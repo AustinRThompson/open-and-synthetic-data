@@ -1,0 +1,585 @@
+﻿Study ID,Date of Service (yy-mm-dd),Video Number,Bolus Colorant,Please specify 'Other' bolus colorant,Bolus Consistency,Please specify 'Other' bolus consistency,Bolus Volume,Bolus Volume Continuous (scale),Bolus Delivery Method,Instruction: Normal/Held/Cued,Instruction: Single/Natural/Uninterrupted/Fast,Number of swallows performed,Valleculae Severity rating,Epiglottis Severity rating,Piriform Sinus Severity rating,Laryngeal Vestibule Severity rating,Vocal Folds Severity rating,Subglottis Severity rating,PAS 'before' the swallow,PAS 'during' the swallow,PAS 'after' the swallow,PAS 'between' bolus trials,Bolus location at onset of 'during' the swallow (if visualized (choice=Oral cavity (no bolus visualized at onset)),Bolus location at onset of 'during' the swallow (if visualized (choice=Oropharynx),Bolus location at onset of 'during' the swallow (if visualized (choice=Epiglottis),Bolus location at onset of 'during' the swallow (if visualized (choice=Hypopharynx),Bolus location at onset of 'during' the swallow (if visualized (choice=Laryngeal vestibule),Bolus location at onset of 'during' the swallow (if visualized (choice=Vocal folds),Bolus location at onset of 'during' the swallow (if visualized (choice=Subglottis),PAS_Max
+HOA01,12/9/21,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),14,Cup,Normal,Natural,1,4,2,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),27,Cup,Normal,Natural,1,2,2,2,2,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA01,12/9/21,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,7,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,9,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,3,0,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,10,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,8,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,12,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,5,7,4,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,13,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,14,6,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,14,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,5,4,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,15,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),20,Cup,Normal,Single,1,7,13,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,16,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),18,Cup,Normal,Single,1,4,9,3,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,17,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,4,4,9,4,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,0,4,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,19,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,7,3,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,20,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.924,,Normal,Single,2,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA01,12/9/21,21,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.97,,Normal,Single,1,6,5,2,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA02,12/13/21,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),20,Cup,Normal,Natural,2,1,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA02,12/13/21,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),11,Cup,Normal,Natural,1,1,0,1,2,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA02,12/13/21,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,2,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA02,12/13/21,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA02,12/13/21,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,11,2,3,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA02,12/13/21,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,3,0,2,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA02,12/13/21,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,3,8,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA02,12/13/21,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2,0,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA02,12/13/21,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),14,Cup,Normal,Single,1,2,2,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA02,12/13/21,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),10,Cup,Normal,Single,1,1,2,2,2,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA02,12/13/21,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,9,2,9,3,2,3,0,1,5,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,5
+HOA02,12/13/21,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,2,2,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA02,12/13/21,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,2,5,0,4,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA02,12/13/21,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.9839,,Normal,Single,3,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA02,12/13/21,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.7108,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA03,12/1/21,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),26,Cup,Normal,Natural,3,2,5,2,1,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA03,12/1/21,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),19,Cup,Normal,Natural,2,2,2,1,0,0,0,1,1,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA03,12/1/21,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,4,3,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA03,12/1/21,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,3,0,2,0,0,0,1,1,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA03,12/1/21,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,3,4,1,1,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA03,12/1/21,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA03,12/1/21,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,3,20,2,2,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA03,12/1/21,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2,8,3,3,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA03,12/1/21,14,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),22,Cup,Normal,Single,2,2,38,2,33,32,0,1,5,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA03,12/1/21,15,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),28,Cup,Normal,Single,1,3,0,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA03,12/1/21,16,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,3,3,40,2,3,0,0,1,3,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA03,12/1/21,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3,0,1,0,0,0,1,1,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA03,12/1/21,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,5,0,2,0,0,0,1,1,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA03,12/1/21,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.8494,,Normal,Single,1,1,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA03,12/1/21,20,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.8312,,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA04,12/10/21,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),21,Cup,Normal,Natural,2,2,1,3,0,0,0,1,1,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA04,12/10/21,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),20,Cup,Normal,Natural,2,3,7,1,2,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA04,12/10/21,8,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,3,1,2,1,0,0,1,3,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA04,12/10/21,9,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,3,6,3,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA04,12/10/21,10,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,4,5,2,0,0,0,1,1,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA04,12/10/21,11,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,3,3,2,0,0,0,1,1,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA04,12/10/21,12,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,3,3,2,2,0,0,1,3,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA04,12/10/21,13,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,3,6,3,0,0,0,1,1,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA04,12/10/21,14,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),22,Cup,Normal,Single,1,2,4,3,1,0,0,1,3,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA04,12/10/21,15,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),21,Cup,Normal,Single,1,5,7,6,6,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA04,12/10/21,16,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,4,6,3,3,8,0,0,1,3,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA04,12/10/21,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,2,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA04,12/10/21,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA04,12/10/21,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.5773,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA04,12/10/21,20,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.896,,Normal,Single,2,2,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA07,12/7/21,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),34,Cup,Normal,Natural,1,6,0,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA07,12/7/21,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),13,Cup,Normal,Natural,1,7,18,3,0,0,0,1,1,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA07,12/7/21,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,3,3,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA07,12/7/21,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,0,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA07,12/7/21,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,6,11,2,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA07,12/7/21,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,3,3,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA07,12/7/21,12,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,3,3,2,1,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA07,12/7/21,13,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,4,6,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA07,12/7/21,15,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),32,Cup,Normal,Single,2,5,31,4,18,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA07,12/7/21,16,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),16,Cup,Normal,Single,1,5,4,4,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA07,12/7/21,17,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,3,3,18,2,1,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA07,12/7/21,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,2,6,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA07,12/7/21,19,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,2,3,0,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA07,12/7/21,20,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),2.357,,Normal,Single,3,0,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA07,12/7/21,21,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.8232,,Normal,Single,2,3,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),7,Cup,Normal,Natural,1,2.5,4.5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),5,Cup,Normal,Natural,1,1,2.5,2,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA34,3/2/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,2,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2.5,4.5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,3.5,6.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,2.5,4,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,10.5,5,2.5,1.5,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA34,3/2/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,11,2.5,4.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),13,Cup,Normal,Single,1,4,12.5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),7,Cup,Normal,Single,1,2,28,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,11,3,5.5,2.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,2.5,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,12.5,6,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.919,,Normal,Single,1,2,3,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA34,3/2/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.808,,Normal,Single,1,2,15,2,0,0,0,1,1,1,1,Unchecked,Checked,Checked,,Unchecked,Unchecked,Unchecked,1
+HOA08,2/10/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),25,Cup,Normal,Natural,2,6.5,8,2.5,2.5,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA08,2/10/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),17,Cup,Normal,Natural,2,4,10,2.5,0,0,0,1,2,1,1,Unchecked,Checked,Checked,Checked,Checked,Unchecked,Unchecked,2
+HOA08,2/10/22,8,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,4.5,12,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA08,2/10/22,9,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,4,2,2.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA08,2/10/22,10,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,3,15.5,4.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA08,2/10/22,11,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,3.5,5,4,11,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA08,2/10/22,13,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,7.5,5.5,4,6,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA08,2/10/22,14,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,7,5.5,3,7,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA08,2/10/22,15,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),22,Cup,Normal,Single,1,3.5,5,1.5,35,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA08,2/10/22,16,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),15,Cup,Normal,Single,1,4,4,3,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA08,2/10/22,17,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,8,6,6,2.5,3,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA08,2/10/22,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,4,4.5,6,0,0,0,1,2,1,1,Unchecked,Checked,Checked,Checked,Checked,Unchecked,Unchecked,2
+HOA08,2/10/22,19,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,4.5,3.5,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA08,2/10/22,20,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.84,,Normal,Single,1,4.5,1,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA08,2/10/22,21,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.44,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),29,Cup,Normal,Natural,1,2.5,5.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),37,Cup,Normal,Natural,1,1.5,1,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,2,1.5,1.5,1.5,0,0,0,1,1,1,1,,,,,,,,1
+HOA09,2/8/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1.5,4,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,2,4,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,2,2.5,1.5,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA09,2/8/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,3.5,3,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),33,Cup,Normal,Single,2,3.5,2,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),34,Cup,Normal,Single,1,3,0,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,7,3.5,4,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,34,4.5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,8.5,4,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.565,,Normal,Single,1,4.5,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA09,2/8/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.61,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA10,2/9/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),26,Cup,Normal,Natural,1,2,2,3,12,0,0,1,3,1,1,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA10,2/9/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),22,Cup,Normal,Natural,1,3,2,2,2,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA10,2/9/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,18,1,4,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA10,2/9/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,1,1,5,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA10,2/9/22,10,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,5,25,2,3,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA10,2/9/22,11,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA10,2/9/22,13,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,3,25,2,6,0,0,1,3,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA10,2/9/22,14,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,5,3,3,2,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA10,2/9/22,16,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),24,Cup,Normal,Single,1,2,13,64,3,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA10,2/9/22,17,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),23,Cup,Normal,Single,1,2,4,1,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA10,2/9/22,18,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,4,3,14,2,2,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA10,2/9/22,19,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,2,3,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA10,2/9/22,20,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,4,42,1,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA10,2/9/22,21,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.57,,Normal,Single,1,4,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA10,2/9/22,22,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.58,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),13,Cup,Normal,Natural,1,2,2,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),16,Cup,Normal,Natural,1,2.5,2,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,3,1.5,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,4,1,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,3,1.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,3,1,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,3,3.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,4.5,1.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),50,Cup,Normal,Single,1,2.5,2,3.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),47,Cup,Normal,Single,1,2.5,4,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,4,2.5,5.5,2.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3.5,1,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.206,,Normal,Single,1,2,1,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA13,2/8/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.52,,Normal,Single,1,1.5,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,4,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),16,Cup,Normal,Natural,2,2,5.5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,5,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),19,Cup,Normal,Natural,2,2,4.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,6,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2.5,13,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,7,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2.5,11,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,10,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2.5,12,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,11,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,2.5,4,1.5,1.5,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA14,3/28/22,12,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,2,6.5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,13,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,3,6,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,14,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),20,Cup,Normal,Single,2,3,4.5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,15,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),22,Cup,Normal,Single,1,1.5,3,2,4,10,1,1,7,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,7
+HOA14,3/28/22,17,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,5,2,4,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,2.5,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,19,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,2.5,1.5,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,20,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),2.97,,Normal,Single,2,5.5,2,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA14,3/28/22,21,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),3.03,,Normal,Single,2,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),15,Cup,Normal,Natural,1,1.5,2,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),16,Cup,Normal,Natural,1,9,2,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,2,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,3,2,2,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA15,2/24/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1.5,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,12,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1,1.5,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,13,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,6,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,14,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),42,Cup,Normal,Single,2,8.5,4.5,2,1.5,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,15,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),27,Cup,Normal,Single,2,12,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,16,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,7,3.5,2,1.5,3,2.5,0,1,5,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA15,2/24/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.84,,Normal,Single,1,4.5,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA15,2/24/22,20,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.61,,Normal,Single,1,1.5,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA18,2/7/22,6,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),69,Cup,Normal,Natural,2,23,3,4,4,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA18,2/7/22,7,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),42,Cup,Normal,Natural,1,4,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA18,2/7/22,9,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,4,1,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA18,2/7/22,10,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,4,0,4,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA18,2/7/22,11,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,4,2,2,7,1,0,1,5,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,5
+HOA18,2/7/22,12,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA18,2/7/22,13,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,5,3,2,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA18,2/7/22,14,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,3,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA18,2/7/22,16,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),20,Cup,Normal,Single,2,1,2,2,2,0,0,1,3,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA18,2/7/22,17,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),20,Cup,Normal,Single,2,3,0,3,12,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA18,2/7/22,18,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,5,2,2,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA18,2/7/22,19,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,2,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA18,2/7/22,20,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3,5,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA18,2/7/22,21,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.622,,Normal,Single,1,3,0,3,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA18,2/7/22,22,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.067,,Normal,Single,1,3,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA22,2/17/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),27,Cup,Normal,Natural,1,2,2.5,1.5,7,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA22,2/17/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),20,Cup,Normal,Natural,1,6.5,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA22,2/17/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,1,1,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA22,2/17/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA22,2/17/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,1.5,2,2,3,3,0,1,5,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,5
+HOA22,2/17/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,3.5,0,2.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA22,2/17/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2.5,2.5,2,5,7,0,1,5,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA22,2/17/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA22,2/17/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),18,Cup,Normal,Single,1,2,3,1.5,0,7,0,1,5,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,5
+HOA22,2/17/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),17,Cup,Normal,Single,1,2.5,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA22,2/17/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,7,3.5,1.5,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA22,2/17/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA22,2/17/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA22,2/17/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.64,,Normal,Single,1,1,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA22,2/17/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.48,,Normal,Single,1,1,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA23,3/2/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),14,Cup,Normal,Natural,2,1.5,1,1.5,2,1.5,0,1,5,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA23,3/2/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),10,Cup,Normal,Natural,2,1.5,3,1.5,3,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA23,3/2/22,8,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,2.5,1.5,4,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA23,3/2/22,9,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,2,5,0,1.5,7,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA23,3/2/22,11,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,5,5.5,4,4,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA23,3/2/22,12,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,3,3,1.5,1.5,4,0,1,5,1,1,Unchecked,Checked,Checked,Checked,Checked,Unchecked,Unchecked,5
+HOA23,3/2/22,14,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,2.5,6,1.5,17,3.5,0,5,1,1,1,Unchecked,Checked,Checked,Checked,Checked,Checked,Unchecked,5
+HOA23,3/2/22,15,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,3,7.5,2.5,4,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA23,3/2/22,16,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),13,Cup,Normal,Single,1,3,48,3,42,55,0,1,5,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,5
+HOA23,3/2/22,17,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),12,Cup,Normal,Single,1,4.5,31,3.5,31,8,0,1,5,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,5
+HOA23,3/2/22,18,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,2,2,3.5,1,40,40,24,1,7,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,7
+HOA23,3/2/22,19,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,2.5,2,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA23,3/2/22,20,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,11,0,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA23,3/2/22,21,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.1,,Normal,Single,1,1,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA23,3/2/22,22,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.4,,Normal,Single,1,1.5,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA24,2/10/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),10,Cup,Normal,Natural,1,1.5,1.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA24,2/10/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),9,Cup,Normal,Natural,3,0,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA24,2/10/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,1.5,2,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA24,2/10/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA24,2/10/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,6,2,4,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA24,2/10/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,1,1,1,2,2.5,0,1,5,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA24,2/10/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,1,3,1.5,3,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA24,2/10/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,1.5,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA24,2/10/22,14,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),9,Cup,Normal,Single,1,1.5,5,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA24,2/10/22,15,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),6,Cup,Normal,Single,1,1.5,2,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA24,2/10/22,16,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,14,1,3,1,3,2,0,1,5,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA24,2/10/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA24,2/10/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.707,,Normal,Single,1,0,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA24,2/10/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.972,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),21,Cup,Normal,Natural,1,5.5,3.5,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),15,Cup,Normal,Natural,1,5,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2.5,2.5,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,2,1.5,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,2,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1.5,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,4.5,3.5,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,5,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),18,Cup,Normal,Single,1,10,5,3,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),18,Cup,Normal,Single,1,5,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,5,1.5,1.5,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,6.5,1.5,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,2,3,2,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.87,,Normal,Single,2,38,5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA25,2/23/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.01,,Normal,Single,3,6,2,2,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA27,2/23/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),12,Cup,Normal,Natural,1,1.5,5,2,1,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA27,2/23/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),16,Cup,Normal,Natural,1,3,8,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA27,2/23/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,2,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA27,2/23/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,2,2,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA27,2/23/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,1.5,3.5,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA27,2/23/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,2,3,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA27,2/23/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,1.5,2.5,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA27,2/23/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,1,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA27,2/23/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),9,Cup,Normal,Single,1,1.5,5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA27,2/23/22,13,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),15,Cup,Normal,Single,2,2,1,2,3,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA27,2/23/22,14,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,6,2.5,6.5,1.5,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA27,2/23/22,15,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,2,15,9,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA27,2/23/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,2,5,12.5,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA27,2/23/22,17,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.88,,Normal,Single,1,5,3,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA27,2/23/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.96,,Normal,Single,1,4.5,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA29,3/1/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),12,Cup,Normal,Natural,3,1.5,1.5,2,2,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA29,3/1/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),7,Cup,Normal,Natural,1,1.5,2,2.5,3.5,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA29,3/1/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,3,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA29,3/1/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,2.5,2.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA29,3/1/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1,1.5,1.5,1.5,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA29,3/1/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,0,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA29,3/1/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,3,2,5.5,2,0,1,0,1,5,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,5
+HOA29,3/1/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,3,2,4,2,1,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA29,3/1/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),5,Cup,Normal,Single,1,1.5,7.5,2.5,1,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA29,3/1/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),5,Cup,Normal,Single,1,1.5,2.5,2,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA29,3/1/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,14,2.5,2,2.5,1.5,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA29,3/1/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3.5,4.5,3,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA29,3/1/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,2,2.5,5.5,2.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA29,3/1/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.682,,Normal,Single,1,1,1,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA29,3/1/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.577,,Normal,Single,1,2.5,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),23,Cup,Normal,Natural,3,1.5,2.5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),18,Cup,Normal,Natural,3,1,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,2,2,1.5,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,2,0,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,1.5,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,1.5,2,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,1.5,2,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),14,Cup,Normal,Single,2,1.5,2.5,1.5,5.5,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA31,3/1/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),9,Cup,Normal,Single,2,2,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,8,1.5,0,2,0,0,0,1,2,1,1,Unchecked,Checked,Checked,Checked,Checked,Unchecked,Unchecked,2
+HOA31,3/1/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,4.5,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.94,,Normal,Single,1,1,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA31,3/1/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.72,,Normal,Single,1,1,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA32,3/2/22,85,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),16,Cup,Normal,Natural,2,4,3,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA32,3/2/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),17,Cup,Normal,Natural,1,2.5,0,1.5,0,0,0,1,1,1,1,,,,,,,,1
+HOA32,3/2/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2.5,1.5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA32,3/2/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,2,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA32,3/2/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,1.5,2,1,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA32,3/2/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,2,3.5,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA32,3/2/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,1.5,1.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA32,3/2/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,3,0,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA32,3/2/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),23,Cup,Normal,Single,1,35,4,2,4.5,3,10,1,8,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,8
+HOA32,3/2/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),21,Cup,Normal,Single,2,3,1,2,1,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA32,3/2/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,9,3,3,2.5,2,1,0,1,5,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA32,3/2/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1.5,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA32,3/2/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,4.5,11.5,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA32,3/2/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.43,,Normal,Single,1,1.5,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA32,3/2/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.48,,Normal,Single,1,1.5,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),33,Cup,Normal,Natural,2,2,1.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),24,Cup,Normal,Natural,2,1,1.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,4,3.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2.5,3.5,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2.5,3,4,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,1.5,4,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2.5,5,2.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),19,Cup,Normal,Single,1,2.5,2.5,2.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),14,Cup,Normal,Single,2,1.5,1.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,6,2,1,2.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,5,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,7.5,3,4,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.04,,Normal,Single,1,7,0,3.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA33,3/3/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.84,,Normal,Single,1,0,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA35,2/23/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),37,Cup,Normal,Natural,2,1.5,1.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA35,2/23/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),29,Cup,Normal,Natural,2,1.5,0,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA35,2/23/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2.5,19.5,2.5,17,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA35,2/23/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,3,1.5,2,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA35,2/23/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,2,1,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA35,2/23/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,3,2,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA35,2/23/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,3,1.5,7,2.5,13,4.5,0,1,5,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA35,2/23/22,13,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,3,0,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA35,2/23/22,14,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),42,Cup,Normal,Single,2,2,7.5,3,0,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA35,2/23/22,15,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),30,Cup,Normal,Single,2,4,2.5,4,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA35,2/23/22,16,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,5,3.5,2,2.5,3,2,0,1,5,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA35,2/23/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,2,0,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA35,2/23/22,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,2,3.5,3.5,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA35,2/23/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),2.953,,Normal,Single,2,2.5,12,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA35,2/23/22,21,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),3.026,,Normal,Single,1,4,0,2.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,6,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),43,Cup,Normal,Natural,1,1,1,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,7,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),27,Cup,Normal,Natural,2,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,8,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,1,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,9,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,10,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1.5,2.5,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,11,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,12,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1.5,2.5,1.5,1,0,0,1,3,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA36,3/7/22,13,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1.5,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,14,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),39,Cup,Normal,Single,1,10.5,1.5,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,15,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),43,Cup,Normal,Single,1,3,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,16,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,4,1.5,1.5,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.705,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA36,3/7/22,20,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.813,,Normal,Single,1,3,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),18,Cup,Normal,Natural,1,1.5,1.5,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),36,Cup,Normal,Natural,1,2,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,4,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2.5,7,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1.5,1,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1.5,1.5,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2.5,5.5,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),31,Cup,Normal,Single,1,2,5.5,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),33,Cup,Normal,Single,1,3,3,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,4,2,3,1,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA38,3/22/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,9,0,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3,4,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),2.992,,Normal,Single,2,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA38,3/22/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),3.087,,Normal,Single,2,6.5,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),13,Cup,Normal,Natural,1,1.5,1,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),12,Cup,Normal,Natural,1,1.5,2.5,1,2,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA39,3/29/22,8,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,1.5,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,9,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,10,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1.5,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,11,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1.5,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,12,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2,2.5,2,0.5,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA39,3/29/22,13,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,14,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),4,Cup,Normal,Single,1,2,2,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,15,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),5,Cup,Normal,Single,1,1.5,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,16,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,5,2,2.5,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,2,0,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3.5,4,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.974,,Normal,Single,1,1.5,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA39,3/29/22,20,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.162,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),26,Cup,Normal,Natural,1,2,4,1,2.5,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA40,3/8/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),24,Cup,Normal,Natural,1,2,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,8,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,2,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,9,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,10,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1.5,1.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,11,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,12,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,4.5,4,5.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,13,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,5.5,0,4,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,14,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),15,Cup,Normal,Single,1,1.5,3.5,1.5,3,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA40,3/8/22,15,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),12,Cup,Normal,Single,1,2,0,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,16,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,5,1.5,2.5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,7,3.5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,4.5,2.5,3.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.89,,Normal,Single,1,1.5,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA40,3/8/22,20,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.51,,Normal,Single,1,2.5,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,6,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),12,Cup,Normal,Natural,1,2,5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,7,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),9,Cup,Normal,Natural,1,2.5,3,1.5,7,4,0,1,5,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA41,3/22/22,8,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,2.5,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,9,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,4,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,10,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2.5,5.5,2.5,1.5,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA41,3/22/22,11,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1.5,3,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2.5,6,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2.5,0,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,14,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),14,Cup,Normal,Single,1,3,1.5,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,15,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),12,,Normal,Single,1,2,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,16,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,8,3,2,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,89,6.5,2.5,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,3,4,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.871,,Normal,Single,2,3,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA41,3/22/22,20,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.393,,Normal,Single,1,1.5,0,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA42,3/28/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),13,Cup,Normal,Natural,2,2,16,2,7.5,2,0,1,5,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA42,3/28/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),14,Cup,Normal,Natural,2,1.5,4,1,2,0,0,1,3,1,5,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA42,3/28/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,8.5,32,3,2,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA42,3/28/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,3.5,6,3.5,1,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA42,3/28/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,2,2,8,1.5,3.5,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA42,3/28/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1.5,6,1.5,4,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA42,3/28/22,12,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,2.5,52,2,4.5,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA42,3/28/22,13,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,3,2,1,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA42,3/28/22,14,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),12,Cup,Normal,Single,1,6.5,46,2.5,18,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA42,3/28/22,15,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),12,Cup,Normal,Single,2,1.5,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA42,3/28/22,16,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,13,1.5,3,1.5,0,0,0,1,2,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,2
+HOA42,3/28/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,7,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA42,3/28/22,18,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3.5,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,,Unchecked,Unchecked,Unchecked,1
+HOA42,3/28/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.5,,Normal,Single,1,1.5,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA42,3/28/22,20,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.415,,Normal,Single,1,1.5,0,1.5,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA44,3/10/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),22,Cup,Normal,Natural,2,2,11,2.5,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA44,3/10/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),17,Cup,Normal,Natural,2,1.5,5,2.5,2.5,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA44,3/10/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,7,2.5,0,0,0,1,1,1,1,,,,,,,,1
+HOA44,3/10/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,1.5,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA44,3/10/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2.5,8,2,2,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,3
+HOA44,3/10/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,4.5,2.5,2,2,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA44,3/10/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,3.5,7,2.5,3,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA44,3/10/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2,2.5,2,4,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA44,3/10/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),8,Cup,Normal,Single,1,2,11.5,2,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA44,3/10/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),10,Cup,Normal,Single,1,2.5,8,2.5,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA44,3/10/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,5,2.5,5.5,3,2,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA44,3/10/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,1.5,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA44,3/10/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,2,6.5,2.5,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA44,3/10/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.04,,Normal,Single,1,2.5,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA44,3/10/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.68,,Normal,Single,1,1,1,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,4,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),16,Cup,Normal,Natural,1,1.5,25,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,5,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),12,Cup,Normal,Natural,1,2,3,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,6,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,21,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,7,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1.5,7,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,8,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,31,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,9,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,3,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,10,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1,17,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,11,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2.5,7,2,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA45,7/29/22,12,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),13,Cup,Normal,Single,1,2,40,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,13,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),16,Cup,Normal,Single,1,3,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,14,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,3,1,70,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,15,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,2,2,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,17,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.64,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA45,7/29/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.55,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA46,8/17/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),19,Cup,Normal,Natural,1,1,41,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA46,8/17/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),19,Cup,Normal,Natural,1,1,38,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA46,8/17/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,1,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA46,8/17/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA46,8/17/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1,41,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA46,8/17/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1,15,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA46,8/17/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1,11,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA46,8/17/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1,21,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA46,8/17/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),18,Cup,Normal,Single,1,1,18,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA46,8/17/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),13,Cup,Normal,Single,1,1,1,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA46,8/17/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,5,1,1,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA46,8/17/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA46,8/17/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,,,,,,,,1
+HOA46,8/17/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.461,,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA46,8/17/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.54,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA47,8/19/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),23,Cup,Normal,Natural,1,3.5,14,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA47,8/19/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),20,Cup,Normal,Natural,1,4,1,1,2.5,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA47,8/19/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,1,1,1,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA47,8/19/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA47,8/19/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,1,1,3,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA47,8/19/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,3,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA47,8/19/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2,38,1,24,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA47,8/19/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,2,4,1,2,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA47,8/19/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),14,Cup,Normal,Single,1,2,29,1,4,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA47,8/19/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),18,Cup,Normal,Single,2,1.5,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA47,8/19/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,11,2,17,2,2.5,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA47,8/19/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,2,4,8.5,21,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA47,8/19/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA47,8/19/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),2.24,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA47,8/19/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),3.04,,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA48,8/19/22,5,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),51,Cup,Normal,Natural,1,1,27,1,39,0,0,1,3,1,1,,,,,,,,3
+HOA48,8/19/22,6,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),33,Cup,Normal,Natural,2,1,1,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA48,8/19/22,7,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,5,1,2,0,0,1,3,1,1,,,,,,,,3
+HOA48,8/19/22,8,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,2,1,5.5,0,0,1,3,1,1,Unchecked,Checked,Checked,Checked,Checked,Unchecked,Unchecked,3
+HOA48,8/19/22,9,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1,4,1,8,60,90,1,7,1,6,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,7
+HOA48,8/19/22,10,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1,1,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA48,8/19/22,11,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1,17,1,9,4,3,1,8,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,8
+HOA48,8/19/22,12,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1,4,1,7.5,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA48,8/19/22,13,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),22,Cup,Normal,Single,1,1,10,1,3,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA48,8/19/22,14,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),26,Cup,Normal,Single,1,6,4,1,4,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA48,8/19/22,15,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,1,1,9,1,3,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA48,8/19/22,16,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,2,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA48,8/19/22,17,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,2,2,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA48,8/19/22,18,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.64,,Normal,Single,1,5,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA48,8/19/22,19,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),3.02,,Normal,Single,1,2,3,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA49,8/23/22,8,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),23,Cup,Normal,Natural,1,1,2,1,4,3,0,1,5,1,1,,,,,,,,5
+HOA49,8/23/22,9,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),18,Cup,Normal,Natural,2,1,2,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA49,8/23/22,10,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,1,1,1,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA49,8/23/22,11,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,1,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA49,8/23/22,12,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1,1,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA49,8/23/22,13,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1,1,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA49,8/23/22,14,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1,4,1,2,0,0,1,3,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA49,8/23/22,15,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA49,8/23/22,16,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),13,Cup,Normal,Single,1,1,2,1,2,0,0,1,3,1,1,,,,,,,,3
+HOA49,8/23/22,17,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),13,Cup,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA49,8/23/22,19,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,9,1,1,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA49,8/23/22,20,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3,3,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA49,8/23/22,21,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,4,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA49,8/23/22,22,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.28,,Normal,Single,1,3.5,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA49,8/23/22,23,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.94,,Normal,Single,1,2,1,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,8,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),30,Cup,Normal,Natural,1,1,1,1,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,9,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),34,Cup,Normal,Natural,1,1,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,10,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,3,2,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,11,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,2,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,12,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,5,15,2,1,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA50,8/29/22,13,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,14,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,1,1,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,15,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,2,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,16,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),25,Cup,Normal,Single,1,2,2,2,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,17,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),21,Cup,Normal,Single,1,2,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Checked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,19,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,7,1,7,2,9,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA50,8/29/22,20,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,21,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,0,0,2,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,22,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.47,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA50,8/29/22,23,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.32,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Unchecked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA51,8/29/22,8,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),19,Cup,Normal,Natural,1,1,3,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA51,8/29/22,9,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),12,Cup,Normal,Natural,2,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA51,8/29/22,10,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,1,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA51,8/29/22,11,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,1,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA51,8/29/22,12,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA51,8/29/22,13,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA51,8/29/22,14,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1,1,1,0,0,0,1,1,1,3,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA51,8/29/22,15,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,3.5,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA51,8/29/22,16,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),9,Cup,Normal,Single,1,3,2,2,2,3.5,0,1,5,4,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA51,8/29/22,17,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),16,Cup,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA51,8/29/22,19,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,7,1,2,1,4,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA51,8/29/22,20,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA51,8/29/22,21,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA51,8/29/22,22,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.59,,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA51,8/29/22,23,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),1.02,,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA52,8/29/22,8,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),14,Cup,Normal,Natural,1,1,4,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA52,8/29/22,9,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),21,Cup,Normal,Natural,2,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA52,8/29/22,10,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,2,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA52,8/29/22,11,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,2,2,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA52,8/29/22,12,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,6,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA52,8/29/22,13,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,3,4,1,3,3,0,1,5,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA52,8/29/22,14,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1,12,1,0,0,0,1,1,1,1,,,,,,,,1
+HOA52,8/29/22,15,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,6,0,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA52,8/29/22,16,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),22,Cup,Normal,Single,1,3,9,1,7,18,0,1,5,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,5
+HOA52,8/29/22,17,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),15,Cup,Normal,Single,1,1,2,1,4,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA52,8/29/22,19,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,1,2,8,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA52,8/29/22,20,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3,8,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA52,8/29/22,21,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,3,22,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA52,8/29/22,22,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.7,,Normal,Single,1,2,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA52,8/29/22,23,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.79,,Normal,Single,1,2,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,8,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),6,Cup,Normal,Natural,2,1,2,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,9,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),9,Cup,Normal,Natural,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,10,White coating,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,3,1,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,11,Green opaque,,Thin (IDDSI 0),,5 mL,5,Cup,Normal,Single,1,4,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,12,White coating,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,2,0,2,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,13,Green opaque,,Thin (IDDSI 0),,10 mL,10,Cup,Normal,Single,1,1,0,3,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,14,White coating,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,17,2,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,15,Green opaque,,Thin (IDDSI 0),,20 mL,20,Cup,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,16,White coating,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),9,Cup,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,17,Green opaque,,Thin (IDDSI 0),,Self-administered cup sip (non-measured),7,Cup,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,19,White coating,,Thin (IDDSI 0),,90 mL,90,Cup,Normal,Uninterrupted,13,1,1,1,1,0,0,1,3,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,3
+HOA53,8/29/22,20,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Unchecked,Checked,Checked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,21,Blue opaque,,Extremely thick (IDDSI 4),,5 mL,5,Spoon,Normal,Single,1,1,0,1,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,22,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.69,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
+HOA53,8/29/22,23,Natural/non-colored,,Regular (IDDSI 7),,Self-administered cup sip (non-measured),0.64,,Normal,Single,1,0,0,0,0,0,0,1,1,1,1,Checked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,Unchecked,1
