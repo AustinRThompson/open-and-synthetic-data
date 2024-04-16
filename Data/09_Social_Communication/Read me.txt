@@ -1,0 +1,77 @@
+Read me
+Column names -- meaning
+
+
+Study1Comp.csv
+Subj -- participant ID
+Form -- data collection form (same items with different order: A or B or C; M- or F- means male participants or female participants (phom or nu:))
+Target.1 -- targeted personal reference terms
+Item -- item order
+Person -- person (1st, 2nd, or 3rd) that the tested personal reference term in that trial refers to
+Target.2 -- target (child (C); experimenter (E); boy (B); girl (G); monkey (M)) that the tested personal reference term in that trial refers to
+Phase -- grouping of blocks
+Block -- the changes from Block 1 to 2 or Block 2 to 1 indicate the change of pictures used
+Answer -- target (child (C); experimenter (E); boy (B); girl (G); monkey (M)) the child chose
+Accuracy -- accuracy of target
+Repeat -- how many times the question was repeated
+ParGroup -- participant group (ASD or TD)
+Grade -- school grade (school year)
+Months -- the child's age in month
+IQ -- non-verbal IQ raw score
+Handedness
+Gender -- gender of participant
+SSIQ -- converted non-verbal IQ
+
+
+Study1Prod.csv
+Subj -- participant ID
+Form -- data collection form (same items with different order: A or B or C; M- or F- means male participants or female participants (phom or nu:))
+Target -- target (child (C); experimenter (E); boy (B); girl (G); monkey (M)) that the tested personal reference term in that trial refers to
+Block -- block number
+Trial -- trial number within block
+Accuracy -- accuracy of target
+NewAcc -- accuracy where withdrawals were not counted as inccurate responses
+AnsCat -- categories of answer by participant
+ParGroup -- participant group (ASD or TD)
+Grade -- school grade (school year)
+Months -- the child's age in month
+IQ -- non-verbal IQ raw score
+Handedness
+Gender -- gender of participant
+
+
+Study2Comp.csv
+Subj -- participant ID
+Form -- data collection form (same items with different order: A or B or C; M- or F- means male participants or female participants (phom or nu:))
+Item -- item order
+Phase -- grouping of blocks
+Block -- the changes from Block 1 to 2 or Block 2 to 1 indicate the change of pictures used
+Word -- targeted personal reference terms
+Target -- target (child (C); experimenter (E); boy (B); girl (G); monkey (M)) that the tested personal reference term in that trial refers to
+Person -- person (1st, 2nd, or 3rd) that the tested personal reference term in that trial refers to
+Answer -- target (child (C); experimenter (E); boy (B); girl (G); monkey (M)) the child chose
+Accuracy -- accuracy of target
+Repeat -- how many times the question was repeated
+ParGroup -- participant group (ASD or TD)
+Age -- the child's age in year
+Months -- the child's age in month
+SSIQ -- converted non-verbal IQ
+Gender -- gender of participant
+Grade -- school grade (school year)
+
+
+Study2Prod.csv
+Subj -- participant ID
+Form -- data collection form (same items with different order: A or B or C; M- or F- means male participants or female participants (phom or nu:))
+Target -- target (child (C); experimenter (E); boy (B); girl (G); monkey (M)) that the tested personal reference term in that trial refers to
+Block -- block number
+Trial -- trial number
+AnsTarg -- intended target (child (C); experimenter (E); boy (B); girl (G); monkey (M)) by the term the child used 
+Accuracy -- accuracy of target
+AnsCat -- categories of answer by participant
+AnsCatOrig -- detailed categories of answer by participant
+ParGroup -- participant group (ASD or TD)
+Age -- the child's age in year
+Months -- the child's age in month
+SSIQ -- converted non-verbal IQ
+Gender -- gender of participant
