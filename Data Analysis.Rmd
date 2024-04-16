@@ -121,7 +121,71 @@ This data was reported in
 ## 04 - Voice
 
 ## 05 - Hearing
-This data was reported in 
+This data was reported in "Ubiquitous enhancement of spatial hearing in congenitally blind people" (https://osf.io/preprints/psyarxiv/veh7t) and was retrieved from https://osf.io/tav35/.
+
+```{r}
+# Load packages
+library(nlme) # LMM
+
+# Load data
+plane.thre.out <- read.table(here::here("Data/05_Hearing/All_Thresholds_outliersmarked-500B.txt"), sep=",", header=T)
+
+# Convert variables to factors
+names(plane.thre.out)[4]<-c('head')
+plane.thre.out$arm <- factor(plane.thre.out$arm)
+plane.thre.out$subj <- factor(plane.thre.out$subj)
+plane.thre.out$head <- factor(plane.thre.out$head)
+plane.thre.out$planes <- factor(plane.thre.out$planes)
+plane.thre.out$group <- ifelse(plane.thre.out$group=='EB', c('CB'), c('SC'))
+plane.thre.out$group <-factor(plane.thre.out$group)
+
+#omit all +-3SD outliers 
+plane.thre.out<- subset(plane.thre.out, outlier==0)
+plane.thre.out[which(plane.thre.out$thre >12),]
+
+#divide back
+horizontal.thre.out <- subset(plane.thre.out,planes=='hor')
+vertical.thre.out <- subset(plane.thre.out,planes=='ver')
+
+rownames(horizontal.thre.out) <-c(1:nrow(horizontal.thre.out)) #correct the row numbers
+horizontal.thre.out[which(horizontal.thre.out$thre >10),] # we know from glmm there's one outlier
+horizontal.thre.out <-horizontal.thre.out[-c(188),] 
+
+rownames(vertical.thre.out) <-c(1:nrow(vertical.thre.out))
+vertical.thre.out[which(vertical.thre.out$thre >12),] # we know from glmm there's one outlier
+vertical.thre.out <-vertical.thre.out[-c(144),] 
+
+# in the horizontal back condition left arm is right area // right arm is left area of the subject
+hor.thre.front <- subset(horizontal.thre.out, head ==1)
+hor.thre.back <- subset(horizontal.thre.out, head ==2)
+
+hor.thre.back$arm <-as.character(hor.thre.back$arm)
+hor.thre.back <- within(hor.thre.back, arm[arm=="left"] <-("Alien"))#just to assign into a temp
+hor.thre.back <- within(hor.thre.back, arm[arm=='right'] <- 'left')
+hor.thre.back <- within(hor.thre.back, arm[arm=='Alien'] <- 'right')
+
+horizontal.thre.out <-rbind(hor.thre.front,hor.thre.back)
+
+# combine them back
+plane.thre.out <- rbind(horizontal.thre.out,vertical.thre.out)
+plane.thre.out$arm <- factor(plane.thre.out$arm)
+plane.thre.out$subj <- factor(plane.thre.out$subj)
+plane.thre.out$head <- factor(plane.thre.out$head)
+plane.thre.out$planes <- factor(plane.thre.out$planes)
+plane.thre.out$group <-factor(plane.thre.out$group)
+
+#divide back
+horizontal.thre.out <- subset(plane.thre.out,planes=='hor')
+vertical.thre.out <- subset(plane.thre.out,planes=='ver')
+
+# LMM on planes
+# this is the model itself - subject is the random fx
+plane.out.nlme <- lme(thre ~ 1 + planes * group * head, random = ~ 1|subj, weights = varIdent(form = ~ 1 | planes), data = plane.thre.out)
+
+# Results
+my.plane.anova <- anova(plane.out.nlme)
+my.plane.anova
+```
 
 ## 06 - AAC
 
@@ -130,6 +194,29 @@ This data was reported in
 ## 08 - Cognition
 
 ## 09 - Social Communication
-This data was reported in 
+This data was reported in "Difficulties with pronouns in autism: Experimental results from Thai children with autism" (https://www.tandfonline.com/doi/full/10.1080/10489223.2023.2262457) and retrieved from https://osf.io/92jgd/.
+
+```{r}
+# Load data
+Comp <-
+  read.csv(here::here("Data/09_Social_Communication/Study1Comp.csv"),
+           fileEncoding = 'UTF-8-BOM')
+
+subjdata <-
+  plyr::ddply(
+    Comp,
+    c("ParGroup", "Subj", "Gender"),
+    summarise,
+    N    = length(Accuracy),
+    acc  = sum(Accuracy),
+    pct = mean(Accuracy),
+    grade = mean(Grade),
+    age = mean(Months),
+    NVIQ = mean(SSIQ)
+  )
+
+# Model
+summary(aov(NVIQ ~ ParGroup, subjdata))
+```
 
 ## {- .leave-tabset}
