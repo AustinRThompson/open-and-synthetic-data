@@ -6,12 +6,14 @@ output:
     toc_float: true
     toc_collapsed: true
     code_folding: hide
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Packages
 Here, we load the packages that we will use for data wrangling, as well as the `synthpop` package, which we will use to generate synthetic data.
 ```{r}
-library(tidyverse)
+library(tidyverse) # data wrangling
 library(synthpop) # install.packages('synthpop')
 ```
 
@@ -21,7 +23,81 @@ This data was reported in "Normative Reference Values for FEES and VASES: Prelim
 
 ### Loading Data
 ```{r}
+#Load data
+swallowing_data <-
+  read.csv(here::here("Data/01_Swallowing/norms_ratings.csv")) |>
+  # clean variable names
+  janitor::clean_names() |>
+  # select only relevant variables
+  dplyr::select(c(study_id, bolus_consistency, laryngeal_vestibule_severity_rating)) |> 
+  mutate(
+    # create binary variable for 'absent' when 0 and present when > 0
+    lv_zero = if_else(laryngeal_vestibule_severity_rating == 0, "Absent", "Present"),
+    # create variables for 'amount of residue when present'
+    lv_present = ifelse(
+      laryngeal_vestibule_severity_rating > 0,
+      laryngeal_vestibule_severity_rating,
+      NA
+    )
+  )
 
+# Visualize distribution
+break_trans = scales::trans_new('clip_range',
+                                \(x) ifelse(x <= 50, x, x - 350),
+                                \(x) ifelse(x <= 50, x, x + 350))
+
+ggplot(swallowing_data,
+       aes(x = laryngeal_vestibule_severity_rating, fill = lv_zero, color = lv_zero)) +
+  geom_histogram(bins = 105) +
+  coord_trans(y = break_trans) +
+  cowplot::theme_cowplot() +
+  scale_x_continuous(limits = c(-1, 100),
+                     breaks = seq(from = 0, to = 100, by = 5.0)) +
+  scale_y_continuous(
+    limits = c(-1, 450),
+    breaks = c(
+      0,
+      10,
+      20,
+      30,
+      40,
+      50,
+      405,
+      425,
+      450
+    )
+  ) +
+  geom_hline(yintercept = 50,
+             linetype = "solid",
+             color = "dark grey") +
+  scale_fill_manual(values = c("orange", "blue")) +
+  scale_color_manual(values = c("white", "white")) +
+  labs(x = "Laryngeal Vestibule Residue Rating (%)",
+       y = "Count") +
+  ggeasy::easy_remove_legend()
+
+# Summarise distribution
+## Percentage of 'present' laryngeal vestibule residue
+### Thin (IDDSI 1)
+swallowing_data |> 
+  filter(bolus_consistency == "Thin (IDDSI 0)") |> 
+  count(lv_zero) |> 
+  mutate(total = sum(n)) |> 
+  mutate(perc = (n/total)*100)
+
+### Pudding & Cracker
+swallowing_data |> 
+  filter(bolus_consistency != "Thin (IDDSI 0)") |> 
+  count(lv_zero) |> 
+  mutate(total = sum(n)) |> 
+  mutate(perc = (n/total)*100)
+
+## Median and IQR for 'present' laryngeal vestibule residue
+swallowing_data |> 
+  filter(bolus_consistency == "Thin (IDDSI 0)" & lv_zero == "Present") |> 
+  summarise(median = median(lv_present),
+            IQR_high = quantile(lv_present, 0.75),
+            IQR_low = quantile(lv_present, 0.25))
 ```
 
 ### Generating Synthetic Data
@@ -45,6 +121,7 @@ This data was reported in
 ## 04 - Voice
 
 ## 05 - Hearing
+This data was reported in 
 
 ## 06 - AAC
 
@@ -53,5 +130,6 @@ This data was reported in
 ## 08 - Cognition
 
 ## 09 - Social Communication
+This data was reported in 
 
 ## {- .leave-tabset}
