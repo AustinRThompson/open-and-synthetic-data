@@ -1,0 +1,112 @@
+---
+title: "Fluency"
+author: Austin Thompson
+---
+
+This script recreates the analysis presented in Elsherif et al. (2021)
+
+# Packages
+```{r}
+library(tidyverse)
+library(effsize) # devtools::install_github("mtorchiano/effsize")
+library(effectsize)
+```
+
+# Loading in the Data
+Retrieved the data from: https://osf.io/q2b7v/ 
+```{r}
+data_fluency <- rio::import(file = "data_Dyslexia Stutter Master.csv") |> 
+  filter(Rejection == 0) |> 
+  filter(Group != "AWD")
+
+data_fluency |> 
+  group_by(Group) |> 
+  summarise(
+    N = length(Group),
+    M = mean(Nonwordrepetition),
+    SD = sd(Nonwordrepetition),
+    SEM = sd(Nonwordrepetition) / sqrt(length(Nonwordrepetition)),
+    CIneg = M - 1.96 * SEM,
+    CIpos = M + 1.96 * SEM
+  )
+```
+
+# Analysis
+Here, we recreate the comparison between neurotypical and stuttering in non-word repetition, (t(36.42) = 6.61, p < .001, Δ = 1.26).
+```{r}
+
+t_test <- stats::t.test(Nonwordrepetition ~ Group,
+                        data = data_fluency,
+                        paired = FALSE,
+                        var.equal = FALSE)
+
+delta <- effectsize::glass_delta(Nonwordrepetition ~ Group,
+                                 data = data_fluency,
+                                 correction = TRUE,
+                                 ci = 0.95)
+
+
+# Pasting it together to get the APA write-up
+apa <- paste0(
+  "t(",
+  
+  # DF
+  df <- t_test[["parameter"]][["df"]] |>
+    round(digits = 2),
+  
+  ") = ",
+  
+  # t statistic
+  t <- t_test[["statistic"]][["t"]] |>
+    round(digits = 2),
+  
+  ", p < .001, Δ = ",
+  
+  delta$Glass_delta |>
+    round(digits = 2)
+  )
+
+apa
+
+```
+
+The delta is the same from their Rmd, but different from what they report in the manuscript :(
+
+# Analysis #2
+Here, we recreate the comparison between neurotypical and stuttering in Test of Word Reading Efficiency (TOWRE) sight word reading, t(35.28) = 3.46, p = .0014, Δ = 0.66
+```{r}
+
+t_test <- stats::t.test(sightTOWRE ~ Group,
+                        data = data_fluency,
+                        paired = FALSE,
+                        var.equal = FALSE)
+
+delta <- effectsize::glass_delta(sightTOWRE ~ Group,
+                                 data = data_fluency,
+                                 correction = TRUE,
+                                 ci = 0.95)
+
+# Pasting it together to get the APA write-up
+apa <- paste0(
+  "t(",
+  
+  # DF
+  df <- t_test[["parameter"]][["df"]] |>
+    round(digits = 2),
+  
+  ") = ",
+  
+  # t statistic
+  t <- t_test[["statistic"]][["t"]] |>
+    round(digits = 2),
+  
+  ", p < .001, Δ = ",
+  
+  delta$Glass_delta |>
+    round(digits = 2)
+  )
+
+apa
+```
+
+Again, the delta glass is similar to their R file, but different that what they reported.

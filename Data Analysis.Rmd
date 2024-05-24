@@ -15,6 +15,7 @@ Here, we load the packages that we will use for data wrangling, as well as the `
 ```{r}
 library(tidyverse) # data wrangling
 library(synthpop) # install.packages('synthpop')
+library(ggeasy) # install.packages('ggeasy')
 ```
 
 # Data Synthesis {.tabset}
@@ -105,11 +106,22 @@ swallowing_data |>
 ### Comparisons
 
 ## 02 - Articulation
-This data was reported in 
+This data was reported in Vowel Acoustics as Predictors of Speech Intelligibility in Dysarthria by Thompson et al. (2023)
+https://pubs.asha.org/doi/10.1044/2022_JSLHR-22-00287
 
 ### Loading Data
+The data were retrieved from: https://osf.io/hr7aj/ 
 ```{r}
-
+data_articulation <- rio::import(
+  file = "Data/02_Articulation/data_Acoustic Measures.csv"
+) |>
+  
+  # Remove the reliability trials that have "_rel" in the SpeakerID variable
+  dplyr::filter(
+    !grepl(
+      pattern = "_rel",
+      x = SpeakerID
+  ))
 ```
 
 ### Generating Synthetic Data
