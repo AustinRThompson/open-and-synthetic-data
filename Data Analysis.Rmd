@@ -130,7 +130,21 @@ data_articulation <- rio::import(
 
 ## 03 - Fluency
 
-## 04 - Voice
+## 04 - Voice/Resonance
+These data were reported in "Hypernasality associated with basal ganglia dysfunction: Evidence from Parkinson's disease and Huntington's disease" (https://doi.org/10.7717/peerj.2530) and were retrieved from https://peerj.com/articles/2530/#supp-1.
+
+```{r}
+# Load data
+voice_data <-
+  readxl::read_excel(here::here("Data/04_Voice_Resonance/RawData.xlsx"), range = "B3:Z114") |>
+  # clean variable names
+  janitor::clean_names() |>
+  # select only relevant variables
+  dplyr::select(c(names, efn_sd_d_b, median_of_raters))
+
+# Examine correlation between overall perceptual rating and acoustic EFn SD parameter
+cor.test(voice_data$median_of_raters, voice_data$efn_sd_d_b, method = "pearson")
+```
 
 ## 05 - Hearing
 This data was reported in "Ubiquitous enhancement of spatial hearing in congenitally blind people" (https://osf.io/preprints/psyarxiv/veh7t) and was retrieved from https://osf.io/tav35/.
