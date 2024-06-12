@@ -217,6 +217,18 @@ my.plane.anova
 ## 06 - AAC
 
 ## 07 - Language
+These data were reported in "Relationships between reading performance and regional spontaneous brain activity following surgical removal of primary left-hemisphere tumors: A resting-state fMRI study" by Kearney et al. (2023) (https://doi.org/10.1016/j.neuropsychologia.2023.108631) and were retrieved from https://osf.io/3abxs.
+
+```{r}
+# Load data
+language_data <-
+  read.csv(here::here("Data/07_Language/demographics_CAT_reading.csv")) |>
+  # select only relevant variables
+  dplyr::select(c(Filename, edu, tpost_cat_read_total))
+
+# Examine correlation between education (years) and reading t-scores
+cor.test(language_data$edu, language_data$tpost_cat_read_total, method = "spearman")
+```
 
 ## 08 - Cognition
 
