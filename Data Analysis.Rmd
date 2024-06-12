@@ -20,7 +20,7 @@ library(ggeasy) # install.packages('ggeasy')
 
 # Data Synthesis {.tabset}
 ## 01 - Swallowing
-This data was reported in "Normative Reference Values for FEES and VASES: Preliminary Data From 39 Nondysphagic, Community-Dwelling Adults" (https://pubs.asha.org/doi/full/10.1044/2023_JSLHR-23-00132) and was retrieved from https://osf.io/4anzm/.
+These data were reported in "Normative Reference Values for FEES and VASES: Preliminary Data From 39 Nondysphagic, Community-Dwelling Adults" by Curtis et al. (2023) (https://doi.org/10.1044/2023_JSLHR-23-00132) and were retrieved from https://osf.io/4anzm/.
 
 ### Loading Data
 ```{r}
@@ -106,11 +106,10 @@ swallowing_data |>
 ### Comparisons
 
 ## 02 - Articulation
-This data was reported in Vowel Acoustics as Predictors of Speech Intelligibility in Dysarthria by Thompson et al. (2023)
-https://pubs.asha.org/doi/10.1044/2022_JSLHR-22-00287
+These data were reported in "Vowel Acoustics as Predictors of Speech Intelligibility in Dysarthria" by Thompson et al. (2023)
+(https://doi.org/10.1044/2022_JSLHR-22-00287) and were retrieved from: https://osf.io/hr7aj/.
 
 ### Loading Data
-The data were retrieved from: https://osf.io/hr7aj/ 
 ```{r}
 data_articulation <- rio::import(
   file = "Data/02_Articulation/data_Acoustic Measures.csv"
@@ -131,8 +130,9 @@ data_articulation <- rio::import(
 ## 03 - Fluency
 
 ## 04 - Voice/Resonance
-These data were reported in "Hypernasality associated with basal ganglia dysfunction: Evidence from Parkinson's disease and Huntington's disease" (https://doi.org/10.7717/peerj.2530) and were retrieved from https://peerj.com/articles/2530/#supp-1.
+These data were reported in "Hypernasality associated with basal ganglia dysfunction: Evidence from Parkinson's disease and Huntington's disease" by Novotny et al. (2016) (https://doi.org/10.7717/peerj.2530) and were retrieved from https://peerj.com/articles/2530/#supp-1.
 
+### Loading Data
 ```{r}
 # Load data
 voice_data <-
@@ -147,8 +147,9 @@ cor.test(voice_data$median_of_raters, voice_data$efn_sd_d_b, method = "pearson")
 ```
 
 ## 05 - Hearing
-This data was reported in "Ubiquitous enhancement of spatial hearing in congenitally blind people" (https://osf.io/preprints/psyarxiv/veh7t) and was retrieved from https://osf.io/tav35/.
+These data were reported in "Ubiquitous enhancement of spatial hearing in congenitally blind people" by Battal et al. (2020) (https://doi.org/10.31234/osf.io/veh7t) and were retrieved from https://osf.io/tav35/.
 
+### Loading Data
 ```{r}
 # Load packages
 library(nlme) # LMM
@@ -220,7 +221,7 @@ my.plane.anova
 ## 08 - Cognition
 
 ## 09 - Social Communication
-This data was reported in "Difficulties with pronouns in autism: Experimental results from Thai children with autism" (https://www.tandfonline.com/doi/full/10.1080/10489223.2023.2262457) and retrieved from https://osf.io/92jgd/.
+These data were reported in "Difficulties with pronouns in autism: Experimental results from Thai children with autism" by Chanchaochai & Schwarz (2023) (https://doi.org/10.1080/10489223.2023.2262457) and were retrieved from https://osf.io/92jgd/.
 
 ```{r}
 # Load data
