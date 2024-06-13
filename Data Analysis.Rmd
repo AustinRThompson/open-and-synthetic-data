@@ -20,7 +20,7 @@ library(ggeasy) # install.packages('ggeasy')
 
 # Data Synthesis {.tabset}
 ## 01 - Swallowing
-This data was reported in "Normative Reference Values for FEES and VASES: Preliminary Data From 39 Nondysphagic, Community-Dwelling Adults" (https://pubs.asha.org/doi/full/10.1044/2023_JSLHR-23-00132) and was retrieved from https://osf.io/4anzm/.
+These data were reported in "Normative Reference Values for FEES and VASES: Preliminary Data From 39 Nondysphagic, Community-Dwelling Adults" by Curtis et al. (2023) (https://doi.org/10.1044/2023_JSLHR-23-00132) and were retrieved from https://osf.io/4anzm/.
 
 ### Loading Data
 ```{r}
@@ -106,11 +106,10 @@ swallowing_data |>
 ### Comparisons
 
 ## 02 - Articulation
-This data was reported in Vowel Acoustics as Predictors of Speech Intelligibility in Dysarthria by Thompson et al. (2023)
-https://pubs.asha.org/doi/10.1044/2022_JSLHR-22-00287
+These data were reported in "Vowel Acoustics as Predictors of Speech Intelligibility in Dysarthria" by Thompson et al. (2023)
+(https://doi.org/10.1044/2022_JSLHR-22-00287) and were retrieved from: https://osf.io/hr7aj/.
 
 ### Loading Data
-The data were retrieved from: https://osf.io/hr7aj/ 
 ```{r}
 data_articulation <- rio::import(
   file = "Data/02_Articulation/data_Acoustic Measures.csv"
@@ -130,11 +129,27 @@ data_articulation <- rio::import(
 
 ## 03 - Fluency
 
-## 04 - Voice
+## 04 - Voice/Resonance
+These data were reported in "Hypernasality associated with basal ganglia dysfunction: Evidence from Parkinson's disease and Huntington's disease" by Novotny et al. (2016) (https://doi.org/10.7717/peerj.2530) and were retrieved from https://peerj.com/articles/2530/#supp-1.
+
+### Loading Data
+```{r}
+# Load data
+voice_data <-
+  readxl::read_excel(here::here("Data/04_Voice_Resonance/RawData.xlsx"), range = "B3:Z114") |>
+  # clean variable names
+  janitor::clean_names() |>
+  # select only relevant variables
+  dplyr::select(c(names, efn_sd_d_b, median_of_raters))
+
+# Examine correlation between overall perceptual rating and acoustic EFn SD parameter
+cor.test(voice_data$median_of_raters, voice_data$efn_sd_d_b, method = "pearson")
+```
 
 ## 05 - Hearing
-This data was reported in "Ubiquitous enhancement of spatial hearing in congenitally blind people" (https://osf.io/preprints/psyarxiv/veh7t) and was retrieved from https://osf.io/tav35/.
+These data were reported in "Ubiquitous enhancement of spatial hearing in congenitally blind people" by Battal et al. (2020) (https://doi.org/10.31234/osf.io/veh7t) and were retrieved from https://osf.io/tav35/.
 
+### Loading Data
 ```{r}
 # Load packages
 library(nlme) # LMM
@@ -202,12 +217,75 @@ my.plane.anova
 ## 06 - AAC
 
 ## 07 - Language
+These data were reported in "Relationships between reading performance and regional spontaneous brain activity following surgical removal of primary left-hemisphere tumors: A resting-state fMRI study" by Kearney et al. (2023) (https://doi.org/10.1016/j.neuropsychologia.2023.108631) and were retrieved from https://osf.io/3abxs.
+
+### Loading Data
+```{r}
+# Load data
+language_data <-
+  read.csv(here::here("Data/07_Language/demographics_CAT_reading.csv")) |>
+  # select only relevant variables
+  dplyr::select(c(Filename, edu, tpost_cat_read_total))
+
+# Examine correlation between education (years) and reading t-scores
+cor.test(language_data$edu, language_data$tpost_cat_read_total, method = "spearman")
+```
 
 ## 08 - Cognition
+These data were reported in "Emotion recognition of faces and emoji in individuals with moderate-severe traumatic brain injury" by Clough et al. (2023) (https://doi.org/10.1080/02699052.2023.2181401 and were retrieved from https://osf.io/enjd8/.
+
+### Loading Data
+```{r}
+# Load packages
+library(lme4) # glmer
+library(lmerTest)
+library(broom.mixed)
+
+# Load data
+cognition_data <-
+  read.csv(here::here("Data/08_Cognition/emoji_affect_recognition_data.csv")) |>
+  # select only relevant variables
+  dplyr::select(c(SubjectID, Correct, Group, Condition, Sex)) |>
+  # dummy-code Group (NC = 1, TBI = 0) and Sex (F = 1, M = 0)
+  mutate(
+    Group_NC = if_else(Group == "NC", 1, 0),
+    Sex_F = if_else(Sex == "Female", 1, 0)) |>
+  # treat categorical variables as factors and set reference levels
+  mutate(
+    SubjectID = as.factor(SubjectID),
+    Correct = as.factor(Correct),
+    Group_NC = relevel(as.factor(Group_NC), '1', '0'),
+    Condition = relevel(as.factor(Condition), 'BasicFace', 'BasicEmoji', 'SocialEmoji'),
+    Sex_F =  relevel(as.factor(Sex_F), '1', '0')
+  )
+
+# Set up Helmert contrast coding for Condition
+# https://marissabarlaz.github.io/portfolio/contrastcoding/
+# Contrast 1: Basic Emotion Faces vs average of Basic Emotion Emoji and Social Emotion Emoji
+# Contrast 2: Basic Emotion Emoji vs Social Emotion Emoji
+helmert = matrix(c(2/3, -1/3, -1/3, 0, 1/2, -1/2), ncol = 2)
+contrasts(cognition_data$Condition) = helmert
+
+# Models: Effect of stimulus condition on emotion recognition accuracy
+# Note: Model first failed to converge when using default control settings, so changed optimizer to bobyqa as suggested here: https://rstudio-pubs-static.s3.amazonaws.com/33653_57fc7b8e5d484c909b615d8633c01d51.html
+m1 <- lme4::glmer(Correct ~ Group_NC + Condition + Sex_F + Group_NC*Condition*Sex_F + (1 |SubjectID), data = cognition_data, family = binomial(link = "logit"), control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)))
+summary(m1)
+
+# Set group reference level to TBI (0) and rerun model
+cognition_data$Group_NC = relevel(cognition_data$Group_NC, '0', '1')
+m2 <- lme4::glmer(Correct ~ Group_NC + Condition + Sex_F + Group_NC*Condition*Sex_F + (1 |SubjectID), data = cognition_data, family = binomial(link = "logit"), control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)))
+summary(m2)
+
+# Odds ratios and confidence intervals
+tidy(m1,conf.int=TRUE,exponentiate=TRUE,effects="fixed") # Condition1 conf.high = 5.86, reported in paper as 5.87
+tidy(m2,conf.int=TRUE,exponentiate=TRUE,effects="fixed")
+```
 
 ## 09 - Social Communication
-This data was reported in "Difficulties with pronouns in autism: Experimental results from Thai children with autism" (https://www.tandfonline.com/doi/full/10.1080/10489223.2023.2262457) and retrieved from https://osf.io/92jgd/.
-
+These data were reported in "Difficulties with pronouns in autism: Experimental results from Thai children with autism" by Chanchaochai & Schwarz (2023) (https://doi.org/10.1080/10489223.2023.2262457) and were retrieved from https://osf.io/92jgd/.
+### Loading Data
 ```{r}
 # Load data
 Comp <-

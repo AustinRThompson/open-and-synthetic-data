@@ -1,0 +1,13 @@
+SubjectID,Unique participant ID
+Condition,BasicFace = human faces depicting basic emotions; BasicEmoji = emoji depicting basic emotions; SocialEmoji = emoji depicting social emotions
+Response,The emotion label the participant said the item depicted
+Correct,1 = participant's reponse was correct; 0 = participant's response was not correct
+Incorrect,1 = participant's reponse was incorrect; 0 = participant's response was not incorrect
+Answer,The emotion label that represented the correct answer
+Item,Unique ID for each stimulus item
+Group,"NC = neurotypical comparison participant, TBI = participant with traumatic brain injury"
+Valence,"neg = negative valence item, pos = positive valence item"
+Sex,Female or Male
+Age,Age of participants in years
+TPO,Time post injury in months for TBI participants
+InjuryAge,Age of participants with TBI in years when they sustained their injuries
