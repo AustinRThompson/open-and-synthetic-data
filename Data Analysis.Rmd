@@ -190,7 +190,7 @@ plane.thre.out$group <-factor(plane.thre.out$group)
 horizontal.thre.out <- subset(plane.thre.out,planes=='hor')
 vertical.thre.out <- subset(plane.thre.out,planes=='ver')
 
-# LMM on planes
+# LMM on planes: Auditory localization performance by plane, group and position (head)
 # this is the model itself - subject is the random fx
 plane.out.nlme <- lme(thre ~ 1 + planes * group * head, random = ~ 1|subj, weights = varIdent(form = ~ 1 | planes), data = plane.thre.out)
 
@@ -227,7 +227,7 @@ subjdata <-
     NVIQ = mean(SSIQ)
   )
 
-# Model
+# Model: Non-verbal IQ by group (ASD, TD)
 summary(aov(NVIQ ~ ParGroup, subjdata))
 ```
 
