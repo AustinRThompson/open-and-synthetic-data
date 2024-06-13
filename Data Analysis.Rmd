@@ -266,7 +266,7 @@ cognition_data <-
 helmert = matrix(c(2/3, -1/3, -1/3, 0, 1/2, -1/2), ncol = 2)
 contrasts(cognition_data$Condition) = helmert
 
-# Models
+# Models: Effect of stimulus condition on emotion recognition accuracy
 # Note: Model first failed to converge when using default control settings, so changed optimizer to bobyqa as suggested here: https://rstudio-pubs-static.s3.amazonaws.com/33653_57fc7b8e5d484c909b615d8633c01d51.html
 m1 <- lme4::glmer(Correct ~ Group_NC + Condition + Sex_F + Group_NC*Condition*Sex_F + (1 |SubjectID), data = cognition_data, family = binomial(link = "logit"), control=glmerControl(optimizer="bobyqa",
                             optCtrl=list(maxfun=2e5)))
