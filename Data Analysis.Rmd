@@ -16,6 +16,9 @@ Here, we load the packages that we will use for data wrangling, as well as the `
 library(tidyverse) # data wrangling
 library(synthpop) # install.packages('synthpop')
 library(ggeasy) # install.packages('ggeasy')
+library(janitor) # install.packages('janitor')
+library(gtsummary) # install.packages('gtsummary')
+library(labelled) # install.packages('labelled')
 ```
 
 # Data Synthesis {.tabset}
@@ -106,13 +109,12 @@ swallowing_data |>
 ### Comparisons
 
 ## 02 - Articulation
-These data were reported in "Vowel Acoustics as Predictors of Speech Intelligibility in Dysarthria" by Thompson et al. (2023)
-(https://doi.org/10.1044/2022_JSLHR-22-00287) and were retrieved from: https://osf.io/hr7aj/.
+These data were reported in "Vowel Acoustics as Predictors of Speech Intelligibility in Dysarthria" by Thompson et al. (2023) (https://doi.org/10.1044/2022_JSLHR-22-00287) and were retrieved from: https://osf.io/hr7aj/.
 
 ### Loading Data
 ```{r}
 data_articulation <- rio::import(
-  file = "Data/02_Articulation/data_Acoustic Measures.csv"
+  file = here::here("Data", "02_Articulation", "data_Acoustic Measures.csv")
 ) |>
   
   # Remove the reliability trials that have "_rel" in the SpeakerID variable
@@ -120,7 +122,22 @@ data_articulation <- rio::import(
     !grepl(
       pattern = "_rel",
       x = SpeakerID
-  ))
+  )) |>
+  
+  # Selecting just the variables we need
+  dplyr::select(
+    SpeakerID,
+    Sex,
+    Etiology,
+    VSA_b, # VSA in Bark
+    Int = Int_OT # intelligibility (orthographic transcriptions)
+  )
+
+# Examine the relationship between VSA and intelligibility
+model <- lm(Int ~ VSA_b,
+            data = data_articulation)
+summary(model)
+confint(model, level = 0.95)
 ```
 
 ### Generating Synthetic Data
@@ -128,6 +145,48 @@ data_articulation <- rio::import(
 ### Comparisons
 
 ## 03 - Fluency
+These data were reported in "Hypernasality associated with basal ganglia dysfunction: Evidence from Parkinson's disease and Huntington's disease" by Novotny et al. (2016) (https://doi.org/10.7717/peerj.2530) and were retrieved from https://peerj.com/articles/2530/#supp-1.
+
+### Loading Data
+```{r}
+library(effectsize)
+
+# Load data
+data_fluency <- rio::import(file = here::here("Data", "03_Fluency", "data_Dyslexia Stutter Master.csv")) |> 
+  dplyr::filter(Rejection == 0) |> 
+  dplyr::filter(Group != "AWD") |>
+  
+  # Selecting just the variables that we need
+  dplyr::select(
+    Subject,
+    Age,
+    Group,
+    Nonwordrepetition
+  )
+
+data_fluency |> 
+  dplyr::group_by(Group) |> 
+  dplyr::summarise(
+    N = length(Group),
+    M = mean(Nonwordrepetition),
+    SD = sd(Nonwordrepetition),
+    SEM = sd(Nonwordrepetition) / sqrt(length(Nonwordrepetition)),
+    CIneg = M - 1.96 * SEM,
+    CIpos = M + 1.96 * SEM
+  )
+
+# Examine the difference between neurotypical and stuttering in non-word repetition
+t_test <- stats::t.test(Nonwordrepetition ~ Group,
+                        data = data_fluency,
+                        paired = FALSE,
+                        var.equal = FALSE)
+
+delta <- effectsize::glass_delta(Nonwordrepetition ~ Group,
+                                 data = data_fluency,
+                                 correction = FALSE,
+                                 ci = 0.95)
+
+```
 
 ## 04 - Voice/Resonance
 These data were reported in "Hypernasality associated with basal ganglia dysfunction: Evidence from Parkinson's disease and Huntington's disease" by Novotny et al. (2016) (https://doi.org/10.7717/peerj.2530) and were retrieved from https://peerj.com/articles/2530/#supp-1.
@@ -215,6 +274,66 @@ my.plane.anova
 ```
 
 ## 06 - AAC
+These data were reported in "Supporting emergent bilinguals who use augmentative and alternative communication and their families: Lessons in telepractice from the COVID-19 pandemic" by King et al. (2022) (https://doi.org/10.1044/2022_AJSLP-22-00003) and were retrieved from https://osf.io/sx3nf/.
+
+### Loading Data
+```{r}
+# Load data
+qualtrics_csv = function(file){
+  data = read_csv(file, col_names = FALSE, skip = 3)
+  names = read_lines(file, n_max = 1) |> 
+    str_split(pattern = ",") |> 
+    unlist()
+  names(data) = names
+  labels = read_csv(file, col_names = FALSE, skip = 1, n_max = 1)
+  labels = t(labels)
+  labels = labels[,1]
+  labels = setNames(as.list(labels), names)
+  data = labelled::set_variable_labels(data, .labels = labels, .strict = FALSE)
+  data = janitor::clean_names(data)
+  data
+}
+
+data_aac <- qualtrics_csv(file = here::here("Data", "06_AAC", "data_Combined CSV data.csv")) |> 
+  janitor::remove_empty("cols") |> 
+  janitor::remove_empty("rows") |> 
+  filter(progress > 98) |> 
+  dplyr::select(start_date, participant_id, q2:x2f)
+
+# Examine the chi-square difference in lack of/limited Internet and technology barriers by timepoint
+chi_squared <- data_aac |> 
+  dplyr::select(q87_1_1, q87_1_2, q87_1_3, q87_1_5, q87_1_6, q87_1_7,
+         q87_2_1, q87_2_2, q87_2_3, q87_2_5, q87_2_6, q87_2_7,
+         q87_3_1, q87_3_2, q87_3_3, q87_3_5, q87_3_6, q87_3_7,
+         q89_1_1, q89_1_2, q89_1_3, q89_1_5, q89_1_6, q89_1_7,
+         q89_2_1, q89_2_2, q89_2_3, q89_2_5, q89_2_6, q89_2_7,
+         q89_3_1, q89_3_2, q89_3_3, q89_3_5, q89_3_6, q89_3_7) |> 
+  tidyr::pivot_longer(everything()) |>
+  tidyr::separate(name,
+           into = c("var", "time", "question"),
+           sep = "_") |>
+  dplyr::mutate(time = factor(
+    time,
+    labels = c(
+      "Prior to\nMarch 2020",
+      "March to\nJuly 2020",
+      "August 2020 to\nSpring 2021"
+    )
+  ),
+  var = factor(var, labels = c("Assessment", "Intervention"))) |>
+  tidyr::drop_na(value) |>
+  dplyr::group_by(var, value) |>
+  dplyr::summarize(prop = list(chisq.test(table(time)))) |>
+  dplyr::mutate(
+    chi = map_dbl(prop, ~ .x$statistic),
+    df = map_dbl(prop, ~ .x$parameter),
+    p = map_dbl(prop, ~ .x$p.value)
+  ) |>
+  dplyr::filter(var == "Intervention") |>
+  dplyr::filter(value == "Lack of/limited internet")
+chi_squared
+```
+
 
 ## 07 - Language
 These data were reported in "Relationships between reading performance and regional spontaneous brain activity following surgical removal of primary left-hemisphere tumors: A resting-state fMRI study" by Kearney et al. (2023) (https://doi.org/10.1016/j.neuropsychologia.2023.108631) and were retrieved from https://osf.io/3abxs.

@@ -26,8 +26,8 @@ qualtrics_csv = function(file){
   labels = t(labels)
   labels = labels[,1]
   labels = setNames(as.list(labels), names)
-  data = set_variable_labels(data, .labels = labels, .strict = FALSE)
-  data = clean_names(data)
+  data = labelled::set_variable_labels(data, .labels = labels, .strict = FALSE)
+  data = janitor::clean_names(data)
   data
 }
 
@@ -35,7 +35,7 @@ df = qualtrics_csv(file = "data_Combined CSV data.csv") |>
   janitor::remove_empty("cols") |> 
   janitor::remove_empty("rows") |> 
   filter(progress > 98) |> 
-  select(start_date, participant_id, q2:x2f)
+  dplyr::select(start_date, participant_id, q2:x2f)
 ```
 
 # Analysis
@@ -43,24 +43,33 @@ Here, we recreate the finding that for intervention both lack of/limited Interne
 ```{r}
 
 chi_squared <- df |> 
-  select(q87_1_1, q87_1_2, q87_1_3, q87_1_5, q87_1_6, q87_1_7,
+  dplyr::select(q87_1_1, q87_1_2, q87_1_3, q87_1_5, q87_1_6, q87_1_7,
          q87_2_1, q87_2_2, q87_2_3, q87_2_5, q87_2_6, q87_2_7,
          q87_3_1, q87_3_2, q87_3_3, q87_3_5, q87_3_6, q87_3_7,
          q89_1_1, q89_1_2, q89_1_3, q89_1_5, q89_1_6, q89_1_7,
          q89_2_1, q89_2_2, q89_2_3, q89_2_5, q89_2_6, q89_2_7,
          q89_3_1, q89_3_2, q89_3_3, q89_3_5, q89_3_6, q89_3_7) |> 
-  pivot_longer(everything()) |> 
-  separate(name, into = c("var", "time", "question"), sep = "_") |> 
-  mutate(time = factor(time, labels = c("Prior to\nMarch 2020", "March to\nJuly 2020", "August 2020 to\nSpring 2021")),
-         var = factor(var, labels = c("Assessment", "Intervention"))) |> 
-  drop_na(value) |> 
-  group_by(var, value) |> 
-  summarize(
-    prop = list(chisq.test(table(time)))
-  ) |> 
-  mutate(chi = map_dbl(prop, ~.x$statistic),
-         df = map_dbl(prop, ~.x$parameter),
-         p = map_dbl(prop, ~.x$p.value)) |>
+  tidyr::pivot_longer(everything()) |>
+  tidyr::separate(name,
+           into = c("var", "time", "question"),
+           sep = "_") |>
+  dplyr::mutate(time = factor(
+    time,
+    labels = c(
+      "Prior to\nMarch 2020",
+      "March to\nJuly 2020",
+      "August 2020 to\nSpring 2021"
+    )
+  ),
+  var = factor(var, labels = c("Assessment", "Intervention"))) |>
+  tidyr::drop_na(value) |>
+  dplyr::group_by(var, value) |>
+  dplyr::summarize(prop = list(chisq.test(table(time)))) |>
+  dplyr::mutate(
+    chi = map_dbl(prop, ~ .x$statistic),
+    df = map_dbl(prop, ~ .x$parameter),
+    p = map_dbl(prop, ~ .x$p.value)
+  ) |>
   dplyr::filter(var == "Intervention") |>
   dplyr::filter(value == "Lack of/limited internet")
 

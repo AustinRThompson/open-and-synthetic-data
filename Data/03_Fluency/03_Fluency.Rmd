@@ -42,7 +42,7 @@ t_test <- stats::t.test(Nonwordrepetition ~ Group,
 
 delta <- effectsize::glass_delta(Nonwordrepetition ~ Group,
                                  data = data_fluency,
-                                 correction = TRUE,
+                                 correction = FALSE,
                                  ci = 0.95)
 
 
