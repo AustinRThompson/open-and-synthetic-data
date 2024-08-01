@@ -14,11 +14,9 @@ format:
     reference-doc: "templates-data/custom-reference.docx"
     # this holds the style template for the word document
     pandoc_args: ["-Fpandoc-crossref"]
-  # this makes the equation numbering work
-  #pandoc_args: ["-Fpandoc-crossref"]
 # file with bibtex citations for the document. generated with the zotero plugin
 # or using the {rbbt} R package
-# bibliography: "citations.bib"
+bibliography: "asynthetic.bib"
 # this is the apa style for the document
 csl: apa.csl
 execute:
@@ -56,7 +54,13 @@ EK: 1, 2, 3, 6, 9, 11, 12, 14
 
 **Funding**: None.
 
+<br>
+
 **Ethical Approval**: This study was deemed exempt by the Institutional Review Board at the University of Queensland (#2024/HE001484).
+
+<br>
+
+**Keywords**: Open data; Reproducibility; Meta-science; Communication sciences and disorders
 
 \newpage
 
@@ -78,19 +82,21 @@ set.seed(2024)
 library(tidyverse) # data wrangling
 library(here) # importing data
 library(synthpop) # synthetic data generation
+library(gamlss) # zero-inflated multilevel models
 library(flextable) # create tables
 library(officer) # create tables
 library(insight) # create tables
 ```
 
 # Abstract {style="text-align: center;"}
-**Purpose**: Reproducibility is a core principle of science; however, data sharing is uncommon in the field of Communication Sciences and Disorders and exacerbated by concerns related to privacy and disclosure risks. Synthetic data offers a potential solution to this barrier by generating artificial datasets that do not represent real individuals yet retain statistical properties and relationships from the original data. The present study evaluates the performance of synthetic data generation using open data from previously published studies across the ‘Big Nine’ domains defined by the American Speech-Language Hearing Association.
+
+**Purpose**: Reproducibility is a core principle of science; however, data sharing is uncommon in the field of Communication Sciences and Disorders and exacerbated by concerns related to privacy and disclosure risks. Synthetic data offers a potential solution to this barrier by generating artificial datasets that do not represent real individuals yet retain statistical properties and relationships from the original data. The present study evaluates the performance of synthetic data generation using open data from previously published studies across the 'Big Nine' domains defined by the American Speech-Language Hearing Association.
 
 **Method**: Open datasets were obtained from previously published research across the domains of Articulation, Cognition, Communication, Fluency, Hearing, Language, Social Communication, Voice and Resonance, and Swallowing. Synthetic datasets were generated with the *synthpop* R package. Results from synthetic datasets were compared to those from the original published datasets.
 
-**Results**: XXX
+**Results**: Synthetic datasets maintained the direction of the *p*-value in six studies and effect size categorization in five out of nine studies. **Add more here**.
 
-**Conclusion**: Findings indicate that… We provide a general framework to promote sharing open data to facilitate computational reproducibility and a cumulative science.
+**Conclusion**: Findings indicate that... We provide a general framework to promote sharing open data to facilitate computational reproducibility and a cumulative science.
 :::
 
 \newpage
@@ -99,19 +105,19 @@ library(insight) # create tables
 
 # Introduction {style="text-align: center;"}
 
-Transparency and openness are fundamental tenets of science. One aspect of transparency and openness in science relates to computational reproducibility, or the ability to recreate a study’s results using the original data. Nowadays, the vast majority of scientific studies use some degree of computation, including processing data, conducting descriptive or inferential statistics, or visualizing results. When these computations are reproducible, the transparency and confidence in findings is enhanced. Achieving computational reproducibility, however, requires authors to share their data. Both the National Institutes of Health and National Science Foundation mandate data sharing and management plans to ensure that scientific data supporting a study is shared upon publication and aligns with FAIR (Findability, Accessibility, Interoperability, and Reuse) principles of digital assets. Providing open, publicly available data benefits scientists, funding bodies, and society at large by enabling researchers to verify results, generate new knowledge (e.g., meta-analyses, secondary analyses), develop hypotheses, and minimize redundant data collection. In this sense, sharing data promotes a cumulative and self-correcting science.
+Transparency and openness are fundamental tenets of science. One aspect of transparency and openness in science relates to computational reproducibility, or the ability to recreate a study's results using the original data. Nowadays, the vast majority of scientific studies use some degree of computation, including processing data, conducting descriptive or inferential statistics, or visualizing results. When these computations are reproducible, the transparency and confidence in findings is enhanced. Achieving computational reproducibility, however, requires authors to share their data. Both the National Institutes of Health and National Science Foundation mandate data sharing and management plans to ensure that scientific data supporting a study is shared upon publication and aligns with FAIR (Findability, Accessibility, Interoperability, and Reuse) principles of digital assets [@wilkinson_etal16; @watson_etal23]. Providing open, publicly available data benefits scientists, funding bodies, and society at large by enabling researchers to verify results, generate new knowledge (e.g., meta-analyses, secondary analyses), develop hypotheses, and minimize redundant data collection. In this sense, sharing data promotes a cumulative and self-correcting science.
 
-Despite the clear benefits of open data and its growing adoption in other fields like psychology and the biobehavioral sciences (Quintana, 2020), only 26% of researchers in the field of Communication Sciences and Disorders (CSD) reported sharing their data publicly at least once (El Amin et al., 2023). Both individual and system-level barriers hinder data sharing, including a lack of time, knowledge, support from colleagues, and perceived incentives. Privacy and confidentiality concerns, particularly in low-incidence populations, also pose significant challenges (Pfeiffer et al., 2024). Researchers have traditionally attempted to minimize disclosure risks by anonymizing datasets, aggregating results, or releasing a subset of the dataset; however, these practices do not fully eliminate the risk of identification in low-incidence populations. For example, re-identifying an individual in an incomplete dataset requires only a few demographic attributes (Rocher et al., 2019). A further challenge in sharing data can occur when researchers did not prospectively obtain consent to share data and may not be able to contact participants after data collection (Pfeiffer et al., 2024).
+Despite the clear benefits of open data and its growing adoption in other fields like psychology and the biobehavioral sciences [@quintana20], only 26% of researchers in the field of Communication Sciences and Disorders (CSD) reported sharing their data publicly at least once [@elamin_etal23]. Both individual and system-level barriers hinder data sharing, including a lack of time, knowledge, support from colleagues, and perceived incentives. Privacy and confidentiality concerns, particularly in low-incidence populations, also pose significant challenges [@pfeiffer_etal24]. Researchers have traditionally attempted to minimize disclosure risks by anonymizing datasets, aggregating results, or releasing a subset of the dataset; however, these practices do not fully eliminate the risk of identification in low-incidence populations. For example, re-identifying an individual in an incomplete dataset requires only a few demographic attributes [@rocher_etal19]. A further challenge in sharing data can occur when researchers did not prospectively obtain consent to share data and may not be able to contact participants after data collection [@pfeiffer_etal24].
 
-Synthetic data generation offers a potential solution to maintaining participants’ privacy and confidentiality in publicly available datasets (Rubin, 1993; Drechsler et al., 2024). Synthetic data involves creating artificial datasets that do not represent real individuals, ensuring no risk of disclosure since participants in the synthetic dataset do not correspond to real individuals. Importantly, synthetic data retains the statistical properties and relationships of the original data, allowing researchers to reproduce study findings, explore the dataset, and develop new questions and hypotheses. Synthetic data generation is widely used across medical research, industry, and government agencies, most notably by the United States Census Bureau (Jarmin et al., 2014). Though synthetic data methods were proposed more than 30 years ago (Rubin, 1993), recent analytic and practical developments have made it easier and more efficient to generate high-quality synthetic data (Nowok et al., 2016).
+Synthetic data generation offers a potential solution to maintaining participants' privacy and confidentiality in publicly available datasets [@rubin93; @drechsler_haensch24]. Synthetic data involves creating artificial datasets that do not represent real individuals, ensuring no risk of disclosure since participants in the synthetic dataset do not correspond to real individuals. Importantly, synthetic data retains the statistical properties and relationships of the original data, allowing researchers to reproduce study findings, explore the dataset, and develop new questions and hypotheses. Synthetic data generation is widely used across medical research, industry, and government agencies, most notably by the United States Census Bureau [@jarmin_etal14a]. Though synthetic data methods were proposed more than 30 years ago [@rubin93], recent analytic and practical developments have made it easier and more efficient to generate high-quality synthetic data [@nowok_etal16].
 
-Despite the potential utility of synthetic data to promote open data in the field of CSD, this approach is not widely known or adopted in the field. Data commonly collected in CSD research poses unique challenges, including smaller sample sizes than are typically recommended for synthetic data generation (Borders et al., 2022; Gaeta & Brydges, 2020). Therefore, the present study aimed to examine the utility of synthetic data generation with open datasets from the ‘Big Nine’ American Speech-Language Hearing Association (ASHA) domains. We hypothesize that synthetic datasets will maintain the statistical properties and relationships of the original datasets, and that synthetic data will remain stable when generating multiple datasets. A secondary goal is to provide a framework for researchers in CSD to use data synthesis as a means to share fully de-identified data, thereby addressing concerns regarding researcher knowledge and participant confidentiality in sharing data.
+Despite the potential utility of synthetic data to promote open data in the field of CSD, this approach is not widely known or adopted in the field. Data commonly collected in CSD research poses unique challenges, including smaller sample sizes than are typically recommended for synthetic data generation [@borders_etal22a; @gaeta_brydges20]. Therefore, the present study aimed to examine the utility of synthetic data generation with open datasets from the 'Big Nine' American Speech-Language Hearing Association (ASHA) domains. We hypothesize that synthetic datasets will maintain the statistical properties and relationships of the original datasets, and that synthetic data will remain stable when generating multiple datasets. A secondary goal is to provide a framework for researchers in CSD to use data synthesis as a means to share fully de-identified data, thereby addressing concerns regarding researcher knowledge and participant confidentiality in sharing data.
 
 # Method
 
 ## Description of Original Datasets from ASHA 'Big Nine' Domains
 
-Authors performed a manual search to obtain publicly available datasets from previously published research articles related to ‘Big Nine’ ASHA domains: swallowing, articulation, fluency, voice and resonance, hearing, communication modalities, receptive and expressive language, cognitive aspects of communication, and social aspects of communication. Once a dataset in each domain was found, the authors reproduced the primary analysis from the study. Table 1 provides a description of the population, analysis, and open materials for each study.
+Authors performed a manual search to obtain publicly available datasets from previously published research articles related to 'Big Nine' ASHA domains: swallowing [@curtis_etal23a], articulation [@thompson_etal23], fluency [@elsherif_etal21], voice and resonance [@novotny_etal16], hearing [@battal_etal19], communication modalities [@king_etal22], receptive and expressive language [@kearney_etal23], cognitive aspects of communication [@clough_etal23], and social aspects of communication [@chanchaochai_schwarz23]. Authors then reproduced the primary analysis from each study. Table 1 provides a description of the population, analysis, and open materials for each study.
 
 ##### Table 1 here.
 
@@ -224,7 +230,7 @@ print(doc, target = fileout)
 
 ## Generation of Synthetic Datasets and Comparison with Original Dataset
 
-Synthetic data was generated with the *synthpop* R package (cite). Specifically, *synthpop* uses a non-parametric classification and regression tree (CART) approach that can handle any data type and generates data by sampling from a probability distribution. Our aims were twofold: (1) to determine whether a synthetic dataset maintained statistical properties and relationships of the original dataset and (2) to examine whether this remained stable when generating multiple synthetic datasets. In light of these aims, our approach involved generating 100 different synthetic datasets for each original dataset from an ASHA 'Big Nine' domain. A statistical model with the original dataset was fit and the *p*-value and effect size were recorded. If 95% of p-values and effect sizes from the synthetic datasets demonstrated a similar result as the original study, then this indicated that synthetic data maintained the statistical relationship. Specifically, we further defined this as a similar inferential result for *p*-values (i.e., a ‘significant’ or ‘non-significant’ *p*-value based on the original study’s alpha level) and effect sizes that maintained their categorization (e.g., a ‘medium’ effect size). Measures of effect size and their interpretation for each study are provided in Table 2. If variability between the 100 synthetic datasets was appreciated, we described the dispersion of this distribution. The analysis plan for this study was preregistered on the Open Science Framework (https://osf.io/vhgq2).
+Synthetic data was generated with the *synthpop* R package [@nowok_etal16]. Specifically, *synthpop* uses a non-parametric classification and regression tree (CART) approach that can handle any data type and generates data by sampling from a probability distribution. Our aims were twofold: (1) to determine whether a synthetic dataset maintained statistical properties and relationships of the original dataset and (2) to examine whether this remained stable when generating multiple synthetic datasets. In light of these aims, our approach involved generating 100 different synthetic datasets for each original dataset from an ASHA 'Big Nine' domain. A statistical model with the original dataset was fit and the *p*-value and effect size were recorded. If 95% of p-values and effect sizes from the synthetic datasets demonstrated a similar result as the original study, then this indicated that synthetic data maintained the statistical relationship. Specifically, we further defined this as a similar inferential result for *p*-values (i.e., a 'significant' or 'non-significant' *p*-value based on the original study's alpha level) and effect sizes that maintained their categorization (e.g., a 'medium' effect size). Measures of effect size and their interpretation for each study are provided in Table 2. If variability between the 100 synthetic datasets was appreciated, we described the dispersion of this distribution. The analysis plan for this study was preregistered on the Open Science Framework (https://osf.io/vhgq2).
 
 ##### Table 2 here.
 
@@ -284,11 +290,12 @@ fileout <- here("manuscript", "tables-figures", "table2.docx")
 print(doc, target = fileout)
 ```
 
-In addition to these inferential comparisons, we provide a tutorial to walk through the required steps to generate synthetic data for the reader. This is accomplished in the context of two datasets (Curtis et al., 2023; Thompson et al., 2023) with additional data visualization and detailed R code. Since Curtis et al. (2023) did not perform inferential tests, we directly compared each synthetic dataset to the original data with a zero-inflated beta multilevel model with the *gamlss* package (cite). This model included fixed effects of dataset type (synthetic/original) and bolus consistency (thin liquid/extremely-thick/regular) and a random intercept of participant. Due to issues with model convergence, the fixed effect structure was simplified to only include dataset type. The *p*-value from both zero-inflated and beta portions of the model were evaluated and *p* < .05 was interpreted as evidence of no statistically significant difference between the synthetic and original dataset.
+In addition to these inferential comparisons, we provide a tutorial to walk through the required steps to generate synthetic data for the reader. This is accomplished in the context of two datasets [@curtis_etal23a; @thompson_etal23] with additional data visualization and detailed R code. Since curtis_etal23a did not perform inferential tests, we directly compared each synthetic dataset to the original data with a zero-inflated beta multilevel model with the *gamlss* package (cite). This model included fixed effects of dataset type (synthetic/original) and bolus consistency (thin liquid/extremely thick/regular) and a random intercept of participant. Due to issues with model convergence, the fixed effect structure was simplified to only include dataset type. The *p*-value from both zero-inflated and beta portions of the model were evaluated and *p* \< .05 was interpreted as evidence of no statistically significant difference between the synthetic and original dataset.
 
 # Results
 
 ### Study 1: Normative Reference Values for Swallowing Outcomes
+
 ```{r echo = FALSE}
 # here we run the main analysis
 # then show the code to generate one synthetic dataset for pedagogical purposes below
@@ -310,6 +317,22 @@ swallowing_original_data2 <- swallowing_original_data |>
   mutate(dataset_type = "original",
          dataset_number = 0)
 
+# Obtain effect size measure for original dataset
+  swallowing_original_model <- gamlss(
+    formula = laryngeal_vestibule_severity_rating ~ 1 + re(random = ~ 1 | study_id),
+    nu.formula = laryngeal_vestibule_severity_rating ~ 1 + re(random = ~ 1 | study_id),
+    family = BEZI,
+    data = na.omit(swallowing_original_data2)
+  )
+  
+  # save model fit
+  model_fit_original <- summary(swallowing_original_model, save = TRUE)
+  
+  ## Mu ('small' effect; < 0.50)
+  sqrt((3 / pi)) * exp(model_fit_original$coef[1])
+  ## Nu ('large' effect; > 0.80)
+  sqrt((3 / pi)) * exp(model_fit_original$coef[3])
+
 # Create 100 synthetic datasets
 mysyn <- syn(swallowing_original_data, 
              method = "ctree", 
@@ -322,6 +345,10 @@ synthetic_datasets <- mysyn$syn
 # Create lists to store the p-values for mu (beta) and nu (zero-inflated) coefficients
 p_values_mu <- vector("list", 100)
 p_values_nu <- vector("list", 100)
+
+# Create lists to store the effect_sizes for mu (beta) and nu (zero-inflated) coefficients
+effect_sizes_mu <- vector("list", 100)
+effect_sizes_nu <- vector("list", 100)
 
 # Loop through each synthetic dataset
 for (i in 1:100) {
@@ -342,8 +369,6 @@ for (i in 1:100) {
   all_data$study_id <- as.numeric(gsub("HOA", "", all_data$study_id))
   
   # Fit the model
-  library(gamlss)
-  
   ## 11% of models demonstrated non-convergence so the fixed effects structure was simplified to only include dataset_type.
   model <- gamlss(
     formula = laryngeal_vestibule_severity_rating ~ dataset_type + re(random = ~ 1 | study_id),
@@ -359,14 +384,28 @@ for (i in 1:100) {
   p_value_mu1 <- model_fit$pvalue[2]
   p_value_nu1 <- model_fit$pvalue[5]
   
+  # Extract standardized effect size
+  ## Mu
+  effect_size_mu1 <- sqrt((3/pi))*exp(model_fit$coef[1])
+  ## Nu
+  effect_size_nu1 <- sqrt((3/pi))*exp(model_fit$coef[3])
+  
   # Store the p-value
   p_values_mu[[i]] <- p_value_mu1
   p_values_nu[[i]] <- p_value_nu1
+  
+  # Store effect sizes
+  effect_sizes_mu[[i]] <- effect_size_mu1
+  effect_sizes_nu[[i]] <- effect_size_nu1
 }
 
 # Convert p_values to a numeric vector
 p_values_mu_final <- unlist(p_values_mu)
 p_values_nu_final <- unlist(p_values_nu)
+
+# Convert effect_sizes to a numeric vector
+effect_sizes_mu_final <- unlist(effect_sizes_mu)
+effect_sizes_nu_final <- unlist(effect_sizes_nu)
 
 # Count % < .05
 curtis_pvalue_mu <- p_values_mu_final |> 
@@ -382,11 +421,31 @@ curtis_pvalue_nu <- p_values_nu_final |>
                          p_values_mu_final >= .05 ~ "non-sig")) |> 
   count(sig) |> 
   mutate(perc = n/100)
+
+# Count effect sizes that maintain categorization
+## Mu
+swallowing_effect_size_mu_summary <- effect_sizes_mu_final |> 
+  as.data.frame() |> 
+  mutate(categorization = case_when(
+    effect_sizes_mu_final < 0.50 ~ "same")
+    ) |> 
+  count(categorization) |> 
+  mutate(perc = n/100)
+
+## Nu
+swallowing_effect_size_nu_summary <- effect_sizes_nu_final |> 
+  as.data.frame() |> 
+  mutate(categorization = case_when(
+    effect_sizes_nu_final > 0.80 ~ "same")
+    ) |> 
+  count(categorization) |> 
+  mutate(perc = n/100)
 ```
 
-Curtis et al. (2023) examined normative reference values for swallowing outcomes during flexible endoscopic evaluations of swallowing among 39 non-dysphagic, community-dwelling adults. In this observational cohort study, participants were administered 15 swallowing trials that varied by bolus size, consistency, contrast agent, and swallowing instructions. A variety of swallowing outcomes were measured, including the amount of laryngeal vestibule residue rated with the Visual Analysis of Swallowing Efficiency and Safety.
+Curtis et al. (2023) examined normative reference values for swallowing outcomes during flexible endoscopic evaluations of swallowing among 39 non-dysphagic, community-dwelling adults. In this observational cohort study, participants were administered 15 swallowing trials that varied by bolus size, consistency, contrast agent, and swallowing instructions. A variety of swallowing outcomes were measured, including the amount of laryngeal vestibule residue rated with the Visual Analysis of Swallowing Efficiency and Safety. Median and interquartile ranges (IQR) were used to describe the distribution of laryngeal vestibule residue ratings.
 
 To generate synthetic data, we first load in the original dataset and then create a synthetic dataset with the syn() function in the *synthpop* package.
+
 ```{r echo = TRUE, include = TRUE}
 # load required packages
 library(tidyverse) # data wrangling
@@ -461,11 +520,11 @@ fig1b <- synthetic_dataset |>
   full_join(swallowing_original_data_viz) |> 
   group_by(Dataset, bolus_consistency) |> 
   count() |> 
-  mutate(bolus_consistency = case_when(bolus_consistency == "Extremely thick (IDDSI 4)" ~ "Extremely-thick",
+  mutate(bolus_consistency = case_when(bolus_consistency == "Extremely thick (IDDSI 4)" ~ "extremely thick",
                                        bolus_consistency == "Regular (IDDSI 7)" ~ "Regular",
                                        bolus_consistency == "Thin (IDDSI 0)" ~ "Thin")) |> 
   ggplot(aes(x = factor(bolus_consistency,
-                        levels = c("Thin", "Extremely-thick", "Regular")), y = n, fill = Dataset)) +
+                        levels = c("Thin", "extremely thick", "Regular")), y = n, fill = Dataset)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
@@ -578,9 +637,10 @@ number_trials <- table(swallowing_original_data$bolus_consistency) |>
   as.data.frame()
 ```
 
-Descriptively, the synthetic dataset classified `r round(combined_summaries$perc_absent[6], digits = 0)`% of laryngeal vestibule ratings on thin liquid boluses as 'absent' (i.e., 0% residue) compared to `r round(combined_summaries$perc_absent[1], digits = 0)`% in the original dataset. In the synthetic dataset, the median value on thin liquids was `r combined_summaries$median[6]` (IQR: `r combined_summaries$IQR_low[6]` - `r combined_summaries$IQR_high[6]`) compared to `r combined_summaries$median[1]` (IQR: `r combined_summaries$IQR_low[1]` - `r round(combined_summaries$IQR_high[1], digits = 2)`) in the original dataset. `r round(combined_summaries$perc_absent[4], digits = 2)`% of extremely-thick liquids were classified as having no laryngeal vestibule residue compared to `r round(combined_summaries$perc_absent[2], digits = 2)`% in the original dataset. A similar pattern was appreciated for regular solids (`r round(combined_summaries$perc_absent[5], digits = 2)`% in synthetic vs. `r round(combined_summaries$perc_absent[3], digits = 2)`% in original dataset). Number of trials was lower for extremely-thick (`r number_trials$Freq[1]` trials) and regular solid (`r number_trials$Freq[2]` trials) boluses compared to thin liquid (`r number_trials$Freq[3]` trials). Findings from the zero-inflated beta multilevel models indicate that `r curtis_pvalue_mu$n[1]`% of synthetic datasets were not statistically significantly different than the original dataset for both the zero-inflated and beta portions of the model.
+Descriptively, the synthetic dataset classified `r round(combined_summaries$perc_absent[6], digits = 0)`% of laryngeal vestibule ratings on thin liquid boluses as 'absent' (i.e., 0% residue) compared to `r round(combined_summaries$perc_absent[1], digits = 0)`% in the original dataset. In the synthetic dataset, the median value on thin liquids was `r combined_summaries$median[6]` (IQR: `r combined_summaries$IQR_low[6]` - `r combined_summaries$IQR_high[6]`) compared to `r combined_summaries$median[1]` (IQR: `r combined_summaries$IQR_low[1]` - `r round(combined_summaries$IQR_high[1], digits = 2)`) in the original dataset. `r round(combined_summaries$perc_absent[4], digits = 2)`% of extremely thick liquids were classified as having no laryngeal vestibule residue compared to `r round(combined_summaries$perc_absent[2], digits = 2)`% in the original dataset. A similar pattern was appreciated for regular solids (`r round(combined_summaries$perc_absent[5], digits = 2)`% in synthetic vs. `r round(combined_summaries$perc_absent[3], digits = 2)`% in original dataset). Number of trials was lower for extremely thick (`r number_trials$Freq[1]` trials) and regular solid (`r number_trials$Freq[2]` trials) boluses compared to thin liquid (`r number_trials$Freq[3]` trials). Findings from the zero-inflated beta multilevel models indicate that `r curtis_pvalue_mu$n[1]`% of synthetic datasets were not statistically significantly different than the original dataset for both the zero-inflated and beta portions of the model (Table 3).
 
 ### Study 2: Vowel Acoustics as Predictors of Speech Intelligibility in Dysarthria
+
 ```{r echo = FALSE}
 # import original data
 articulation_original_data <- rio::import(
@@ -674,9 +734,10 @@ articulation_effect_size_summary <- articulation_effect_sizes_final |>
   mutate(perc = n/100)
 ```
 
-Thompson et al. (2023) examined the relationship between vowel space area and speech intelligibility among 40 speakers with dysarthria of varying etiologies, including Parkinson's disease, amyotrophic lateral sclerosis, Huntington's disease, and cerebellar ataxia. A linear regression model revealed a statistically significant relationship between vowel space area and intelligibility (*p* < .001) with a Cohen's *f* of 0.59, corresponding to a conventionally "large" effect size (Table 2).
+Thompson et al. (2023) examined the relationship between vowel space area and speech intelligibility among 40 speakers with dysarthria of varying etiologies, including Parkinson's disease, amyotrophic lateral sclerosis, Huntington's disease, and cerebellar ataxia. A linear regression model revealed a statistically significant relationship between vowel space area and intelligibility (*p* \< .001) with a Cohen's *f* of 0.59, corresponding to a conventionally "large" effect size (Table 2).
 
-Below we import the original dataset and generate a synthetic data set. *Synthpop* provides a warning message since our dataset has few observations than recommended.
+Below we import the original dataset and generate a synthetic data set. *Synthpop* provides a warning message since this dataset has fewer observations than recommended (> 130).
+
 ```{r echo = TRUE, include = TRUE}
 # import original data
 articulation_original_data <- rio::import(
@@ -772,6 +833,7 @@ ggsave(plot = fig2a_combined,
 Findings from the 100 generated synthetic datasets indicate that `r articulation_pvalues_summary$n[2]`% of datasets demonstrated the same inferential result (i.e., a statistically significant *p*-value). For the effect size, `r articulation_effect_size_summary$n[1]`% of synthetic datasets maintained a 'large' effect size categorization.
 
 ### Results for Studies 3 - 9
+
 ```{r fluency, echo = FALSE}
 # Load data
 fluency_original_data <- rio::import(file = here::here("Data", "03_Fluency", "data_Dyslexia Stutter Master.csv")) |>
@@ -1526,7 +1588,7 @@ social_effect_size_summary <- social_effect_sizes_final |>
 
 ```{r table 3, echo = FALSE}
 
-# This code reads in a template, generates table 2, 
+# This code reads in a template, generates table 3, 
 # and then saves it as word doc in the appropriate folder
 
 cols2 <- tibble(
@@ -1552,15 +1614,15 @@ cols2 <- tibble(
     "Clough et al. (2023)",
     "Chanchaochai & Schwarz (2023)"
   ),
-  `Trials` = c(
+  `Observations` = c(
     "584",
     "40",
     "114",
     "111",
     "372",
-    "2160",
+    "2,160",
     "36",
-    "8568",
+    "8,568",
     "96"
   ),
   `P-value\nStability` = c(
@@ -1575,7 +1637,7 @@ cols2 <- tibble(
     paste0(social_pvalues_summary$n[2],"%")
   ),
   `Effect Size Categorization\nStability` = c(
-    "Not applicable",
+    paste0(swallowing_effect_size_mu_summary$n[1],"%"),
     paste0(articulation_effect_size_summary$n[1],"%"),
     paste0(fluency_effect_size_summary$n[1],"%"),
     paste0(voice_effect_size_summary$n[1],"%"),
@@ -1631,6 +1693,5 @@ We would like to thank the authors of the studies included in this manuscript fo
 
 Table 1. Table 1: Characteristics of included studies by ASHA domain.
 
-Figure 1. Visualization of data distributions from synthetic and original data for Study #1 (Curtis et al., 2023).
-*Caption*: Panel A displays the overall distribution of laryngeal vestibule residue. Panel B displays the frequency of values by bolus consistency.
+Figure 1. Visualization of data distributions from synthetic and original data for Study #1 (Curtis et al., 2023). *Caption*: Panel A displays the overall distribution of laryngeal vestibule residue. Panel B displays the frequency of values by bolus consistency.
 :::
