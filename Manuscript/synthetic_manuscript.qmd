@@ -2,11 +2,12 @@
 title: "Synthetic Data in Communication Sciences and Disorders:  \nPromoting an Open, Reproducible, and Cumulative Science [preprint]"
 # Line break in title requires 2 spaces followed by \n
 author: |
-  James C. Borders^1^, Austin Thompson^2^, & Elaine Kearney^3^
+  James C. Borders^1^, Austin Thompson^2^, & Elaine Kearney^3, 4^
 abstract: |
   1.	Department of Biobehavioral Sciences, Teachers College Columbia University
   2.	Department of Communication Sciences and Disorders, University of Houston
-  3.	Faculty of Health, School of Psychology and Counselling, Queensland University of Technology
+  3.	School of Health and Rehabilitation Sciences, University of Queensland, Brisbane, Australia
+  4.	Department of Speech Pathology, Princess Alexandra Hospital, Brisbane, Australia
 # specifies that the output will be a word document
 format:
   docx:
@@ -117,7 +118,7 @@ Despite the potential utility of synthetic data to promote open data in the fiel
 
 ## Description of Original Datasets from ASHA 'Big Nine' Domains
 
-Authors performed a manual search to obtain publicly available datasets from previously published research articles related to 'Big Nine' ASHA domains: swallowing [@curtis_etal23a], articulation [@thompson_etal23], fluency [@elsherif_etal21], voice and resonance [@novotny_etal16], hearing [@battal_etal19], communication modalities [@king_etal22], receptive and expressive language [@kearney_etal23], cognitive aspects of communication [@clough_etal23], and social aspects of communication [@chanchaochai_schwarz23]. Authors then reproduced the primary analysis from each study. Table 1 provides a description of the population, analysis, and open materials for each study.
+Authors performed a manual search to obtain publicly available datasets from previously published research articles related to 'Big Nine' ASHA domains: swallowing [@curtis_etal23a], articulation [@thompson_etal23], fluency [@elsherif_etal21], voice and resonance [@novotny_etal16], hearing [@battal_etal19], communication modalities [@king_etal22], receptive and expressive language [@kearney_etal23], cognitive aspects of communication [@clough_etal23], and social aspects of communication [@chanchaochai_schwarz23]. Authors then reproduced an analysis from each study. Table 1 provides a description of the population, analysis, and open materials for each study.
 
 ##### Table 1 here.
 
@@ -230,7 +231,7 @@ print(doc, target = fileout)
 
 ## Generation of Synthetic Datasets and Comparison with Original Dataset
 
-Synthetic data was generated with the *synthpop* R package [@nowok_etal16]. Specifically, *synthpop* uses a non-parametric classification and regression tree (CART) approach that can handle any data type and generates data by sampling from a probability distribution. Our aims were twofold: (1) to determine whether a synthetic dataset maintained statistical properties and relationships of the original dataset and (2) to examine whether this remained stable when generating multiple synthetic datasets. In light of these aims, our approach involved generating 100 different synthetic datasets for each original dataset from an ASHA 'Big Nine' domain. A statistical model with the original dataset was fit and the *p*-value and effect size were recorded. If 95% of p-values and effect sizes from the synthetic datasets demonstrated a similar result as the original study, then this indicated that synthetic data maintained the statistical relationship. Specifically, we further defined this as a similar inferential result for *p*-values (i.e., a 'significant' or 'non-significant' *p*-value based on the original study's alpha level) and effect sizes that maintained their categorization (e.g., a 'medium' effect size). Measures of effect size and their interpretation for each study are provided in Table 2. If variability between the 100 synthetic datasets was appreciated, we described the dispersion of this distribution. The analysis plan for this study was preregistered on the Open Science Framework (https://osf.io/vhgq2).
+All data generation and analyses were conducted in R version 4.2.1 [@rcoreteam22]. Synthetic data was generated with the *synthpop* R package version 1.8.0 [@nowok_etal16]. Specifically, *synthpop* uses a non-parametric classification and regression tree (CART) approach that can handle any data type and generates data by sampling from a probability distribution. Our aims were twofold: (1) to determine whether a synthetic dataset maintained statistical properties and relationships of the original dataset and (2) to examine whether this remained stable when generating multiple synthetic datasets. In light of these aims, our approach involved generating 100 different synthetic datasets for each original dataset from an ASHA 'Big Nine' domain. A statistical model with the original dataset was fit and the *p*-value and effect size were recorded. If 95% of p-values and effect sizes from the synthetic datasets demonstrated a similar result as the original study, then this indicated that synthetic data maintained the statistical relationship. Specifically, we further defined this as a similar inferential result for *p*-values (i.e., a 'significant' or 'non-significant' *p*-value based on the original study's alpha level) and effect sizes that maintained their categorization (e.g., a 'medium' effect size). Measures of effect size and their interpretation for each study are provided in Table 2. If variability between the 100 synthetic datasets was appreciated, we described the dispersion of this distribution. The analysis plan for this study was preregistered on the Open Science Framework (https://osf.io/vhgq2).
 
 ##### Table 2 here.
 
@@ -290,7 +291,9 @@ fileout <- here("manuscript", "tables-figures", "table2.docx")
 print(doc, target = fileout)
 ```
 
-In addition to these inferential comparisons, we provide a tutorial to walk through the required steps to generate synthetic data for the reader. This is accomplished in the context of two datasets [@curtis_etal23a; @thompson_etal23] with additional data visualization and detailed R code. Since curtis_etal23a did not perform inferential tests, we directly compared each synthetic dataset to the original data with a zero-inflated beta multilevel model with the *gamlss* package (cite). This model included fixed effects of dataset type (synthetic/original) and bolus consistency (thin liquid/extremely thick/regular) and a random intercept of participant. Due to issues with model convergence, the fixed effect structure was simplified to only include dataset type. The *p*-value from both zero-inflated and beta portions of the model were evaluated and *p* \< .05 was interpreted as evidence of no statistically significant difference between the synthetic and original dataset.
+In addition to these inferential comparisons, we provide a tutorial to walk through the required steps to generate synthetic data for the reader. This is accomplished in the context of two datasets [@curtis_etal23a; @thompson_etal23] with additional data visualization and detailed R code. Since curtis_etal23a did not perform inferential tests, we directly compared each synthetic dataset to the original data with a zero-inflated beta multilevel model with the *gamlss* package version 5.4.3 [@stasinopoulosGeneralizedAdditiveModels2007]. This model included fixed effects of dataset type (synthetic/original) and bolus consistency (thin liquid/extremely thick/regular) and a random intercept of participant. Due to issues with model convergence, the fixed effect structure was simplified to only include dataset type. The *p*-value from both zero-inflated and beta portions of the model were evaluated and *p* \< .05 was interpreted as evidence of no statistically significant difference between the synthetic and original dataset.
+
+The tutorial data and accompanying code can be accessed on the Open Science Framework (OSF: **add link**). To get started, download… Open the *open-and-synthetic-data.Rproj* file in RStudio and then X file.
 
 # Results
 
@@ -444,7 +447,7 @@ swallowing_effect_size_nu_summary <- effect_sizes_nu_final |>
 
 Curtis et al. (2023) examined normative reference values for swallowing outcomes during flexible endoscopic evaluations of swallowing among 39 non-dysphagic, community-dwelling adults. In this observational cohort study, participants were administered 15 swallowing trials that varied by bolus size, consistency, contrast agent, and swallowing instructions. A variety of swallowing outcomes were measured, including the amount of laryngeal vestibule residue rated with the Visual Analysis of Swallowing Efficiency and Safety. Median and interquartile ranges (IQR) were used to describe the distribution of laryngeal vestibule residue ratings.
 
-To generate synthetic data, we first load in the original dataset and then create a synthetic dataset with the syn() function in the *synthpop* package.
+To generate synthetic data, we first load in the original dataset, wrangle the dataset using the *tidyverse* packages @wickham_etal19 and then create a synthetic dataset with the syn() function in the *synthpop* package. The data wrangling steps include loading required R packages, importing the original dataset csv file, 'cleaning' variable names to ensure they are all lowercase, selecting only relevant variables in the dataset, converting relevant categorical variables to factors, and expressing the outcome variable as a percentage out of 100.
 
 ```{r echo = TRUE, include = TRUE}
 # load required packages
@@ -467,7 +470,11 @@ swallowing_original_data <-
     # express laryngeal_vestibule_severity_rating as a %
     laryngeal_vestibule_severity_rating = laryngeal_vestibule_severity_rating/100
          )
+```
 
+Next, we create a synthetic dataset with the syn() function from the *synthpop* package. Within the function, 'method' specifies the synthesising method for the data. The default in synthpop is "cart" (Classification and Regression Tree). If a synthetic dataset fails to generate with this method, Nowok et al. (2018) recommend an alternative implementation of the CART technique from package *party* [@hothorn_etal06]. This dataset, for example, required the 'ctree' CART specification. Next, specify the number of synthetic datasets to generate within 'm'. Once the synthetic dataset is generated, extract and convert it to a dataframe for additional wrangling and visualization.
+
+```{r echo = TRUE, include = TRUE}
 # Create a synthetic dataset
 synthetic_data <-
   syn(swallowing_original_data, # name of the original data
@@ -520,11 +527,11 @@ fig1b <- synthetic_dataset |>
   full_join(swallowing_original_data_viz) |> 
   group_by(Dataset, bolus_consistency) |> 
   count() |> 
-  mutate(bolus_consistency = case_when(bolus_consistency == "Extremely thick (IDDSI 4)" ~ "extremely thick",
+  mutate(bolus_consistency = case_when(bolus_consistency == "Extremely thick (IDDSI 4)" ~ "Extremely Thick",
                                        bolus_consistency == "Regular (IDDSI 7)" ~ "Regular",
                                        bolus_consistency == "Thin (IDDSI 0)" ~ "Thin")) |> 
   ggplot(aes(x = factor(bolus_consistency,
-                        levels = c("Thin", "extremely thick", "Regular")), y = n, fill = Dataset)) +
+                        levels = c("Thin", "Extremely Thick", "Regular")), y = n, fill = Dataset)) +
   geom_bar(stat = "identity", position = position_dodge()) +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
@@ -637,7 +644,7 @@ number_trials <- table(swallowing_original_data$bolus_consistency) |>
   as.data.frame()
 ```
 
-Descriptively, the synthetic dataset classified `r round(combined_summaries$perc_absent[6], digits = 0)`% of laryngeal vestibule ratings on thin liquid boluses as 'absent' (i.e., 0% residue) compared to `r round(combined_summaries$perc_absent[1], digits = 0)`% in the original dataset. In the synthetic dataset, the median value on thin liquids was `r combined_summaries$median[6]` (IQR: `r combined_summaries$IQR_low[6]` - `r combined_summaries$IQR_high[6]`) compared to `r combined_summaries$median[1]` (IQR: `r combined_summaries$IQR_low[1]` - `r round(combined_summaries$IQR_high[1], digits = 2)`) in the original dataset. `r round(combined_summaries$perc_absent[4], digits = 2)`% of extremely thick liquids were classified as having no laryngeal vestibule residue compared to `r round(combined_summaries$perc_absent[2], digits = 2)`% in the original dataset. A similar pattern was appreciated for regular solids (`r round(combined_summaries$perc_absent[5], digits = 2)`% in synthetic vs. `r round(combined_summaries$perc_absent[3], digits = 2)`% in original dataset). Number of trials was lower for extremely thick (`r number_trials$Freq[1]` trials) and regular solid (`r number_trials$Freq[2]` trials) boluses compared to thin liquid (`r number_trials$Freq[3]` trials). Findings from the zero-inflated beta multilevel models indicate that `r curtis_pvalue_mu$n[1]`% of synthetic datasets were not statistically significantly different than the original dataset for both the zero-inflated and beta portions of the model (Table 3).
+Descriptively, the synthetic dataset classified `r round(combined_summaries$perc_absent[6], digits = 0)`% of laryngeal vestibule ratings on thin liquid boluses as 'absent' (i.e., 0% residue) compared to `r round(combined_summaries$perc_absent[1], digits = 0)`% in the original dataset. In the synthetic dataset, the median value on thin liquids was `r combined_summaries$median[6]` (IQR: `r combined_summaries$IQR_low[6]` - `r combined_summaries$IQR_high[6]`) compared to `r combined_summaries$median[1]` (IQR: `r combined_summaries$IQR_low[1]` - `r round(combined_summaries$IQR_high[1], digits = 2)`) in the original dataset. `r round(combined_summaries$perc_absent[4], digits = 2)`% of extremely thick liquids were classified as having no laryngeal vestibule residue compared to `r round(combined_summaries$perc_absent[2], digits = 2)`% in the original dataset. A similar pattern was appreciated for regular solids (`r round(combined_summaries$perc_absent[5], digits = 2)`% in synthetic vs. `r round(combined_summaries$perc_absent[3], digits = 2)`% in original dataset). Number of trials was lower for extremely thick (`r number_trials$Freq[1]` trials) and regular solid (`r number_trials$Freq[2]` trials) boluses compared to thin liquid (`r number_trials$Freq[3]` trials). When examined across 100 synthetic datasets, findings from the zero-inflated beta multilevel models indicate that `r curtis_pvalue_mu$n[1]`% of synthetic datasets were not statistically significantly different than the original dataset for both the zero-inflated and beta portions of the model (Table 3). Additionally, effect size categorizations were maintained for `r swallowing_effect_size_mu_summary$n`% of both zero-inflated and beta portions of the model.
 
 ### Study 2: Vowel Acoustics as Predictors of Speech Intelligibility in Dysarthria
 
@@ -736,7 +743,7 @@ articulation_effect_size_summary <- articulation_effect_sizes_final |>
 
 Thompson et al. (2023) examined the relationship between vowel space area and speech intelligibility among 40 speakers with dysarthria of varying etiologies, including Parkinson's disease, amyotrophic lateral sclerosis, Huntington's disease, and cerebellar ataxia. A linear regression model revealed a statistically significant relationship between vowel space area and intelligibility (*p* \< .001) with a Cohen's *f* of 0.59, corresponding to a conventionally "large" effect size (Table 2).
 
-Below we import the original dataset and generate a synthetic data set. *Synthpop* provides a warning message since this dataset has fewer observations than recommended (> 130).
+Below we import the original dataset, wrangle the data, and generate a synthetic data set. Data wrangling stpes include importing the original dataset, removing a string from the SpeakerID variable, and selecting only relevant variables.
 
 ```{r echo = TRUE, include = TRUE}
 # import original data
@@ -755,7 +762,11 @@ articulation_original_data <- rio::import(
     VSA_b, # VSA in Bark
     Int = Int_OT # intelligibility (orthographic transcriptions)
   )
+```
 
+Next, we generate a synthetic dataset with the syn() functionm extract the dataset, and convert it to a dataframe. *Synthpop* provides a warning message since this dataset has fewer observations than recommended (> 130).
+
+```{r echo = TRUE, include = TRUE}
 # generate synthetic dataset
 articulation_synthetic_dataset <- syn(articulation_original_data,
                                       m = 1,
