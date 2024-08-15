@@ -242,40 +242,35 @@ cols3 <- tibble(
     "Independent t-test",
     "Correlation (Pearson’s, Spearman’s)",
     "Chi-square",
-    "Generalized linear model",
-    "Analysis of variance"
+    "Generalized linear model"
   ),
   `Effect Size Measure` = c(
     "Cohen’s f\n(Cohen, 1988)",
     "Cohen’s d\n(Cohen, 1988)",
     "Correlation coefficient\n(Cohen, 1988)",
     "Cohen's 𝜔\n(Cohen, 1988)",
-    "√(3/𝜋) x odds ratio\n(Haddock et al., 1998; Hasselblad & Hedges, 1995)",
-    "Partial 𝜂2\n(Cohen, 1988)"
+    "√(3/𝜋) x odds ratio\n(Haddock et al., 1998; Hasselblad & Hedges, 1995)"
   ),
   `Small` = c(
     "0.1",
     "0.2",
     "0.1",
     "0.1",
-    "0.2",
-    "0.01"
+    "0.2"
   ),
   `Medium` = c(
     "0.25",
     "0.5",
     "0.3",
     "0.3",
-    "0.5",
-    "0.06"
+    "0.5"
   ),
   `Large` = c(
     "0.4",
     "0.8",
     "0.5",
     "0.5",
-    "0.8",
-    "0.14"
+    "0.8"
   )
 )
 
@@ -298,151 +293,214 @@ The tutorial data and accompanying code can be accessed on the Open Science Fram
 # Results
 
 ### Study 1: Normative Reference Values for Swallowing Outcomes
-
 ```{r echo = FALSE}
 # here we run the main analysis
 # then show the code to generate one synthetic dataset for pedagogical purposes below
 
-# Load original data
-swallowing_original_data <-
+# Load original data ----
+swallowing_data_original <-
   read.csv(here::here("Data/01_Swallowing/norms_ratings.csv")) |>
   # clean variable names
   janitor::clean_names() |>
   # select only relevant variables
-  dplyr::select(c(study_id, bolus_consistency, laryngeal_vestibule_severity_rating)) |> 
-  mutate(bolus_consistency = as.factor(bolus_consistency),
-         study_id = as.factor(study_id),
-         # express laryngeal_vestibule_severity_rating as a percentage
-         laryngeal_vestibule_severity_rating = laryngeal_vestibule_severity_rating/100)
+  dplyr::select(c(
+    study_id,
+    bolus_consistency,
+    laryngeal_vestibule_severity_rating
+  )) |>
+  dplyr::mutate(
+    bolus_consistency = as.factor(bolus_consistency),
+    study_id = as.factor(study_id),
+    # express laryngeal_vestibule_severity_rating as a percentage
+    laryngeal_vestibule_severity_rating = laryngeal_vestibule_severity_rating /
+      100
+  )
 
-# Add columns to original dataset
-swallowing_original_data2 <- swallowing_original_data |> 
-  mutate(dataset_type = "original",
-         dataset_number = 0)
+# Establish p_value for study
+swallowing_alpha <- .05
 
+# Reproduce original results ----
 # Obtain effect size measure for original dataset
-  swallowing_original_model <- gamlss(
+swallowing_analyze_data <- function(data) {
+  model <- gamlss::gamlss(
     formula = laryngeal_vestibule_severity_rating ~ 1 + re(random = ~ 1 | study_id),
     nu.formula = laryngeal_vestibule_severity_rating ~ 1 + re(random = ~ 1 | study_id),
     family = BEZI,
-    data = na.omit(swallowing_original_data2)
+    data = na.omit(data)
   )
+  model_fit <- summary(model, save=TRUE) # Saving the model
   
-  # save model fit
-  model_fit_original <- summary(swallowing_original_model, save = TRUE)
-  
-  ## Mu ('small' effect; < 0.50)
-  sqrt((3 / pi)) * exp(model_fit_original$coef[1])
-  ## Nu ('large' effect; > 0.80)
-  sqrt((3 / pi)) * exp(model_fit_original$coef[3])
-
-# Create 100 synthetic datasets
-mysyn <- syn(swallowing_original_data, 
-             method = "ctree", 
-             m = 100,
-             seed = 2024)
-
-# Combine synthetic datasets into a list
-synthetic_datasets <- mysyn$syn
-
-# Create lists to store the p-values for mu (beta) and nu (zero-inflated) coefficients
-p_values_mu <- vector("list", 100)
-p_values_nu <- vector("list", 100)
-
-# Create lists to store the effect_sizes for mu (beta) and nu (zero-inflated) coefficients
-effect_sizes_mu <- vector("list", 100)
-effect_sizes_nu <- vector("list", 100)
-
-# Loop through each synthetic dataset
-for (i in 1:100) {
-  # Get the i-th synthetic dataset
-  syn_data <- synthetic_datasets[i]
-  
-  syn_data2 <- syn_data |>
-    as.data.frame() |>
-    mutate(dataset_type = "synthetic",
-           dataset_number = i)
-  
-  # Combine original and synthetic datasets
-  all_data <- rbind(swallowing_original_data2, syn_data2) |>
-    mutate(study_id = as.character(study_id),
-           dataset_type = as.factor(dataset_type))
-  
-  # Remove "HOA" from study_id and convert to numeric
-  all_data$study_id <- as.numeric(gsub("HOA", "", all_data$study_id))
-  
-  # Fit the model
-  ## 11% of models demonstrated non-convergence so the fixed effects structure was simplified to only include dataset_type.
-  model <- gamlss(
-    formula = laryngeal_vestibule_severity_rating ~ dataset_type + re(random = ~ 1 | study_id),
-    nu.formula = laryngeal_vestibule_severity_rating ~ dataset_type + re(random = ~ 1 | study_id),
-    family = BEZI,
-    data = na.omit(all_data)
+  list(
+    p_value_mu = model_fit$pvalue[1],
+    p_value_nu = model_fit$pvalue[3],
+    # Extracting effect sizes
+    effect_size_mu = sqrt((3 / pi)) * exp(model_fit$coef[1]),
+    effect_size_nu = sqrt((3 / pi)) * exp(model_fit$coef[3]),
+    # Extracting CI intervals
+    conf_int_lower_mu = confint(model)[1, ][1], # lower CI bound for mu
+    conf_int_upper_mu = confint(model)[1, ][2], # upper CI bound for mu
+    conf_int_lower_nu = confint(model)[3, ][1], # lower CI bound for nu
+    conf_int_upper_nu = confint(model)[3, ][2] # upper CI bound for nu
   )
-  
-  # Save the model
-  model_fit <- summary(model, save=TRUE) 
-  
-  # Extract the p-value for the bolus_consistency variable
-  p_value_mu1 <- model_fit$pvalue[2]
-  p_value_nu1 <- model_fit$pvalue[5]
-  
-  # Extract standardized effect size
-  ## Mu
-  effect_size_mu1 <- sqrt((3/pi))*exp(model_fit$coef[1])
-  ## Nu
-  effect_size_nu1 <- sqrt((3/pi))*exp(model_fit$coef[3])
-  
-  # Store the p-value
-  p_values_mu[[i]] <- p_value_mu1
-  p_values_nu[[i]] <- p_value_nu1
-  
-  # Store effect sizes
-  effect_sizes_mu[[i]] <- effect_size_mu1
-  effect_sizes_nu[[i]] <- effect_size_nu1
 }
 
-# Convert p_values to a numeric vector
-p_values_mu_final <- unlist(p_values_mu)
-p_values_nu_final <- unlist(p_values_nu)
+# Reproduce original results ----
+swallowing_results_original <-
+  swallowing_analyze_data(swallowing_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  dplyr::mutate(
+    dataset = "original",
+    # Variables for mu
+    sig_mu = case_when(
+      p_value_mu < swallowing_alpha ~ "sig",
+      p_value_mu >= swallowing_alpha ~ "non-sig"
+    ),
+    categorization_mu = case_when(
+      abs(effect_size_mu) > 0.8 ~ "Large",
+      abs(effect_size_mu) > 0.5 ~ "Medium",
+      abs(effect_size_mu) > 0.2 ~ "Small",
+      TRUE ~ "Negligible"
+    ),
+    # Variables for nu
+    sig_nu = case_when(
+      p_value_nu < swallowing_alpha ~ "sig",
+      p_value_nu >= swallowing_alpha ~ "non-sig"
+    ),
+    categorization_nu = case_when(
+      abs(effect_size_nu) > 0.8 ~ "Large",
+      abs(effect_size_nu) > 0.5 ~ "Medium",
+      abs(effect_size_nu) > 0.2 ~ "Small",
+      TRUE ~ "Negligible"
+    )
+  )
 
-# Convert effect_sizes to a numeric vector
-effect_sizes_mu_final <- unlist(effect_sizes_mu)
-effect_sizes_nu_final <- unlist(effect_sizes_nu)
 
-# Count % < .05
-curtis_pvalue_mu <- p_values_mu_final |> 
-  as.data.frame() |> 
-  mutate(sig = case_when(p_values_mu_final < .05 ~ "sig",
-                         p_values_mu_final >= .05 ~ "non-sig")) |> 
-  count(sig) |> 
-  mutate(perc = n/100)
+# Create synthetic data ----
+swallowing_data_synthetic <- syn(swallowing_data_original, 
+                                   method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
 
-curtis_pvalue_nu <- p_values_nu_final |> 
-  as.data.frame() |> 
-  mutate(sig = case_when(p_values_mu_final < .05 ~ "sig",
-                         p_values_mu_final >= .05 ~ "non-sig")) |> 
-  count(sig) |> 
-  mutate(perc = n/100)
+# Perform analysis on each synthetic dataset
+swallowing_results_synthetic <- swallowing_data_synthetic$syn |>
+  purrr::map_df(~ swallowing_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    # Variables for mu
+    sig_mu = case_when(
+      p_value_mu < swallowing_alpha ~ "sig",
+      p_value_mu >= swallowing_alpha ~ "non-sig"
+    ),
+    categorization_mu = case_when(
+      abs(effect_size_mu) > 0.8 ~ "Large",
+      abs(effect_size_mu) > 0.5 ~ "Medium",
+      abs(effect_size_mu) > 0.2 ~ "Small",
+      TRUE ~ "Negligible"
+    ),
+    # Variables for nu
+    sig_nu = case_when(
+      p_value_nu < swallowing_alpha ~ "sig",
+      p_value_nu >= swallowing_alpha ~ "non-sig"
+    ),
+    categorization_nu = case_when(
+      abs(effect_size_nu) > 0.8 ~ "Large",
+      abs(effect_size_nu) > 0.5 ~ "Medium",
+      abs(effect_size_nu) > 0.2 ~ "Small",
+      TRUE ~ "Negligible"
+    ),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue_mu = abs(p_value_mu - swallowing_results_original$p_value_mu),
+    diff_effectsize_mu = abs(effect_size_mu - swallowing_results_original$effect_size_mu),
+    diff_pvalue_nu = abs(p_value_nu - swallowing_results_original$p_value_nu),
+    diff_effectsize_nu = abs(effect_size_nu - swallowing_results_original$effect_size_nu)
+  )
 
-# Count effect sizes that maintain categorization
-## Mu
-swallowing_effect_size_mu_summary <- effect_sizes_mu_final |> 
-  as.data.frame() |> 
-  mutate(categorization = case_when(
-    effect_sizes_mu_final < 0.50 ~ "same")
-    ) |> 
-  count(categorization) |> 
-  mutate(perc = n/100)
+# Compile results ----
+swallowing_results_summary <- data_frame(
+  Domain = "Swallowing",
+  Study = "Curtis et al. (2023)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(swallowing_data_original),
+  
+  # Mu vlues
+  p_value_mu = ifelse(
+    swallowing_results_original$p_value_mu < .001, "<.001",
+    sprintf("%0.3f", swallowing_results_original$p_value_mu)),
+  effect_size_measure_mu = "√(3/𝜋) x odds ratio (mu)",
+  effect_size_mu = round(swallowing_results_original$effect_size_mu, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue_mu = swallowing_results_synthetic |>
+    count(sig_mu) |>
+    dplyr::mutate(percent = n / NROW(swallowing_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig_mu == swallowing_results_original$sig_mu) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean_mu = mean(swallowing_results_synthetic$diff_pvalue_mu),
+  absDiff_pvalue_sd_mu = sd(swallowing_results_synthetic$diff_pvalue_mu),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize_mu = swallowing_results_synthetic |>
+    count(categorization_mu) |>
+    dplyr::mutate(percent = n / nrow(swallowing_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization_mu == swallowing_results_original$categorization_mu) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean_mu = mean(swallowing_results_synthetic$diff_effectsize_mu),
+  absDiff_effectSize_sd_mu = sd(swallowing_results_synthetic$diff_effectsize_mu),
+  
+  # Nu vlues
+  p_value_nu = ifelse(
+    swallowing_results_original$p_value_nu < .001, "<.001",
+    sprintf("%0.3f", swallowing_results_original$p_value_nu)),
+  effect_size_measure_nu = "√(3/𝜋) x odds ratio (nu)",
+  effect_size_nu = round(swallowing_results_original$effect_size_nu, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue_nu = swallowing_results_synthetic |>
+    count(sig_nu) |>
+    dplyr::mutate(percent = n / NROW(swallowing_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig_nu == swallowing_results_original$sig_nu) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean_nu = mean(swallowing_results_synthetic$diff_pvalue_nu),
+  absDiff_pvalue_sd_nu = sd(swallowing_results_synthetic$diff_pvalue_nu),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize_nu = swallowing_results_synthetic |>
+    count(categorization_nu) |>
+    dplyr::mutate(percent = n / nrow(swallowing_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization_nu == swallowing_results_original$categorization_nu) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean_nu = mean(swallowing_results_synthetic$diff_effectsize_nu),
+  absDiff_effectSize_sd_nu = sd(swallowing_results_synthetic$diff_effectsize_nu),
+)
 
-## Nu
-swallowing_effect_size_nu_summary <- effect_sizes_nu_final |> 
-  as.data.frame() |> 
-  mutate(categorization = case_when(
-    effect_sizes_nu_final > 0.80 ~ "same")
-    ) |> 
-  count(categorization) |> 
-  mutate(perc = n/100)
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+swallowing <- list(
+  data_original = swallowing_data_original,
+  data_synthetic = swallowing_data_synthetic,
+  results_original = swallowing_results_original,
+  results_synthetic = swallowing_results_synthetic,
+  results_summary = swallowing_results_summary,
+  alpha = swallowing_alpha
+)
+
+## Cleaning up the environment
+rm(
+  swallowing_data_original,
+  swallowing_data_synthetic,
+  swallowing_results_original,
+  swallowing_results_synthetic,
+  swallowing_results_summary,
+  swallowing_alpha
+)
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = swallowing,
+              file = here::here("Data","01_Swallowing","analysisData.RDS"))
 ```
 
 Curtis et al. (2023) examined normative reference values for swallowing outcomes during flexible endoscopic evaluations of swallowing among 39 non-dysphagic, community-dwelling adults. In this observational cohort study, participants were administered 15 swallowing trials that varied by bolus size, consistency, contrast agent, and swallowing instructions. A variety of swallowing outcomes were measured, including the amount of laryngeal vestibule residue rated with the Visual Analysis of Swallowing Efficiency and Safety. Median and interquartile ranges (IQR) were used to describe the distribution of laryngeal vestibule residue ratings.
@@ -649,96 +707,138 @@ Descriptively, the synthetic dataset classified `r round(combined_summaries$perc
 ### Study 2: Vowel Acoustics as Predictors of Speech Intelligibility in Dysarthria
 
 ```{r echo = FALSE}
-# import original data
-articulation_original_data <- rio::import(
+# Import original data ----
+articulation_data_original <- rio::import(
   file = here::here("Data", "02_Articulation", "data_Acoustic Measures.csv")
 ) |>
+  
   # Remove the reliability trials that have "_rel" in the SpeakerID variable
-  dplyr::filter(
-    !grepl(
-      pattern = "_rel",
-      x = SpeakerID
-  )) |>
+  dplyr::filter(!str_detect(SpeakerID, "_rel")) |>
+  
   # Selecting just the variables we need
   dplyr::select(
     SpeakerID, # ID
     VSA_b, # VSA in Bark
     Int = Int_OT # intelligibility (orthographic transcriptions)
   ) |> 
+  
   # convert SpeakerID to factor
   mutate(SpeakerID = as.factor(SpeakerID))
 
-# run model with original data
-articulation_model <- lm(Int ~ VSA_b,
-            data = articulation_original_data)
+## Establish p_value for study
+articulation_alpha <- .05
 
-# store p-value
-articulation_pvalue <- summary(articulation_model)$coefficients[2, 4]
+# Analysis Function ----
+## Perform regression between Intelligibility and VSA (bark)
+articulation_analyze_data <- function(data) {
+  model <- lm(Int ~ VSA_b, data = data) # Creating the model
+  model_fit <- summary(model, save=TRUE) # Saving the model
+  
+  list(
+    p_value = model_fit$coefficients[8], # Extracting p-values
+    effect_size = effectsize::cohens_f(model, partial = F)$Cohens_f, # Extracting effect size
+    conf_int_lower = confint(model)[2, ][1], # Extracting lower CI bound
+    conf_int_upper = confint(model)[2, ][2] # Extracting upper CI bound
+    )
+}
 
-# store effect size - cohen's f is 0.59, which qualifies as a 'large' effect
-effectsize::cohens_f(articulation_model)$Cohens_f
+# Reproduce original results ----
+articulation_results_original <- (articulation_analyze_data(articulation_data_original)) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < articulation_alpha ~ "sig",
+      p_value >= articulation_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) > 0.40 ~ "Large",
+                               abs(effect_size) > 0.25 ~ "Medium",
+                               abs(effect_size) > 0.1 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
 
-# store confidence interval
-articulation_ci <- confint(articulation_model, level = 0.95)[2,]
 
-# Create 100 synthetic datasets
-articulation_mysyn <- syn(articulation_original_data, 
+# Create synthetic data ----
+articulation_data_synthetic <- syn(articulation_data_original, 
                           # method = "ctree", 
                           m = 100,
                           seed = 2024)
 
-# Combine synthetic datasets into a list
-articulation_synthetic_datasets <- articulation_mysyn$syn
+## Perform analysis on each synthetic dataset
+articulation_results_synthetic <- articulation_data_synthetic$syn |>
+  purrr::map_df(~ articulation_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(p_value < articulation_alpha ~ "sig",
+                    p_value >= articulation_alpha ~ "non-sig"),
+    categorization = case_when(
+      abs(effect_size) > 0.40 ~ "Large",
+      abs(effect_size) > 0.25 ~ "Medium",
+      abs(effect_size) > 0.1 ~ "Small",
+      TRUE ~ "Negligible"
+    ),
+     # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - articulation_results_original$p_value),
+    diff_effectSize = abs(effect_size - articulation_results_original$effect_size)
+  )
 
-# Create lists to store the p-values for mu (beta) and nu (zero-inflated) coefficients
-articulation_p_values <- vector("list", 100)
-articulation_effect_sizes <- vector("list", 100)
+# Compile results ----
+articulation_results_summary <- data_frame(
+  Domain = "Articulation",
+  Study = "Thompson et al. (2023)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(articulation_data_original),
+  p_value = ifelse(
+    articulation_results_original$p_value < .001,"<.001",
+    sprintf("%0.3f", articulation_results_original$p_value)),
+  effect_size_measure = "Cohen’s f",
+  effect_size = round(articulation_results_original$effect_size, digits = 2), 
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = articulation_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(articulation_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == articulation_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(articulation_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(articulation_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = articulation_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(articulation_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == articulation_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(articulation_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(articulation_results_synthetic$diff_effectSize),
+)
 
-# Loop through each synthetic dataset
-for (i in 1:100) {
-  # Get the i-th synthetic dataset
-  syn_data <- articulation_synthetic_datasets[i]
-  
-  syn_data2 <- syn_data |>
-    as.data.frame() |>
-    mutate(dataset_number = i)
-  
-  # Fit the model with synthetic data
-  articulation_model <- lm(Int ~ VSA_b,
-                           data = syn_data2)
-  
-  # Save the model
-  model_fit <- summary(articulation_model, save=TRUE) 
-  
-  # Extract the p-value for the bolus_consistency variable
-  p_value <- model_fit$coefficients[8]
-  effect_size <- effectsize::cohens_f(articulation_model)$Cohens_f
-  
-  # Store the p-value
-  articulation_p_values[[i]] <- p_value
-  articulation_effect_sizes[[i]] <- effect_size
-}
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+articulation <- list(
+  data_original = articulation_data_original,
+  data_synthetic = articulation_data_synthetic,
+  results_original = articulation_results_original,
+  results_synthetic = articulation_results_synthetic,
+  results_summary = articulation_results_summary,
+  alpha = articulation_alpha
+)
 
-# Convert p_values to a numeric vector
-articulation_p_values_final <- unlist(articulation_p_values)
-articulation_effect_sizes_final <- unlist(articulation_effect_sizes)
+## Cleaning up the environment
+rm(
+  articulation_data_original,
+  articulation_data_synthetic,
+  articulation_results_original,
+  articulation_results_synthetic,
+  articulation_results_summary,
+  articulation_alpha
+)
 
-# Count percentage that are significant (p < .05)
-articulation_pvalues_summary <- articulation_p_values_final |> 
-  as.data.frame() |> 
-  mutate(sig = case_when(articulation_p_values_final < .05 ~ "sig",
-                         articulation_p_values_final >= .05 ~ "non-sig")) |> 
-  count(sig) |> 
-  mutate(perc = n/100)
-
-# Count percentage where effect size maintains categorization (in this case, a 'medium' Cohen's f)
-articulation_effect_size_summary <- articulation_effect_sizes_final |> 
-  as.data.frame() |> 
-  mutate(categorization = case_when(
-    articulation_effect_sizes_final > 0.40 ~ "medium")
-    ) |> 
-  count(categorization) |> 
-  mutate(perc = n/100)
+# Saving the data and results for easy importing later.
+base::saveRDS(object = articulation,
+              file = here::here("Data","02_Articulation","analysisData.RDS"))
 ```
 
 Thompson et al. (2023) examined the relationship between vowel space area and speech intelligibility among 40 speakers with dysarthria of varying etiologies, including Parkinson's disease, amyotrophic lateral sclerosis, Huntington's disease, and cerebellar ataxia. A linear regression model revealed a statistically significant relationship between vowel space area and intelligibility (*p* \< .001) with a Cohen's *f* of 0.59, corresponding to a conventionally "large" effect size (Table 2).
@@ -844,10 +944,9 @@ ggsave(plot = fig2a_combined,
 Findings from the 100 generated synthetic datasets indicate that `r articulation_pvalues_summary$n[2]`% of datasets demonstrated the same inferential result (i.e., a statistically significant *p*-value). For the effect size, `r articulation_effect_size_summary$n[1]`% of synthetic datasets maintained a 'large' effect size categorization.
 
 ### Results for Studies 3 - 9
-
 ```{r fluency, echo = FALSE}
-# Load data
-fluency_original_data <- rio::import(file = here::here("Data", "03_Fluency", "data_Dyslexia Stutter Master.csv")) |>
+# Import original data ----
+fluency_data_original <- rio::import(file = here::here("Data", "03_Fluency", "data_Dyslexia Stutter Master.csv")) |>
   dplyr::filter(Rejection == 0) |> 
   dplyr::filter(Group != "AWD") |>
   
@@ -858,165 +957,257 @@ fluency_original_data <- rio::import(file = here::here("Data", "03_Fluency", "da
     Nonwordrepetition
   )
 
+# Establish p_value for study
+fluency_alpha <- .05
+
+# Analysis Function ----
 # Examine the difference between neurotypical and stuttering in non-word repetition
-t_test <- stats::t.test(Nonwordrepetition ~ Group,
-                        data = fluency_original_data,
-                        paired = FALSE,
-                        var.equal = FALSE)
-
-# Cohen's d of 1.78 which constitutes a 'large' effect size categorization (d > 0.80)
-effectsize::cohens_d(Nonwordrepetition ~ Group,
-                     data = fluency_original_data,
-                     ci = 0.95)
-
-# Create 100 synthetic datasets
-fluency_mysyn <- syn(fluency_original_data,
-                     # method = "ctree",
-                     m = 100,
-                     seed = 2024)
-
-# Combine synthetic datasets into a list
-fluency_synthetic_datasets <- fluency_mysyn$syn
-
-# Create lists to store the p-values and effect sizes
-fluency_p_values <- vector("list", 100)
-fluency_effect_sizes <- vector("list", 100)
-
-# Loop through each synthetic dataset
-for (i in 1:100) {
-  # Get the i-th synthetic dataset
-  syn_data <- fluency_synthetic_datasets[i]
-  
-  syn_data2 <- syn_data |>
-    as.data.frame() |>
-    mutate(dataset_number = i)
-  
-  # Fit the model with synthetic data
+fluency_analyze_data <- function(data) {
   t_test <- stats::t.test(
     Nonwordrepetition ~ Group,
-    data = syn_data2,
+    data = data,
     paired = FALSE,
     var.equal = FALSE
   )
 
-  # Save the model
-  model_fit <- summary(t_test, save=TRUE) 
-  
-  # Extract the p-value for the bolus_consistency variable
-  p_value <- t_test$p.value
-  effect_size <- effectsize::cohens_d(Nonwordrepetition ~ Group,
-                                      data = syn_data2,
-                                      ci = 0.95)$Cohens_d
-  
-  # Store the p-value
-  fluency_p_values[[i]] <- p_value
-  fluency_effect_sizes[[i]] <- effect_size
+  list(
+    p_value = t_test$p.value,# Extracting p-values
+    effect_size = effectsize::cohens_d(Nonwordrepetition ~ Group,
+                     data = data,
+                     ci = 0.95)$Cohens_d, # Extracting effect size
+    conf_int_lower = t_test$conf.int[1],# Extracting lower CI bound
+    conf_int_upper = t_test$conf.int[2] # Extracting upper CI bound
+  )
 }
 
-# Convert p_values to a numeric vector
-fluency_p_values_final <- unlist(fluency_p_values)
-fluency_effect_sizes_final <- unlist(fluency_effect_sizes)
+# Reproduce original results ----
+fluency_results_original <- (fluency_analyze_data(fluency_data_original)) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(p_value < fluency_alpha ~ "sig",
+                    p_value >= fluency_alpha ~ "non-sig"),
+    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
+                               abs(effect_size) > 0.5 ~ "Medium",
+                               abs(effect_size) > 0.2 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
 
-# Count percentage that are significant (p < .05)
-fluency_pvalues_summary <- fluency_p_values_final |> 
-  as.data.frame() |> 
-  mutate(sig = case_when(fluency_p_values_final < .05 ~ "sig",
-                         fluency_p_values_final >= .05 ~ "non-sig")) |> 
-  count(sig) |> 
-  mutate(perc = n/100)
 
-# Count percentage where effect size maintains categorization
-fluency_effect_size_summary <- fluency_effect_sizes_final |> 
-  as.data.frame() |> 
-  mutate(categorization = case_when(
-    fluency_effect_sizes_final <= -0.80 ~ "same")
-    ) |> 
-  count(categorization) |> 
-  mutate(perc = n/100)
+# Create synthetic data ----
+fluency_data_synthetic <- syn(fluency_data_original,
+                              # method = "ctree",
+                              m = 100,
+                              seed = 2024)
+
+# Perform analysis on each synthetic dataset
+fluency_results_synthetic <- fluency_data_synthetic$syn |>
+  purrr::map_df(~ fluency_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(p_value < fluency_alpha ~ "sig",
+                    p_value >= fluency_alpha ~ "non-sig"),
+    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
+                               abs(effect_size) > 0.5 ~ "Medium",
+                               abs(effect_size) > 0.2 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - fluency_results_original$p_value),
+    diff_effectSize = abs(effect_size - fluency_results_original$effect_size)
+  )
+
+
+# Compile results ----
+fluency_results_summary <- data_frame(
+  Domain = "Fluency",
+  Study = "Elsherif et al. (2021)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(fluency_data_original),
+  p_value = ifelse(
+    fluency_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", fluency_results_original$p_value)),
+  effect_size_measure = "Cohen’s d",
+  effect_size = round(fluency_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = fluency_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(fluency_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == fluency_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(fluency_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(fluency_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = fluency_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(fluency_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == fluency_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(fluency_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(fluency_results_synthetic$diff_effectSize),
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+fluency <- list(
+  data_original = fluency_data_original,
+  data_synthetic = fluency_data_synthetic,
+  results_original = fluency_results_original,
+  results_synthetic = fluency_results_synthetic,
+  results_summary = fluency_results_summary,
+  alpha = fluency_alpha
+)
+
+## Cleaning up the environment
+rm(
+  fluency_data_original,
+  fluency_data_synthetic,
+  fluency_results_original,
+  fluency_results_synthetic,
+  fluency_results_summary,
+  fluency_alpha
+)
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = fluency,
+              file = here::here("Data","03_Fluency","analysisData.RDS"))
 ```
 
 ```{r voice, echo = FALSE}
-# Load data
-voice_original_data <-
+# Load data ----
+voice_data_original <-
   readxl::read_excel(here::here("Data/04_Voice_Resonance/RawData.xlsx"), range = "B3:Z114") |>
   # clean variable names
   janitor::clean_names() |>
   # select only relevant variables
   dplyr::select(c(names, efn_sd_d_b, median_of_raters))
 
+# Establish p_value for study
+voice_alpha <- .05
+
+# Analysis Function ----
 # Examine correlation between overall perceptual rating and acoustic EFn SD parameter
-voice_cor <- cor.test(voice_original_data$median_of_raters, 
-                      voice_original_data$efn_sd_d_b, 
-                      method = "pearson")
-
-# Examine p-value (significant)
-voice_cor$p.value
-
-# Examine correlation coefficient (large: r > 0.50)
-voice_cor$estimate
-
-# Create 100 synthetic datasets
-voice_mysyn <- syn(voice_original_data,
-                     m = 100,
-                     seed = 2024)
-
-# Combine synthetic datasets into a list
-voice_synthetic_datasets <- voice_mysyn$syn
-
-# Create lists to store the p-values and effect sizes
-voice_p_values <- vector("list", 100)
-voice_effect_sizes <- vector("list", 100)
-
-# Loop through each synthetic dataset
-for (i in 1:100) {
-  # Get the i-th synthetic dataset
-  syn_data <- voice_synthetic_datasets[i]
+voice_analyze_data <- function(data) {
+  # Creating the model
+  model <- cor.test(data$median_of_raters,
+                    data$efn_sd_d_b,
+                    method = "pearson")
   
-  syn_data2 <- syn_data |>
-    as.data.frame() |>
-    mutate(dataset_number = i)
-  
-  # Fit the model with synthetic data
-  voice_cor <- cor.test(syn_data2$median_of_raters,
-                        syn_data2$efn_sd_d_b,
-                        method = "pearson")
-
-  # Extract the p-value for the bolus_consistency variable
-  p_value <- voice_cor$p.value
-  effect_size <- voice_cor$estimate
-  
-  # Store the p-value
-  voice_p_values[[i]] <- p_value
-  voice_effect_sizes[[i]] <- effect_size
+  list(
+    p_value = model$p.value, # Extracting p-values
+    effect_size = model$estimate, # Extracting effect size
+    conf_int_lower = model[["conf.int"]][1], # Extracting lower CI bound
+    conf_int_upper = model[["conf.int"]][2] # Extracting upper CI bound
+  )
 }
 
-# Convert p_values to a numeric vector
-voice_p_values_final <- unlist(voice_p_values)
-voice_effect_sizes_final <- unlist(voice_effect_sizes)
+# Reproduce original results ----
+voice_results_original <- voice_analyze_data(voice_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < voice_alpha ~ "sig",
+      p_value >= voice_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) > 0.5 ~ "Large",
+                               abs(effect_size) > 0.3 ~ "Medium",
+                               abs(effect_size) > 0.1 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
 
-# Count percentage that are significant (p < .05)
-voice_pvalues_summary <- voice_p_values_final |> 
-  as.data.frame() |> 
-  mutate(sig = case_when(voice_p_values_final < .05 ~ "sig",
-                         voice_p_values_final >= .05 ~ "non-sig")) |> 
-  count(sig) |> 
-  mutate(perc = n/100)
+# Create synthetic data ----
+voice_data_synthetic <- syn(voice_data_original, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
 
-# Count percentage where effect size maintains categorization
-voice_effect_size_summary <- voice_effect_sizes_final |> 
-  as.data.frame() |> 
-  mutate(categorization = case_when(
-    voice_effect_sizes_final > 0.50 ~ "same")
-    ) |> 
-  count(categorization) |> 
-  mutate(perc = n/100)
+
+# Perform analysis on each synthetic dataset
+voice_results_synthetic <- voice_data_synthetic$syn |>
+  purrr::map_df(~ voice_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(
+      p_value < voice_alpha ~ "sig",
+      p_value >= voice_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) > 0.5 ~ "Large",
+                               abs(effect_size) > 0.3 ~ "Medium",
+                               abs(effect_size) > 0.1 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - voice_results_original$p_value),
+    diff_effectSize = abs(effect_size - voice_results_original$effect_size)
+  )
+
+# Compile results ----
+voice_results_summary <- data_frame(
+  Domain = "Voice",
+  Study = "Novotný et al. (2016)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(voice_data_original),
+  p_value = ifelse(
+    voice_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", voice_results_original$p_value)),
+  effect_size_measure = "Correlation coefficient",
+  effect_size = round(voice_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = voice_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(voice_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == voice_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(voice_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(voice_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = voice_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(voice_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == voice_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(voice_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(voice_results_synthetic$diff_effectSize),
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+voice <- list(
+  data_original = voice_data_original,
+  data_synthetic = voice_data_synthetic,
+  results_original = voice_results_original,
+  results_synthetic = voice_results_synthetic,
+  results_summary = voice_results_summary,
+  alpha = voice_alpha
+)
+
+## Cleaning up the environment
+rm(
+  voice_data_original,
+  voice_data_synthetic,
+  voice_results_original,
+  voice_results_synthetic,
+  voice_results_summary,
+  voice_alpha
+)
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = voice,
+              file = here::here("Data","04_Voice_Resonance","analysisData.RDS"))
 ```
 
 ```{r hearing, echo = FALSE}
 # Load packages
 library(nlme) # linear mixed models
 
-# Load data
+# Import original data ----
 plane.thre.out <- read.table(here::here("Data/05_Hearing/All_Thresholds_outliersmarked-500B.txt"), 
                              sep=",", header=T)
 
@@ -1070,97 +1261,145 @@ horizontal.thre.out <- subset(plane.thre.out,planes=='hor')
 vertical.thre.out <- subset(plane.thre.out,planes=='ver')
 
 # re-label dataset as 'original_data'
-hearing_original_data <- plane.thre.out |> 
+hearing_data_original <- plane.thre.out |> 
   dplyr::select(c(thre, planes, group, head, subj))
 
+# Removing unneeded items
+rm(plane.thre.out, hor.thre.back, hor.thre.front, horizontal.thre.out, vertical.thre.out)
+
+# Establish p_value for study
+hearing_alpha <- .05
+
+# Analysis Function ----
 # LMM on planes: Auditory localization performance by plane, group and position (head)
-# this is the model itself - subject is the random fx
-hearing_model <- lme(thre ~ 1 + planes * group * head, random = ~ 1|subj, 
-                     weights = varIdent(form = ~ 1 | planes), 
-                     data = hearing_original_data)
-
-# Save model
-hearing_model_fit <- summary(hearing_model, save=TRUE) 
-
-# Results
-hearing_results <- anova(hearing_model) |> 
-  as.data.frame()
-
-# p-value (significant, < .05)
-hearing_results$`p-value`[3]
-
-# Calculate standardized effect size (Haddock et al., 1998; Hasselblad & Hedges, 1995)
-# 1.56 is a 'large' effect (> 0.80)
-(sqrt(3/pi))*exp(hearing_model_fit$coefficients$fixed[3])
-
-# Create 100 synthetic datasets
-hearing_mysyn <- syn(hearing_original_data,
-                     m = 100,
-                     seed = 2024)
-
-# Combine synthetic datasets into a list
-hearing_synthetic_datasets <- hearing_mysyn$syn
-
-# Create lists to store the p-values and effect sizes
-hearing_p_values <- vector("list", 100)
-hearing_effect_sizes <- vector("list", 100)
-
-# Loop through each synthetic dataset
-for (i in 1:100) {
-  # Get the i-th synthetic dataset
-  syn_data <- hearing_synthetic_datasets[i]
+hearing_analyze_data <- function(data) {
+  # Creating the model
+  model <-
+    nlme::lme(
+      thre ~ 1 + planes * group * head,
+      random = ~ 1 | subj,
+      weights = varIdent(form = ~ 1 | planes),
+      data = data
+    )
+  # Saving the model
+  model_fit <- summary(model, save=TRUE)
   
-  syn_data2 <- syn_data |>
-    as.data.frame() |>
-    mutate(dataset_number = i)
-  
-  # Fit the model with synthetic data
-  hearing_model <- lme(thre ~ 1 + planes * group * head, random = ~ 1|subj, 
-                     weights = varIdent(form = ~ 1 | planes), 
-                     data = syn_data2)
-
-  # Save the model
-  model_fit <- summary(hearing_model, save=TRUE) 
-  
-  # Results
-  hearing_results <- anova(model_fit) |>
+  model_results <- anova(model_fit) |> 
     as.data.frame()
   
-  # Extract p-value
-  p_value <- hearing_results$`p-value`[3]
-  
-  # Extract effect size
-  effect_size <- (sqrt(3 / pi)) * exp(model_fit$coefficients$fixed[3])
-  
-  # Store the p-value
-  hearing_p_values[[i]] <- p_value
-  hearing_effect_sizes[[i]] <- effect_size
+  list(
+    p_value = model_results$`p-value`[3], # Extracting p-values
+    # Extracting effect size - standardized effect size (Haddock et al., 1998; Hasselblad & Hedges, 1995)
+    effect_size = (sqrt(3/pi))*exp(model_fit$coefficients$fixed[3]),
+    conf_int_lower = intervals(model)[["fixed"]][3,][1], # Extracting lower CI bound
+    conf_int_upper = intervals(model)[["fixed"]][3,][3] # Extracting upper CI bound
+  )
 }
 
-# Convert p_values to a numeric vector
-hearing_p_values_final <- unlist(hearing_p_values)
-hearing_effect_sizes_final <- unlist(hearing_effect_sizes)
 
-# Count percentage that are significant (p < .05)
-hearing_pvalues_summary <- hearing_p_values_final |> 
-  as.data.frame() |> 
-  mutate(sig = case_when(hearing_p_values_final < .05 ~ "sig",
-                         hearing_p_values_final >= .05 ~ "non-sig")) |> 
-  count(sig) |> 
-  mutate(perc = n/100)
+# Reproduce original results ----
+hearing_results_original <- hearing_analyze_data(hearing_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < hearing_alpha ~ "sig",
+      p_value >= hearing_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
+                               abs(effect_size) > 0.5 ~ "Medium",
+                               abs(effect_size) > 0.2 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
 
-# Count percentage where effect size maintains categorization
-hearing_effect_size_summary <- hearing_effect_sizes_final |> 
-  as.data.frame() |> 
-  mutate(categorization = case_when(
-    hearing_effect_sizes_final > 0.80 ~ "same")
-    ) |> 
-  count(categorization) |> 
-  mutate(perc = n/100)
+
+
+# Create synthetic data ----
+hearing_data_synthetic <- syn(hearing_data_original, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+# Perform analysis on each synthetic dataset
+hearing_results_synthetic <- hearing_data_synthetic$syn |>
+  purrr::map_df(~ hearing_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(p_value < hearing_alpha ~ "sig",
+                    p_value >= hearing_alpha ~ "non-sig"),
+    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
+                               abs(effect_size) > 0.5 ~ "Medium",
+                               abs(effect_size) > 0.2 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - hearing_results_original$p_value),
+    diff_effectSize = abs(effect_size - hearing_results_original$effect_size)
+  )
+
+
+# Compile results ----
+hearing_results_summary <- data_frame(
+  Domain = "Hearing",
+  Study = "Battal et al. (2019)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(hearing_data_original),
+  p_value = ifelse(
+    hearing_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", hearing_results_original$p_value)),
+  effect_size_measure = "√(3/𝜋) x odds ratio",
+  effect_size = round(hearing_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = hearing_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(hearing_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == hearing_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(hearing_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(hearing_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = hearing_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(hearing_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == hearing_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(hearing_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(hearing_results_synthetic$diff_effectSize),
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+hearing <- list(
+  data_original = hearing_data_original,
+  data_synthetic = hearing_data_synthetic,
+  results_original = hearing_results_original,
+  results_synthetic = hearing_results_synthetic,
+  results_summary = hearing_results_summary,
+  alpha = hearing_alpha
+)
+
+## Cleaning up the environment
+rm(
+  hearing_data_original,
+  hearing_data_synthetic,
+  hearing_results_original,
+  hearing_results_synthetic,
+  hearing_results_summary,
+  hearing_alpha
+)
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = hearing,
+              file = here::here("Data","05_Hearing","analysisData.RDS"))
 ```
 
 ```{r comm_modalities, echo = FALSE}
-# Function to load in AAC data
+
+# Import original data ----
+## Function to load in AAC data from the author's code
 qualtrics_csv = function(file){
   data = read_csv(file, col_names = FALSE, skip = 3)
   names = read_lines(file, n_max = 1) |> 
@@ -1177,7 +1416,7 @@ qualtrics_csv = function(file){
 }
 
 # Load original data
-aac_original_data <- qualtrics_csv(file = here::here("Data", "06_AAC", "data_Combined CSV data.csv")) |> 
+aac_data_original <- qualtrics_csv(file = here::here("Data", "06_AAC", "data_Combined CSV data.csv")) |> 
   janitor::remove_empty("cols") |> 
   janitor::remove_empty("rows") |> 
   filter(progress > 98) |> 
@@ -1204,173 +1443,264 @@ aac_original_data <- qualtrics_csv(file = here::here("Data", "06_AAC", "data_Com
   tidyr::drop_na(value) |> 
     dplyr::select(-question)
 
+# Establish p_value for study
+aac_alpha <- .05
+
+# Analysis Function ----
 # Examine the chi-square difference in lack of/limited Internet and technology barriers by timepoint
-chi_squared <- aac_original_data |> 
-  dplyr::group_by(var, value) |>
-  dplyr::summarize(prop = list(chisq.test(table(time)))) |>
-  dplyr::mutate(
-    chi = map_dbl(prop, ~ .x$statistic),
-    df = map_dbl(prop, ~ .x$parameter),
-    p = map_dbl(prop, ~ .x$p.value)
-  ) |>
-  dplyr::filter(var == "Intervention") |>
-  dplyr::filter(value == "Lack of/limited internet")
-
-# Examine effect size ("Large" effect; i.e., chi > 0.50)
-chi_squared$chi
-
-# P-value is 'significant' (p < .05)
-chi_squared$p
-
-# Create 100 synthetic datasets
-aac_mysyn <- syn(aac_original_data,
-                 m = 100,
-                 seed = 2024)
-
-# Combine synthetic datasets into a list
-aac_synthetic_datasets <- aac_mysyn$syn
-
-# Create lists to store the p-values and effect sizes
-aac_p_values <- vector("list", 100)
-aac_effect_sizes <- vector("list", 100)
-
-# Loop through each synthetic dataset
-for (i in 1:100) {
-  # Get the i-th synthetic dataset
-  syn_data <- aac_synthetic_datasets[i]
+aac_analyze_data <- function(data) {
+  chi_squared <- data |>
+    dplyr::group_by(var, value) |>
+    dplyr::summarize(prop = list(chisq.test(table(time))),
+                     .groups = "drop_last") |>
+    dplyr::mutate(
+      chi = map_dbl(prop, ~ .x$statistic),
+      df = map_dbl(prop, ~ .x$parameter),
+      p = map_dbl(prop, ~ .x$p.value)
+    ) |>
+    dplyr::filter(var == "Intervention") |>
+    dplyr::filter(value == "Lack of/limited internet")
   
-  syn_data2 <- syn_data |>
-    as.data.frame() |>
-    mutate(dataset_number = i)
-  
-  # Fit chi-squared model with synthetic data
-  chi_squared <- syn_data2 |> 
-  dplyr::group_by(var, value) |>
-  dplyr::summarize(prop = list(chisq.test(table(time)))) |>
-  dplyr::mutate(
-    chi = map_dbl(prop, ~ .x$statistic),
-    df = map_dbl(prop, ~ .x$parameter),
-    p = map_dbl(prop, ~ .x$p.value)
-  ) |>
-  dplyr::filter(var == "Intervention") |>
-  dplyr::filter(value == "Lack of/limited internet")
-  
-  # Extract p-value
-  p_value <- chi_squared$p
-  
-  # Extract effect size
-  effect_size <- chi_squared$chi
-  
-  # Store the p-value
-  aac_p_values[[i]] <- p_value
-  aac_effect_sizes[[i]] <- effect_size
+  list(
+    p_value = chi_squared$p,
+    # Extracting p-values
+    effect_size = chi_squared$chi,
+    # There are no confidence intervals for chi-squared tests
+    conf_int_lower = NA,
+    conf_int_upper = NA 
+  )
 }
 
-# Convert p_values to a numeric vector
-aac_p_values_final <- unlist(aac_p_values)
-aac_effect_sizes_final <- unlist(aac_effect_sizes)
+# Reproduce original results ----
+aac_results_original <- aac_analyze_data(aac_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < aac_alpha ~ "sig",
+      p_value >= aac_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) > 0.5 ~ "Large",
+                               abs(effect_size) > 0.3 ~ "Medium",
+                               abs(effect_size) > 0.1 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
 
-# Count percentage that are significant (p < .05)
-aac_pvalues_summary <- aac_p_values_final |> 
-  as.data.frame() |> 
-  mutate(sig = case_when(aac_p_values_final < .05 ~ "sig",
-                         aac_p_values_final >= .05 ~ "non-sig")) |> 
-  count(sig) |> 
-  mutate(perc = n/100)
+# Create synthetic data ----
+aac_data_synthetic <- syn(aac_data_original, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
 
-# Count percentage where effect size maintains categorization
-aac_effect_size_summary <- aac_effect_sizes_final |> 
-  as.data.frame() |> 
-  mutate(categorization = case_when(
-    aac_effect_sizes_final >= 0.50 ~ "same")
-    ) |> 
-  count(categorization) |> 
-  mutate(perc = n/100)
+# Perform analysis on each synthetic dataset
+aac_results_synthetic <- aac_data_synthetic$syn |>
+  purrr::map_df(~ aac_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(p_value < aac_alpha ~ "sig",
+                    p_value >= aac_alpha ~ "non-sig"),
+    categorization = case_when(abs(effect_size) > 0.5 ~ "Large",
+                               abs(effect_size) > 0.3 ~ "Medium",
+                               abs(effect_size) > 0.1 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - aac_results_original$p_value),
+    diff_effectSize = abs(effect_size - aac_results_original$effect_size)
+  )
+
+# Compile results ----
+aac_results_summary <- data_frame(
+  Domain = "Communication modalities",
+  Study = "King et al. (2022)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(aac_data_original),
+  p_value = ifelse(
+    aac_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", aac_results_original$p_value)),
+  effect_size_measure = "Cohen's 𝜔",
+  effect_size = round(aac_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = aac_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(aac_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == aac_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(aac_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(aac_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = aac_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(aac_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == aac_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(aac_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(aac_results_synthetic$diff_effectSize),
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+aac <- list(
+  data_original = aac_data_original,
+  data_synthetic = aac_data_synthetic,
+  results_original = aac_results_original,
+  results_synthetic = aac_results_synthetic,
+  results_summary = aac_results_summary,
+  alpha = aac_alpha
+)
+
+## Cleaning up the environment
+rm(
+  aac_data_original,
+  aac_data_synthetic,
+  aac_results_original,
+  aac_results_synthetic,
+  aac_results_summary,
+  aac_alpha
+)
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = aac,
+              file = here::here("Data","06_AAC","analysisData.RDS"))
 ```
 
+
 ```{r recep_language, echo = FALSE}
-# Load data
-language_original_data <-
+library(DescTools) # install.packages("DescTools")
+
+# Import original data ----
+language_data_original <-
   read.csv(here::here("Data/07_Language/demographics_CAT_reading.csv")) |>
   # select only relevant variables
   dplyr::select(c(Filename, edu, tpost_cat_read_total))
 
+# Establish p_value for study
+language_alpha <- .05
+
+# Analysis Function ----
 # Examine correlation between education (years) and reading t-scores
-language_cor <- cor.test(language_original_data$edu, 
-                         language_original_data$tpost_cat_read_total, 
-                         method = "spearman")
-
-# Examine p-value (significant; p < .05)
-language_cor$p.value
-
-# Examine effect size ("Large"; r > .05)
-language_cor$estimate
-
-# Create 100 synthetic datasets
-language_mysyn <- syn(language_original_data,
-                      m = 100,
-                      seed = 2024)
-
-# Combine synthetic datasets into a list
-language_synthetic_datasets <- language_mysyn$syn
-
-# Create lists to store the p-values and effect sizes
-language_p_values <- vector("list", 100)
-language_effect_sizes <- vector("list", 100)
-
-# Loop through each synthetic dataset
-for (i in 1:100) {
-  # Get the i-th synthetic dataset
-  syn_data <- language_synthetic_datasets[i]
+language_analyze_data <- function(data) {
+  model <- cor.test(data$edu,
+                    data$tpost_cat_read_total,
+                    exact = F,
+                    method = "spearman") # Creating the model
   
-  syn_data2 <- syn_data |>
-    as.data.frame() |>
-    mutate(dataset_number = i)
+  # Obtaining CI's for SpearmansRho using a bootstrapping method
+  model_CI <- DescTools::SpearmanRho(data$edu,
+                                     data$tpost_cat_read_total,
+                                     conf.level = .95)
   
-  # Fit correlation
-  cor_test <- cor.test(syn_data2$edu,
-                       syn_data2$tpost_cat_read_total,
-                       method = "spearman")
-  
-  # Extract p-value
-  p_value <- cor_test$p.value
-  
-  # Extract effect size
-  effect_size <- cor_test$estimate
-  
-  # Store the p-value
-  language_p_values[[i]] <- p_value
-  language_effect_sizes[[i]] <- effect_size
+  list(
+    p_value = model$p.value, # Extracting p-values
+    effect_size = model$estimate, # Extracting effect size
+    # CI for S
+    conf_int_lower = model_CI[2],
+    conf_int_upper = model_CI[3]
+  )
 }
 
-# Convert p_values to a numeric vector
-language_p_values_final <- unlist(language_p_values)
-language_effect_sizes_final <- unlist(language_effect_sizes)
+# Reproduce original results ----
+language_results_original <- language_analyze_data(language_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < language_alpha ~ "sig",
+      p_value >= language_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) > 0.5 ~ "Large",
+                               abs(effect_size) > 0.3 ~ "Medium",
+                               abs(effect_size) > 0.1 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
 
-# Count percentage that are significant (p < .05)
-language_pvalues_summary <- language_p_values_final |> 
-  as.data.frame() |> 
-  mutate(sig = case_when(language_p_values_final < .05 ~ "sig",
-                         language_p_values_final >= .05 ~ "non-sig")) |> 
-  count(sig) |> 
-  mutate(perc = n/100)
+# Create synthetic data ----
+language_data_synthetic <- syn(language_data_original, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
 
-# Count percentage where effect size maintains categorization
-language_effect_size_summary <- language_effect_sizes_final |> 
-  as.data.frame() |> 
-  mutate(categorization = case_when(
-    language_effect_sizes_final >= 0.50 ~ "same")
-    ) |> 
-  count(categorization) |> 
-  mutate(perc = n/100)
+# Perform analysis on each synthetic dataset
+language_results_synthetic <- language_data_synthetic$syn |>
+  purrr::map_df(~ language_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(
+      p_value < language_alpha ~ "sig",
+      p_value >= language_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) > 0.5 ~ "Large",
+                               abs(effect_size) > 0.3 ~ "Medium",
+                               abs(effect_size) > 0.1 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - language_results_original$p_value),
+    diff_effectSize = abs(effect_size - language_results_original$effect_size)
+  )
+
+# Compile results ----
+language_results_summary <- data_frame(
+  Domain = "Language",
+  Study = "Kearney et al. (2023)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(language_data_original),
+  p_value = ifelse(
+    language_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", language_results_original$p_value)),
+  effect_size_measure = "Correlation coefficient",
+  effect_size = round(language_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = language_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(language_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == language_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(language_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(language_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = language_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(language_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == language_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(language_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(language_results_synthetic$diff_effectSize),
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+language <- list(
+  data_original = language_data_original,
+  data_synthetic = language_data_synthetic,
+  results_original = language_results_original,
+  results_synthetic = language_results_synthetic,
+  results_summary = language_results_summary,
+  alpha = language_alpha
+)
+
+## Cleaning up the environment
+rm(
+  language_data_original,
+  language_data_synthetic,
+  language_results_original,
+  language_results_synthetic,
+  language_results_summary,
+  language_alpha
+)
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = language,
+              file = here::here("Data","07_Language","analysisData.RDS"))
 ```
 
-```{r cognition, echo = FALSE}
-# Load packages
-library(lme4) # glmer
-library(lmerTest) # p-values for glmer
-library(broom.mixed) # model summaries
-
+```{r}
 # Load data
 cognition_original_data <-
   read.csv(here::here("Data/08_Cognition/emoji_affect_recognition_data.csv")) |>
@@ -1420,101 +1750,197 @@ tidy(m1,conf.int=TRUE,exponentiate=TRUE,effects="fixed")[7,]$`p.value`
 ## this is a "medium" effect (>= 0.50 & < 0.80)
 sqrt((3/pi))*tidy(m1,conf.int=TRUE,exponentiate=TRUE,effects="fixed")[7,]$estimate
 
-# Create 100 synthetic datasets
-cognition_mysyn <- syn(cognition_original_data,
-                       method = "ctree",
-                       m = 100,
-                       seed = 2024)
+```
 
-# Combine synthetic datasets into a list
-cognition_synthetic_datasets <- cognition_mysyn$syn
+```{r cognition, echo = FALSE}
+# Load packages
+library(lme4) # glmer
+library(lmerTest) # p-values for glmer
+library(broom.mixed) # model summaries
 
-# Create lists to store the p-values and effect sizes
-cognition_p_values <- vector("list", 100)
-cognition_effect_sizes <- vector("list", 100)
+# Import original data ----
+cognition_data_original <-
+  read.csv(here::here("Data/08_Cognition/emoji_affect_recognition_data.csv")) |>
+  # select only relevant variables
+  dplyr::select(c(SubjectID, Correct, Group, Condition, Sex)) |>
+  # dummy-code Group (NC = 1, TBI = 0) and Sex (F = 1, M = 0)
+  mutate(
+    Group_NC = if_else(Group == "NC", 1, 0),
+    Sex_F = if_else(Sex == "Female", 1, 0)) |>
+  # treat categorical variables as factors and set reference levels
+  mutate(
+    SubjectID = as.factor(SubjectID),
+    Correct = as.factor(Correct),
+    Group_NC = relevel(as.factor(Group_NC), '1', '0'),
+    Condition = relevel(as.factor(Condition), 'BasicFace', 'BasicEmoji', 'SocialEmoji'),
+    Sex_F =  relevel(as.factor(Sex_F), '1', '0')
+  ) |> 
+  dplyr::select(-c(Group, Sex))
 
-# Loop through each synthetic dataset
-for (i in 1:100) {
-  # Get the i-th synthetic dataset
-  syn_data <- cognition_synthetic_datasets[i]
-  
-  syn_data2 <- syn_data |>
-    as.data.frame() |>
-    mutate(dataset_number = i)
-  
-  # Set up Helmert contrast coding for Condition
-  # https://marissabarlaz.github.io/portfolio/contrastcoding/
-  # Contrast 1: Basic Emotion Faces vs average of Basic Emotion Emoji and Social Emotion Emoji
-  # Contrast 2: Basic Emotion Emoji vs Social Emotion Emoji
-  helmert = matrix(c(2 / 3,-1 / 3,-1 / 3, 0, 1 / 2,-1 / 2), ncol = 2)
-  contrasts(syn_data2$Condition) = helmert
-  
-  # Models: Effect of stimulus condition on emotion recognition accuracy
-  # Note: Model first failed to converge when using default control settings, so changed optimizer to bobyqa as suggested here: https://rstudio-pubs-static.s3.amazonaws.com/33653_57fc7b8e5d484c909b615d8633c01d51.html
+# Set up Helmert contrast coding for Condition
+# https://marissabarlaz.github.io/portfolio/contrastcoding/
+# Contrast 1: Basic Emotion Faces vs average of Basic Emotion Emoji and Social Emotion Emoji
+# Contrast 2: Basic Emotion Emoji vs Social Emotion Emoji
+helmert = matrix(c(2/3, -1/3, -1/3, 0, 1/2, -1/2), ncol = 2)
+contrasts(cognition_data_original$Condition) = helmert
+
+cognition_alpha <- .05
+
+# Analysis Function ----
+## Models: Effect of stimulus condition on emotion recognition accuracy
+## Note: Model first failed to converge when using default control settings, so changed optimizer to bobyqa as suggested here: https://rstudio-pubs-static.s3.amazonaws.com/33653_57fc7b8e5d484c909b615d8633c01d51.html
+cognition_analyze_data <- function(data) {
+  # Creating the model
   m1 <-
-    lme4::glmer(
-      Correct ~ Group_NC + Condition + Sex_F + Group_NC * Condition * Sex_F + (1 |
-                                                                                 SubjectID),
-      data = syn_data2,
+    lme4::glmer(Correct ~ Group_NC + Condition + Sex_F + Group_NC * Condition * Sex_F + (1 | SubjectID),
+      data = data,
       family = binomial(link = "logit"),
       control = glmerControl(optimizer = "bobyqa",
                              optCtrl = list(maxfun = 2e5))
     )
   
   # Set group reference level to TBI (0) and rerun model
-  syn_data2$Group_NC = relevel(syn_data2$Group_NC, '0', '1')
+  data$Group_NC = relevel(data$Group_NC, '0', '1')
   m2 <-
     lme4::glmer(
-      Correct ~ Group_NC + Condition + Sex_F + Group_NC * Condition * Sex_F + (1 |
-                                                                                 SubjectID),
-      data = syn_data2,
+      Correct ~ Group_NC + Condition + Sex_F + Group_NC * Condition * Sex_F + (1 | SubjectID),
+      data = data,
       family = binomial(link = "logit"),
-      control = glmerControl(optimizer = "bobyqa",
+      control = lme4::glmerControl(optimizer = "bobyqa",
                              optCtrl = list(maxfun = 2e5))
     )
-
-  # Extract p-value for Group X Condition Interaction
-  p_value <- tidy(m1,
-       conf.int = TRUE,
-       exponentiate = TRUE,
-       effects = "fixed")[7, ]$`p.value`
   
-  # Extract effect size from odds ratio for Group X Condition Interaction
-  effect_size <- sqrt((3 / pi)) * tidy(m1,
+  list(
+    # Extracting p-values
+    p_value = tidy(
+      m1,
+      conf.int = TRUE,
+      exponentiate = TRUE,
+      effects = "fixed")[7,]$`p.value`,
+    # Extract effect size from odds ratio for Group (NC0) X Condition (2) Interaction
+    effect_size = sqrt((3 / pi)) * tidy(m1,
                         conf.int = TRUE,
                         exponentiate = TRUE,
-                        effects = "fixed")[7, ]$estimate
-  
-  # Store the p-value
-  cognition_p_values[[i]] <- p_value
-  cognition_effect_sizes[[i]] <- effect_size
+                        effects = "fixed")[7, ]$estimate,
+    # Extracting lower CI bound
+    conf_int_lower = tidy(
+      m1,
+      conf.int = TRUE,
+      exponentiate = TRUE,
+      effects = "fixed")[7,]$conf.low,
+    # Extracting upper CI bound
+    conf_int_upper = tidy(
+      m1,
+      conf.int = TRUE,
+      exponentiate = TRUE,
+      effects = "fixed")[7,]$conf.high
+  )
 }
 
-# Convert p_values to a numeric vector
-cognition_p_values_final <- unlist(cognition_p_values)
-cognition_effect_sizes_final <- unlist(cognition_effect_sizes)
+# Reproduce original results ----
+cognition_results_original <- cognition_analyze_data(cognition_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < cognition_alpha ~ "sig",
+      p_value >= cognition_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
+                               abs(effect_size) > 0.5 ~ "Medium",
+                               abs(effect_size) > 0.2 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
 
-# Count percentage that are significant (p < .05)
-cognition_pvalues_summary <- cognition_p_values_final |> 
-  as.data.frame() |> 
-  mutate(sig = case_when(cognition_p_values_final < .05 ~ "sig",
-                         cognition_p_values_final >= .05 ~ "non-sig")) |> 
-  count(sig) |> 
-  mutate(perc = n/100)
 
-# Count percentage where effect size maintains categorization
-cognition_effect_size_summary <- cognition_effect_sizes_final |> 
-  as.data.frame() |> 
-  mutate(categorization = case_when(
-    cognition_effect_sizes_final >= 0.50 & cognition_effect_sizes_final < 0.80 ~ "same")
-    ) |> 
-  count(categorization) |> 
-  mutate(perc = n/100)
+# Create synthetic data ----
+cognition_data_synthetic <- syn(cognition_data_original, 
+                                   method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+# Perform analysis on each synthetic dataset
+cognition_results_synthetic <- cognition_data_synthetic$syn |>
+  purrr::map_df(~ cognition_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(
+      p_value < cognition_alpha ~ "sig",
+      p_value >= cognition_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
+                               abs(effect_size) > 0.5 ~ "Medium",
+                               abs(effect_size) > 0.2 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - cognition_results_original$p_value),
+    diff_effectSize = abs(effect_size - cognition_results_original$effect_size)
+  )
+
+
+# Compile results ----
+cognition_results_summary <- data_frame(
+  Domain = "Cognition",
+  Study = "Clough et al. (2023))",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(cognition_data_original),
+  p_value = ifelse(
+    cognition_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", cognition_results_original$p_value)),
+  effect_size_measure = "√(3/𝜋) x odds ratio",
+  effect_size = round(cognition_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = cognition_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(cognition_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == cognition_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(cognition_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(cognition_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = cognition_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(cognition_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == cognition_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(cognition_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(cognition_results_synthetic$diff_effectSize),
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+cognition <- list(
+  data_original = cognition_data_original,
+  data_synthetic = cognition_data_synthetic,
+  results_original = cognition_results_original,
+  results_synthetic = cognition_results_synthetic,
+  results_summary = cognition_results_summary,
+  alpha = cognition_alpha
+)
+
+## Cleaning up the environment
+rm(
+  cognition_data_original,
+  cognition_data_synthetic,
+  cognition_results_original,
+  cognition_results_synthetic,
+  cognition_results_summary,
+  cognition_alpha
+)
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = cognition,
+              file = here::here("Data","08_Cognition","analysisData.RDS"))
 ```
 
+
 ```{r social_comm, echo = FALSE}
-# Load data
-social_original_data <-
+# Import original data ----
+social_data_original <-
   read.csv(here::here("Data/09_Social_Communication/Study1Comp.csv"),
            fileEncoding = 'UTF-8-BOM') |> 
   plyr::ddply(
@@ -1529,70 +1955,127 @@ social_original_data <-
   ) |> 
   dplyr::select(c(Subj, NVIQ, ParGroup))
 
-# Model: Non-verbal IQ by group (ASD, TD)
-social_anova <- summary(aov(NVIQ ~ ParGroup, social_original_data))
+# Establish p_value for study
+social_alpha <- .05
 
-# Examine p-value (significant; p < .05)
-social_anova[[1]]$'Pr(>F)'[1]
-
-# Examine effect size (partial eta-squared) ["large" effect size; eta-squared >= 0.14]
-effectsize::eta_squared(aov(NVIQ ~ ParGroup, social_original_data), partial = TRUE)$Eta2
-
-# Create 100 synthetic datasets
-social_mysyn <- syn(social_original_data,
-                    m = 100,
-                    seed = 2024)
-
-# Combine synthetic datasets into a list
-social_synthetic_datasets <- social_mysyn$syn
-
-# Create lists to store the p-values and effect sizes
-social_p_values <- vector("list", 100)
-social_effect_sizes <- vector("list", 100)
-
-# Loop through each synthetic dataset
-for (i in 1:100) {
-  # Get the i-th synthetic dataset
-  syn_data <- social_synthetic_datasets[i]
+# Analysis Function ----
+# Model: Non-verbal IQ by group (ASD, TD) two-tailed Fisher’s Exact Test
+social_analyze_data <- function(data) {
+  model <- aov(NVIQ ~ ParGroup,
+               data = data) # Creating the model
+  model_summary <- summary(model)
   
-  syn_data2 <- syn_data |>
-    as.data.frame() |>
-    mutate(dataset_number = i)
-  
-  # Fit anova
-  anova <- summary(aov(NVIQ ~ ParGroup, syn_data2))
-  
-  # Extract p-value
-  p_value <- anova[[1]]$'Pr(>F)'[1]
-  
-  # Extract effect size
-  effect_size <- effectsize::eta_squared(aov(NVIQ ~ ParGroup, syn_data2), partial = TRUE)$Eta2
-  
-  # Store the p-value
-  social_p_values[[i]] <- p_value
-  social_effect_sizes[[i]] <- effect_size
+  list(
+    p_value = model_summary[[1]]$'Pr(>F)'[1],
+    # Extracting p-values
+    effect_size = effectsize::cohens_d(NVIQ ~ ParGroup,
+                     data = data,
+                     ci = 0.95)$Cohens_d,
+    # Extracting effect size
+    conf_int_lower = confint(model)[2, ][1],
+    # Extracting lower CI bound
+    conf_int_upper = confint(model)[2,][2] # Extracting upper CI bound
+  )
 }
 
-# Convert p_values to a numeric vector
-social_p_values_final <- unlist(social_p_values)
-social_effect_sizes_final <- unlist(social_effect_sizes)
+# Reproduce original results ----
+social_results_original <- social_analyze_data(social_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < social_alpha ~ "sig",
+      p_value >= social_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
+                               abs(effect_size) > 0.5 ~ "Medium",
+                               abs(effect_size) > 0.2 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
 
-# Count percentage that are significant (p < .05)
-social_pvalues_summary <- social_p_values_final |> 
-  as.data.frame() |> 
-  mutate(sig = case_when(social_p_values_final < .05 ~ "sig",
-                         social_p_values_final >= .05 ~ "non-sig")) |> 
-  count(sig) |> 
-  mutate(perc = n/100)
 
-# Count percentage where effect size maintains categorization
-social_effect_size_summary <- social_effect_sizes_final |> 
-  as.data.frame() |> 
-  mutate(categorization = case_when(
-    social_effect_sizes_final >= 0.14 ~ "same")
-    ) |> 
-  count(categorization) |> 
-  mutate(perc = n/100)
+
+# Create synthetic data ----
+social_data_synthetic <- syn(social_data_original, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+# Perform analysis on each synthetic dataset
+social_results_synthetic <- social_data_synthetic$syn |>
+  purrr::map_df(~ social_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(
+      p_value < social_alpha ~ "sig",
+      p_value >= social_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
+                               abs(effect_size) > 0.5 ~ "Medium",
+                               abs(effect_size) > 0.2 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - social_results_original$p_value),
+    diff_effectSize = abs(effect_size - social_results_original$effect_size)
+  )
+
+# Compile results ----
+social_results_summary <- data_frame(
+  Domain = "Social aspects of communication",
+  Study = "Chanchaochai & Schwarz (2023)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(social_data_original),
+  p_value = ifelse(
+    social_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", social_results_original$p_value)),
+  effect_size_measure = "Cohen’s d",
+  effect_size = round(social_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = social_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(social_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == social_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(social_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(social_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = social_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(social_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == social_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(social_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(social_results_synthetic$diff_effectSize),
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+social <- list(
+  data_original = social_data_original,
+  data_synthetic = social_data_synthetic,
+  results_original = social_results_original,
+  results_synthetic = social_results_synthetic,
+  results_summary = social_results_summary,
+  alpha = social_alpha
+)
+
+## Cleaning up the environment
+rm(
+  social_data_original,
+  social_data_synthetic,
+  social_results_original,
+  social_results_synthetic,
+  social_results_summary,
+  social_alpha
+)
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = social,
+              file = here::here("Data","09_Social_Communication","analysisData.RDS"))
 ```
 
 ##### Table 3 here.
@@ -1602,8 +2085,19 @@ social_effect_size_summary <- social_effect_sizes_final |>
 # This code reads in a template, generates table 3, 
 # and then saves it as word doc in the appropriate folder
 
+# Load in the data
+swallowing <- base::readRDS(file = here::here("Data","01_Swallowing","analysisData.RDS"))
+articulation <- base::readRDS(file = here::here("Data","02_Articulation","analysisData.RDS"))
+fluency <- base::readRDS(file = here::here("Data","03_Fluency","analysisData.RDS"))
+voice <- base::readRDS(file = here::here("Data","04_Voice_Resonance","analysisData.RDS"))
+hearing <- base::readRDS(file = here::here("Data","05_Hearing","analysisData.RDS"))
+aac <- base::readRDS(file = here::here("Data","06_AAC","analysisData.RDS"))
+language <- base::readRDS(file = here::here("Data","07_Language","analysisData.RDS"))
+cognition <- base::readRDS(file = here::here("Data","08_Cognition","analysisData.RDS"))
+social <-base::readRDS(file = here::here("Data","09_Social_Communication","analysisData.RDS"))
+
 cols2 <- tibble(
-    `Domain` = c(
+  `Domain` = c(
     "Swallowing",
     "Articulation",
     "Fluency",
@@ -1625,38 +2119,71 @@ cols2 <- tibble(
     "Clough et al. (2023)",
     "Chanchaochai & Schwarz (2023)"
   ),
-  `Observations` = c(
-    "584",
-    "40",
-    "114",
-    "111",
-    "372",
-    "2,160",
-    "36",
-    "8,568",
-    "96"
+  `N` = c(
+    swallowing$results_summary$N,
+    articulation$results_summary$N,
+    fluency$results_summary$N,
+    voice$results_summary$N,
+    hearing$results_summary$N,
+    aac$results_summary$N,
+    language$results_summary$N,
+    cognition$results_summary$N,
+    social$results_summary$N
+  ),
+  `P-value` = c(
+    swallowing$results_summary$p_value_mu,
+    articulation$results_summary$p_value,
+    fluency$results_summary$p_value,
+    voice$results_summary$p_value,
+    sub("^0", "", hearing$results_summary$p_value),
+    aac$results_summary$p_value,
+    language$results_summary$p_value,
+    sub("^0", "", cognition$results_summary$p_value),
+    social$results_summary$p_value
+  ),
+  `Effect Size Measure` = c(
+    swallowing$results_summary$effect_size_measure_mu,
+    articulation$results_summary$effect_size_measure,
+    fluency$results_summary$effect_size_measure,
+    voice$results_summary$effect_size_measure,
+    hearing$results_summary$effect_size_measure,
+    aac$results_summary$effect_size_measure,
+    language$results_summary$effect_size_measure,
+    cognition$results_summary$effect_size_measure,
+    social$results_summary$effect_size_measure
+  ),
+  `Effect Size` = c(
+    sub("^0", "", swallowing$results_summary$effect_size_mu),
+    sub("^0", "", articulation$results_summary$effect_size),
+    sub("^0", "", fluency$results_summary$effect_size),
+    sub("^0", "", voice$results_summary$effect_size),
+    sub("^0", "", hearing$results_summary$effect_size),
+    sub("^0", "", aac$results_summary$effect_size),
+    sub("^0", "", language$results_summary$effect_size),
+    sub("^0", "", cognition$results_summary$effect_size),
+    sub("0.", ".", social$results_summary$effect_size)
   ),
   `P-value\nStability` = c(
-    paste0(curtis_pvalue_mu$n[1],"%"),
-    paste0(articulation_pvalues_summary$n[2],"%"),
-    paste0(fluency_pvalues_summary$n[1],"%"),
-    paste0(voice_pvalues_summary$n[2],"%"),
-    paste0(hearing_pvalues_summary$n[2],"%"),
-    paste0(aac_pvalues_summary$n[1],"%"),
-    paste0(language_pvalues_summary$n[1],"%"),
-    paste0(cognition_pvalues_summary$n[2],"%"),
-    paste0(social_pvalues_summary$n[2],"%")
+    swallowing$results_summary$synAgreement_pvalue_mu,
+    articulation$results_summary$synAgreement_pvalue,
+    fluency$results_summary$synAgreement_pvalue,
+    voice$results_summary$synAgreement_pvalue,
+    hearing$results_summary$synAgreement_pvalue,
+    aac$results_summary$synAgreement_pvalue,
+    language$results_summary$synAgreement_pvalue,
+    cognition$results_summary$synAgreement_pvalue,
+    social$results_summary$synAgreement_pvalue
   ),
   `Effect Size Categorization\nStability` = c(
-    paste0(swallowing_effect_size_mu_summary$n[1],"%"),
-    paste0(articulation_effect_size_summary$n[1],"%"),
-    paste0(fluency_effect_size_summary$n[1],"%"),
-    paste0(voice_effect_size_summary$n[1],"%"),
-    paste0(hearing_effect_size_summary$n[1],"%"),
-    paste0(aac_effect_size_summary$n[1],"%"),
-    paste0(language_effect_size_summary$n[1],"%"),
-    paste0(cognition_effect_size_summary$n[1],"%"),
-    paste0(social_effect_size_summary$n[1],"%")
+    swallowing$results_summary$synAgreement_effectSize_mu,
+    articulation$results_summary$synAgreement_effectSize,
+    fluency$results_summary$synAgreement_effectSize,
+    voice$results_summary$synAgreement_effectSize,
+    hearing$results_summary$synAgreement_effectSize,
+    aac$results_summary$synAgreement_effectSize,
+    language$results_summary$synAgreement_effectSize,
+    cognition$results_summary$synAgreement_effectSize,
+    social$results_summary$synAgreement_effectSize
   )
 )
 
