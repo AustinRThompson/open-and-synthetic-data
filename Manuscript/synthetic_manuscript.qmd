@@ -246,7 +246,7 @@ cols3 <- tibble(
   ),
   `Effect Size Measure` = c(
     "Cohen’s f\n(Cohen, 1988)",
-    "Cohen’s d\n(Cohen, 1988)",
+    "Cohen’s d (Cohen, 1988) &\nGlass' Δ (Hedges & Olkin, 1985)",
     "Correlation coefficient\n(Cohen, 1988)",
     "Cohen's 𝜔\n(Cohen, 1988)",
     "√(3/𝜋) x odds ratio\n(Haddock et al., 1998; Hasselblad & Hedges, 1995)"
@@ -972,9 +972,10 @@ fluency_analyze_data <- function(data) {
 
   list(
     p_value = t_test$p.value,# Extracting p-values
-    effect_size = effectsize::cohens_d(Nonwordrepetition ~ Group,
-                     data = data,
-                     ci = 0.95)$Cohens_d, # Extracting effect size
+    effect_size = effectsize::glass_delta(Nonwordrepetition ~ Group,
+                                 data = data,
+                                 correction = FALSE,
+                                 ci = 0.95)$Glass_delta, # Extracting effect size
     conf_int_lower = t_test$conf.int[1],# Extracting lower CI bound
     conf_int_upper = t_test$conf.int[2] # Extracting upper CI bound
   )
@@ -1026,7 +1027,7 @@ fluency_results_summary <- data_frame(
   p_value = ifelse(
     fluency_results_original$p_value < .001, "<.001",
     sprintf("%0.3f", fluency_results_original$p_value)),
-  effect_size_measure = "Cohen’s d",
+  effect_size_measure = "Glass' Δ",
   effect_size = round(fluency_results_original$effect_size, digits = 2),
   
   # Creating the % Agreement for p values between the original and the synthetic datasets
