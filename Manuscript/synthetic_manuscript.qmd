@@ -297,60 +297,47 @@ In addition to these inferential comparisons, we provide a tutorial to walk thro
 The tutorial data and accompanying code can be accessed on the Open Science Framework (OSF: https://osf.io/yhkqf/). To get started, download R (https://cran.r-project.org/) and an interface like RStudio (https://posit.co/download/rstudio-desktop/). Open the *open-and-synthetic-data.Rproj* file in RStudio and then X file. **Add more here about the tutorial scripts**.
 
 ### Study 1: Normative Reference Values for Swallowing Outcomes
-```{r echo = FALSE}
-# here we run the main analysis
-# then show the code to generate one synthetic dataset for pedagogical purposes below
-
-# Load original data ----
+```{r}
+# Import original data ----
 swallowing_data_original <-
   read.csv(here::here("Data/01_Swallowing/norms_ratings.csv")) |>
   # clean variable names
   janitor::clean_names() |>
   # select only relevant variables
-  dplyr::select(c(
-    study_id,
-    bolus_consistency,
-    laryngeal_vestibule_severity_rating
-  )) |>
-  dplyr::mutate(
-    bolus_consistency = as.factor(bolus_consistency),
-    study_id = as.factor(study_id),
-    # express laryngeal_vestibule_severity_rating as a percentage
-    laryngeal_vestibule_severity_rating = laryngeal_vestibule_severity_rating /
-      100
-  )
+  dplyr::select(c(study_id, bolus_consistency, laryngeal_vestibule_severity_rating)) |> 
+  mutate(bolus_consistency = as.factor(bolus_consistency),
+         study_id = as.factor(study_id),
+         # express laryngeal_vestibule_severity_rating as a percentage
+         laryngeal_vestibule_severity_rating = laryngeal_vestibule_severity_rating/100,
+         dataset_type = "original",
+         dataset_number = 0)
 
-# Establish p_value for study
 swallowing_alpha <- .05
 
 # Reproduce original results ----
 # Obtain effect size measure for original dataset
-swallowing_analyze_data <- function(data) {
-  model <- gamlss::gamlss(
-    formula = laryngeal_vestibule_severity_rating ~ 1 + re(random = ~ 1 | study_id),
-    nu.formula = laryngeal_vestibule_severity_rating ~ 1 + re(random = ~ 1 | study_id),
-    family = BEZI,
-    data = na.omit(data)
-  )
-  model_fit <- summary(model, save=TRUE) # Saving the model
-  
-  list(
+swallowing_model_original <- gamlss(
+  formula = laryngeal_vestibule_severity_rating ~ 1 + re(random = ~ 1 | study_id),
+  nu.formula = laryngeal_vestibule_severity_rating ~ 1 + re(random = ~ 1 | study_id),
+  family = BEZI,
+  data = na.omit(swallowing_data_original)
+)
+
+# save model fit
+model_fit <- summary(swallowing_model_original, save = TRUE)
+
+swallowing_results_original <- list(
     p_value_mu = model_fit$pvalue[1],
     p_value_nu = model_fit$pvalue[3],
     # Extracting effect sizes
     effect_size_mu = sqrt((3 / pi)) * exp(model_fit$coef[1]),
     effect_size_nu = sqrt((3 / pi)) * exp(model_fit$coef[3]),
     # Extracting CI intervals
-    conf_int_lower_mu = confint(model)[1, ][1], # lower CI bound for mu
-    conf_int_upper_mu = confint(model)[1, ][2], # upper CI bound for mu
-    conf_int_lower_nu = confint(model)[3, ][1], # lower CI bound for nu
-    conf_int_upper_nu = confint(model)[3, ][2] # upper CI bound for nu
-  )
-}
-
-# Reproduce original results ----
-swallowing_results_original <-
-  swallowing_analyze_data(swallowing_data_original) |>
+    conf_int_lower_mu = confint(swallowing_model_original)[1, ][1], # lower CI bound for mu
+    conf_int_upper_mu = confint(swallowing_model_original)[1, ][2], # upper CI bound for mu
+    conf_int_lower_nu = confint(swallowing_model_original)[3, ][1], # lower CI bound for nu
+    conf_int_upper_nu = confint(swallowing_model_original)[3, ][2] # upper CI bound for nu
+) |>
   as.data.frame(row.names = NULL) |>
   dplyr::mutate(
     dataset = "original",
@@ -360,9 +347,9 @@ swallowing_results_original <-
       p_value_mu >= swallowing_alpha ~ "non-sig"
     ),
     categorization_mu = case_when(
-      abs(effect_size_mu) > 0.8 ~ "Large",
-      abs(effect_size_mu) > 0.5 ~ "Medium",
-      abs(effect_size_mu) > 0.2 ~ "Small",
+      abs(effect_size_mu) >= 0.8 ~ "Large",
+      abs(effect_size_mu) >= 0.5 ~ "Medium",
+      abs(effect_size_mu) >= 0.2 ~ "Small",
       TRUE ~ "Negligible"
     ),
     # Variables for nu
@@ -371,9 +358,9 @@ swallowing_results_original <-
       p_value_nu >= swallowing_alpha ~ "non-sig"
     ),
     categorization_nu = case_when(
-      abs(effect_size_nu) > 0.8 ~ "Large",
-      abs(effect_size_nu) > 0.5 ~ "Medium",
-      abs(effect_size_nu) > 0.2 ~ "Small",
+      abs(effect_size_nu) >= 0.8 ~ "Large",
+      abs(effect_size_nu) >= 0.5 ~ "Medium",
+      abs(effect_size_nu) >= 0.2 ~ "Small",
       TRUE ~ "Negligible"
     )
   )
@@ -381,13 +368,61 @@ swallowing_results_original <-
 
 # Create synthetic data ----
 swallowing_data_synthetic <- syn(swallowing_data_original, 
-                                   method = "ctree", 
-                                   m = 100,
-                                   seed = 2024)
+             method = "ctree", 
+             m = 100,
+             seed = 2024)
+swallowing_data_synthetic <- swallowing_data_synthetic$syn
 
-# Perform analysis on each synthetic dataset
-swallowing_results_synthetic <- swallowing_data_synthetic$syn |>
-  purrr::map_df(~ swallowing_analyze_data(.x), .id = "dataset") |>
+# Initialize a list for synthetic results
+swallowing_results_synthetic <- vector("list", 100)
+
+# Loop through each synthetic dataset
+for (i in 1:100) {
+  # Get the i-th synthetic dataset
+  data_synthetic <- swallowing_data_synthetic[i] |>
+    as.data.frame() |>
+    dplyr::mutate(dataset_type = "synthetic",
+           dataset_number = i)
+  
+  # Combine original and synthetic datasets
+  data_combined <- rbind(swallowing_data_original,
+                    data_synthetic) |>
+    mutate(
+      study_id = as.character(study_id),
+      dataset_type = as.factor(dataset_type),
+      
+      # Remove "HOA" from study_id and convert to numeric
+      as.numeric(gsub("HOA", "", all_data$study_id))
+    )
+  
+  # Fit the model
+  ## 11% of models demonstrated non-convergence so the fixed effects structure was simplified to only include dataset_type.
+  model <- gamlss(
+    formula = laryngeal_vestibule_severity_rating ~ dataset_type + re(random = ~ 1 | study_id),
+    nu.formula = laryngeal_vestibule_severity_rating ~ dataset_type + re(random = ~ 1 | study_id),
+    family = BEZI,
+    data = na.omit(data_combined)
+  )
+  
+  # Save the model
+  model_fit <- summary(model, save=TRUE) 
+
+  # Compiling the results in the swallowing_results_synthetic list.
+  swallowing_results_synthetic[[i]] <- list(
+    dataset = i,
+    p_value_mu = model_fit$pvalue[2],
+    p_value_nu = model_fit$pvalue[5],
+    effect_size_mu = sqrt((3 / pi)) * exp(model_fit$coef[1]),
+    effect_size_nu = sqrt((3 / pi)) * exp(model_fit$coef[3]),
+    conf_int_lower_mu = confint(model)[1,][1],
+    conf_int_upper_mu = confint(model)[1,][2],
+    conf_int_lower_nu = confint(model)[3,][1],
+    conf_int_upper_nu = confint(model)[3,][2]
+  )
+}
+
+# Collapsing the list into a single dataframe & categorizing effect sizes and p-values
+swallowing_results_synthetic <- do.call(rbind, lapply(swallowing_results_synthetic, as.data.frame, row.names = NULL)) |>
   dplyr::mutate(
     # Variables for mu
     sig_mu = case_when(
@@ -395,9 +430,9 @@ swallowing_results_synthetic <- swallowing_data_synthetic$syn |>
       p_value_mu >= swallowing_alpha ~ "non-sig"
     ),
     categorization_mu = case_when(
-      abs(effect_size_mu) > 0.8 ~ "Large",
-      abs(effect_size_mu) > 0.5 ~ "Medium",
-      abs(effect_size_mu) > 0.2 ~ "Small",
+      abs(effect_size_mu) >= 0.8 ~ "Large",
+      abs(effect_size_mu) >= 0.5 ~ "Medium",
+      abs(effect_size_mu) >= 0.2 ~ "Small",
       TRUE ~ "Negligible"
     ),
     # Variables for nu
@@ -406,9 +441,9 @@ swallowing_results_synthetic <- swallowing_data_synthetic$syn |>
       p_value_nu >= swallowing_alpha ~ "non-sig"
     ),
     categorization_nu = case_when(
-      abs(effect_size_nu) > 0.8 ~ "Large",
-      abs(effect_size_nu) > 0.5 ~ "Medium",
-      abs(effect_size_nu) > 0.2 ~ "Small",
+      abs(effect_size_nu) >= 0.8 ~ "Large",
+      abs(effect_size_nu) >= 0.5 ~ "Medium",
+      abs(effect_size_nu) >= 0.2 ~ "Small",
       TRUE ~ "Negligible"
     ),
     # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
@@ -419,7 +454,7 @@ swallowing_results_synthetic <- swallowing_data_synthetic$syn |>
   )
 
 # Compile results ----
-swallowing_results_summary <- data_frame(
+swallowing_results_summary <- dplyr::data_frame(
   Domain = "Swallowing",
   Study = "Curtis et al. (2023)",
   
@@ -438,7 +473,7 @@ swallowing_results_summary <- data_frame(
     count(sig_mu) |>
     dplyr::mutate(percent = n / NROW(swallowing_results_synthetic) * 100,
                   percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
-    dplyr::filter(sig_mu == swallowing_results_original$sig_mu) |>
+    dplyr::filter(sig_mu == "non-sig") |> # if the data_type fixed effect was non-sig, it indicates the data were similar
     dplyr::pull(percent),
   absDiff_pvalue_mean_mu = mean(swallowing_results_synthetic$diff_pvalue_mu),
   absDiff_pvalue_sd_mu = sd(swallowing_results_synthetic$diff_pvalue_mu),
@@ -465,7 +500,7 @@ swallowing_results_summary <- data_frame(
     count(sig_nu) |>
     dplyr::mutate(percent = n / NROW(swallowing_results_synthetic) * 100,
                   percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
-    dplyr::filter(sig_nu == swallowing_results_original$sig_nu) |>
+    dplyr::filter(sig_nu == "non-sig") |> # if the data_type fixed effect was non-sig, it indicates the data were similar
     dplyr::pull(percent),
   absDiff_pvalue_mean_nu = mean(swallowing_results_synthetic$diff_pvalue_nu),
   absDiff_pvalue_sd_nu = sd(swallowing_results_synthetic$diff_pvalue_nu),
@@ -478,7 +513,7 @@ swallowing_results_summary <- data_frame(
     dplyr::filter(categorization_nu == swallowing_results_original$categorization_nu) |>
     dplyr::pull(percent),
   absDiff_effectSize_mean_nu = mean(swallowing_results_synthetic$diff_effectsize_nu),
-  absDiff_effectSize_sd_nu = sd(swallowing_results_synthetic$diff_effectsize_nu),
+  absDiff_effectSize_sd_nu = sd(swallowing_results_synthetic$diff_effectsize_nu)
 )
 
 # Tidying the R project environment ----
@@ -505,6 +540,8 @@ rm(
 # Saving the data and results for easy importing later.
 base::saveRDS(object = swallowing,
               file = here::here("Data","01_Swallowing","analysisData.RDS"))
+
+
 ```
 
 Curtis et al. (2023) examined normative reference values for swallowing outcomes during flexible endoscopic evaluations of swallowing among 39 non-dysphagic, community-dwelling adults. In this observational cohort study, participants were administered 15 swallowing trials that varied by bolus size, consistency, contrast agent, and swallowing instructions. A variety of swallowing outcomes were measured, including the amount of laryngeal vestibule residue rated with the Visual Analysis of Swallowing Efficiency and Safety. Median and interquartile ranges (IQR) were used to describe the distribution of laryngeal vestibule residue ratings.
