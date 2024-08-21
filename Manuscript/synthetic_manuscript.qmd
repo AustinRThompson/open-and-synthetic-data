@@ -331,12 +331,7 @@ swallowing_results_original <- list(
     p_value_nu = model_fit$pvalue[3],
     # Extracting effect sizes
     effect_size_mu = sqrt((3 / pi)) * exp(model_fit$coef[1]),
-    effect_size_nu = sqrt((3 / pi)) * exp(model_fit$coef[3]),
-    # Extracting CI intervals
-    conf_int_lower_mu = confint(swallowing_model_original)[1, ][1], # lower CI bound for mu
-    conf_int_upper_mu = confint(swallowing_model_original)[1, ][2], # upper CI bound for mu
-    conf_int_lower_nu = confint(swallowing_model_original)[3, ][1], # lower CI bound for nu
-    conf_int_upper_nu = confint(swallowing_model_original)[3, ][2] # upper CI bound for nu
+    effect_size_nu = sqrt((3 / pi)) * exp(model_fit$coef[3])
 ) |>
   as.data.frame(row.names = NULL) |>
   dplyr::mutate(
@@ -392,7 +387,7 @@ for (i in 1:100) {
       dataset_type = as.factor(dataset_type),
       
       # Remove "HOA" from study_id and convert to numeric
-      as.numeric(gsub("HOA", "", all_data$study_id))
+      study_id = as.numeric(gsub("HOA", "", study_id))
     )
   
   # Fit the model
@@ -413,11 +408,7 @@ for (i in 1:100) {
     p_value_mu = model_fit$pvalue[2],
     p_value_nu = model_fit$pvalue[5],
     effect_size_mu = sqrt((3 / pi)) * exp(model_fit$coef[1]),
-    effect_size_nu = sqrt((3 / pi)) * exp(model_fit$coef[3]),
-    conf_int_lower_mu = confint(model)[1,][1],
-    conf_int_upper_mu = confint(model)[1,][2],
-    conf_int_lower_nu = confint(model)[3,][1],
-    conf_int_upper_nu = confint(model)[3,][2]
+    effect_size_nu = sqrt((3 / pi)) * exp(model_fit$coef[3])
   )
 }
 
@@ -531,10 +522,16 @@ swallowing <- list(
 rm(
   swallowing_data_original,
   swallowing_data_synthetic,
+  swallowing_model_original,
   swallowing_results_original,
   swallowing_results_synthetic,
   swallowing_results_summary,
-  swallowing_alpha
+  swallowing_alpha,
+  model,
+  model_fit,
+  data_combined,
+  data_synthetic,
+  i
 )
 
 # Saving the data and results for easy importing later.
@@ -792,9 +789,9 @@ articulation_results_original <- (articulation_analyze_data(articulation_data_or
       p_value < articulation_alpha ~ "sig",
       p_value >= articulation_alpha ~ "non-sig"
     ),
-    categorization = case_when(abs(effect_size) > 0.40 ~ "Large",
-                               abs(effect_size) > 0.25 ~ "Medium",
-                               abs(effect_size) > 0.1 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.40 ~ "Large",
+                               abs(effect_size) >= 0.25 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
                                TRUE ~ "Negligible")
   )
 
@@ -812,9 +809,9 @@ articulation_results_synthetic <- articulation_data_synthetic$syn |>
     sig = case_when(p_value < articulation_alpha ~ "sig",
                     p_value >= articulation_alpha ~ "non-sig"),
     categorization = case_when(
-      abs(effect_size) > 0.40 ~ "Large",
-      abs(effect_size) > 0.25 ~ "Medium",
-      abs(effect_size) > 0.1 ~ "Small",
+      abs(effect_size) >= 0.40 ~ "Large",
+      abs(effect_size) >= 0.25 ~ "Medium",
+      abs(effect_size) >= 0.1 ~ "Small",
       TRUE ~ "Negligible"
     ),
      # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
@@ -1030,9 +1027,9 @@ fluency_results_original <- (fluency_analyze_data(fluency_data_original)) |>
     dataset = "original",
     sig = case_when(p_value < fluency_alpha ~ "sig",
                     p_value >= fluency_alpha ~ "non-sig"),
-    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
-                               abs(effect_size) > 0.5 ~ "Medium",
-                               abs(effect_size) > 0.2 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
                                TRUE ~ "Negligible")
   )
 
@@ -1049,9 +1046,9 @@ fluency_results_synthetic <- fluency_data_synthetic$syn |>
   dplyr::mutate(
     sig = case_when(p_value < fluency_alpha ~ "sig",
                     p_value >= fluency_alpha ~ "non-sig"),
-    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
-                               abs(effect_size) > 0.5 ~ "Medium",
-                               abs(effect_size) > 0.2 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
                                TRUE ~ "Negligible"),
     # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
     diff_pvalue = abs(p_value - fluency_results_original$p_value),
@@ -1157,9 +1154,9 @@ voice_results_original <- voice_analyze_data(voice_data_original) |>
       p_value < voice_alpha ~ "sig",
       p_value >= voice_alpha ~ "non-sig"
     ),
-    categorization = case_when(abs(effect_size) > 0.5 ~ "Large",
-                               abs(effect_size) > 0.3 ~ "Medium",
-                               abs(effect_size) > 0.1 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
                                TRUE ~ "Negligible")
   )
 
@@ -1178,9 +1175,9 @@ voice_results_synthetic <- voice_data_synthetic$syn |>
       p_value < voice_alpha ~ "sig",
       p_value >= voice_alpha ~ "non-sig"
     ),
-    categorization = case_when(abs(effect_size) > 0.5 ~ "Large",
-                               abs(effect_size) > 0.3 ~ "Medium",
-                               abs(effect_size) > 0.1 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
                                TRUE ~ "Negligible"),
     # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
     diff_pvalue = abs(p_value - voice_results_original$p_value),
@@ -1351,9 +1348,9 @@ hearing_results_original <- hearing_analyze_data(hearing_data_original) |>
       p_value < hearing_alpha ~ "sig",
       p_value >= hearing_alpha ~ "non-sig"
     ),
-    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
-                               abs(effect_size) > 0.5 ~ "Medium",
-                               abs(effect_size) > 0.2 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
                                TRUE ~ "Negligible")
   )
 
@@ -1371,9 +1368,9 @@ hearing_results_synthetic <- hearing_data_synthetic$syn |>
   dplyr::mutate(
     sig = case_when(p_value < hearing_alpha ~ "sig",
                     p_value >= hearing_alpha ~ "non-sig"),
-    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
-                               abs(effect_size) > 0.5 ~ "Medium",
-                               abs(effect_size) > 0.2 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
                                TRUE ~ "Negligible"),
     # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
     diff_pvalue = abs(p_value - hearing_results_original$p_value),
@@ -1526,9 +1523,9 @@ aac_results_original <- aac_analyze_data(aac_data_original) |>
       p_value < aac_alpha ~ "sig",
       p_value >= aac_alpha ~ "non-sig"
     ),
-    categorization = case_when(abs(effect_size) > 0.5 ~ "Large",
-                               abs(effect_size) > 0.3 ~ "Medium",
-                               abs(effect_size) > 0.1 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
                                TRUE ~ "Negligible")
   )
 
@@ -1544,9 +1541,9 @@ aac_results_synthetic <- aac_data_synthetic$syn |>
   dplyr::mutate(
     sig = case_when(p_value < aac_alpha ~ "sig",
                     p_value >= aac_alpha ~ "non-sig"),
-    categorization = case_when(abs(effect_size) > 0.5 ~ "Large",
-                               abs(effect_size) > 0.3 ~ "Medium",
-                               abs(effect_size) > 0.1 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
                                TRUE ~ "Negligible"),
     # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
     diff_pvalue = abs(p_value - aac_results_original$p_value),
@@ -1614,7 +1611,6 @@ base::saveRDS(object = aac,
               file = here::here("Data","06_AAC","analysisData.RDS"))
 ```
 
-
 ```{r recep_language, echo = FALSE}
 library(DescTools) # install.packages("DescTools")
 
@@ -1658,9 +1654,9 @@ language_results_original <- language_analyze_data(language_data_original) |>
       p_value < language_alpha ~ "sig",
       p_value >= language_alpha ~ "non-sig"
     ),
-    categorization = case_when(abs(effect_size) > 0.5 ~ "Large",
-                               abs(effect_size) > 0.3 ~ "Medium",
-                               abs(effect_size) > 0.1 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
                                TRUE ~ "Negligible")
   )
 
@@ -1678,9 +1674,9 @@ language_results_synthetic <- language_data_synthetic$syn |>
       p_value < language_alpha ~ "sig",
       p_value >= language_alpha ~ "non-sig"
     ),
-    categorization = case_when(abs(effect_size) > 0.5 ~ "Large",
-                               abs(effect_size) > 0.3 ~ "Medium",
-                               abs(effect_size) > 0.1 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
                                TRUE ~ "Negligible"),
     # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
     diff_pvalue = abs(p_value - language_results_original$p_value),
@@ -1893,9 +1889,9 @@ cognition_results_original <- cognition_analyze_data(cognition_data_original) |>
       p_value < cognition_alpha ~ "sig",
       p_value >= cognition_alpha ~ "non-sig"
     ),
-    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
-                               abs(effect_size) > 0.5 ~ "Medium",
-                               abs(effect_size) > 0.2 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
                                TRUE ~ "Negligible")
   )
 
@@ -1914,9 +1910,9 @@ cognition_results_synthetic <- cognition_data_synthetic$syn |>
       p_value < cognition_alpha ~ "sig",
       p_value >= cognition_alpha ~ "non-sig"
     ),
-    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
-                               abs(effect_size) > 0.5 ~ "Medium",
-                               abs(effect_size) > 0.2 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
                                TRUE ~ "Negligible"),
     # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
     diff_pvalue = abs(p_value - cognition_results_original$p_value),
@@ -1976,7 +1972,8 @@ rm(
   cognition_results_original,
   cognition_results_synthetic,
   cognition_results_summary,
-  cognition_alpha
+  cognition_alpha,
+  helmert
 )
 
 # Saving the data and results for easy importing later.
@@ -2033,9 +2030,9 @@ social_results_original <- social_analyze_data(social_data_original) |>
       p_value < social_alpha ~ "sig",
       p_value >= social_alpha ~ "non-sig"
     ),
-    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
-                               abs(effect_size) > 0.5 ~ "Medium",
-                               abs(effect_size) > 0.2 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
                                TRUE ~ "Negligible")
   )
 
@@ -2055,9 +2052,9 @@ social_results_synthetic <- social_data_synthetic$syn |>
       p_value < social_alpha ~ "sig",
       p_value >= social_alpha ~ "non-sig"
     ),
-    categorization = case_when(abs(effect_size) > 0.8 ~ "Large",
-                               abs(effect_size) > 0.5 ~ "Medium",
-                               abs(effect_size) > 0.2 ~ "Small",
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
                                TRUE ~ "Negligible"),
     # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
     diff_pvalue = abs(p_value - social_results_original$p_value),
