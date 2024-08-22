@@ -95,13 +95,13 @@ library(insight) # create tables
 
 # Abstract {style="text-align: center;"}
 
-**Purpose**: Reproducibility is a core principle of science and access to a study's data is required to reproduce its findings. However, data sharing is uncommon in the field of Communication Sciences and Disorders and exacerbated by concerns related to privacy and disclosure risks. Synthetic data offers a potential solution to this barrier by generating artificial datasets that do not represent real individuals yet retain statistical properties and relationships from the original data. The present study evaluates the performance of synthetic data generation using open data from previously published studies across the 'Big Nine' domains defined by the American Speech-Language-Hearing Association.
+**Purpose**: Reproducibility is a core principle of science and access to a study's data is essential for reproducing its findings. However, data sharing is uncommon in the field of Communication Sciences and Disorders, often due to concerns related to privacy and disclosure risks. Synthetic data offers a potential solution to this barrier by generating artificial datasets that do not represent real individuals yet retain statistical properties and relationships from the original data. This study evaluates the performance of synthetic data generation using open data from previously published studies across the 'Big Nine' domains defined by the American Speech-Language-Hearing Association.
 
-**Method**: Open datasets were obtained from previously published research across the domains of Articulation, Cognition, Communication, Fluency, Hearing, Language, Social Communication, Voice and Resonance, and Swallowing. Synthetic datasets were generated with the *synthpop* R package. Inferential (*p*-values) and effect size results from synthetic datasets were compared to those from the original published datasets.
+**Method**: Open datasets were obtained from previously published research within the ASHA domains of Articulation, Cognition, Communication, Fluency, Hearing, Language, Social Communication, Voice and Resonance, and Swallowing. Synthetic datasets were generated with the *synthpop* R package. Results from synthetic datasets, including inferential statistics (*p*-values) and effect size, were compared to those from the original datasets.
 
-**Results**: Synthetic datasets maintained the direction of *p*-values in six studies and effect size categorizations in five out of nine studies. Among studies that did not maintain 95% of inferential or effect size results with synthetic datasets, the absolute mean difference between synthetic and original results was relatively low.
+**Results**: Synthetic datasets maintained the direction of *p*-values in six studies and effect size categorizations in five out of nine studies. In cases where synthetic datasets did not maintain 95% of the inferential or effect size results, the absolute mean difference between synthetic and original results was relatively low.
 
-**Conclusion**: Findings indicate that synthetic data maintained the statistical properties and relationships of the original data. Studies with a lower number of observations tended to demonstrate lower agreement and more variability in *p*-values and effect size estimates. Studies that generate synthetic data as a means to share their data should evaluate the stability of synthetic data to maintain their findings. We provide a general framework to promote sharing open data to facilitate computational reproducibility and a cumulative science in the field of Communication Sciences and Disorders.
+**Conclusion**: Findings suggest that synthetic data can effectively maintain the statistical properties and relationships of data commonly seen in the field of Communication Sciences and Disorders. While some studies with fewer observations showed lower agreement and greater variability in *p*-values and effect size estimates, this was not consistently appreciated across studies. Therefore, researchers who use synthetic data should assess its stability in preserving their results. This study provides a general framework to promote sharing open data to facilitate computational reproducibility and foster a cumulative science in the field of Communication Sciences and Disorders.
 :::
 
 \newpage
@@ -235,7 +235,7 @@ print(doc, target = fileout)
 
 ## Generation of Synthetic Datasets and Comparison with Original Dataset
 
-All data generation and analyses were conducted in R version 4.2.1 [@rcoreteam22]. Synthetic data was generated with the *synthpop* R package version 1.8.0 [@nowok_etal16]. Specifically, *synthpop* uses a non-parametric classification and regression tree (CART) approach that can handle any data type and generates data by sampling from a probability distribution. Our aims were twofold: (1) to determine whether a synthetic dataset maintained the statistical properties and relationships of the original dataset and (2) to examine whether this remained stable when generating multiple synthetic datasets. In light of these aims, our approach involved generating 100 different synthetic datasets for each original dataset from an ASHA 'Big Nine' domain. A statistical model with the original dataset was fit, and the *p*-value and effect size were recorded. If 95% of p-values and effect sizes from the synthetic datasets demonstrated a similar result as the original study, then this indicated that synthetic data maintained the statistical relationship. Specifically, we further defined this as a similar inferential result for *p*-values (i.e., a 'significant' or 'non-significant' *p*-value based on the original study's alpha level) and effect sizes that maintained their categorization (e.g., a 'medium' effect size). Measures of effect size and their interpretation for each study are provided in Table 2. If variability between the 100 synthetic datasets was appreciated, we described the dispersion of this distribution. The analysis plan for this study was preregistered on the Open Science Framework (https://osf.io/vhgq2).
+All data generation and analyses were conducted in R version 4.2.1 [@rcoreteam22]. Synthetic data was generated with the *synthpop* R package version 1.8.0 [@nowok_etal16]. Specifically, *synthpop* uses a non-parametric classification and regression tree (CART) approach that can handle any data type and generates data by sampling from a probability distribution. Our aims were twofold: (1) to determine whether a synthetic dataset maintained the statistical properties and relationships of the original dataset and (2) to examine whether this remained stable when generating multiple synthetic datasets. In light of these aims, our approach involved generating 100 different synthetic datasets for each original dataset from an ASHA 'Big Nine' domain. A statistical model with the original dataset was fit, and the *p*-value and effect size were recorded. If 95% of *p*-values and effect sizes from the synthetic datasets demonstrated a similar result as the original study, then this indicated that synthetic data maintained the statistical relationship. Specifically, we further defined this as a similar inferential result for *p*-values (i.e., a 'significant' or 'non-significant' *p*-value based on the original study's alpha level) and effect sizes that maintained their categorization (e.g., a 'medium' effect size). Measures of effect size and their interpretation for each study are provided in Table 2. If variability between the 100 synthetic datasets was appreciated, we described the dispersion of this distribution. The analysis plan for this study was preregistered on the Open Science Framework (https://osf.io/vhgq2).
 
 ##### Table 2 here.
 
@@ -359,7 +359,6 @@ swallowing_results_original <- list(
       TRUE ~ "Negligible"
     )
   )
-
 
 # Create synthetic data ----
 swallowing_data_synthetic <- syn(swallowing_data_original, 
@@ -740,7 +739,7 @@ number_trials <- table(swallowing_original_data$bolus_consistency) |>
   as.data.frame()
 ```
 
-Descriptively, the synthetic dataset classified `r round(combined_summaries$perc_absent[6], digits = 0)`% of laryngeal vestibule ratings on thin liquid boluses as 'absent' (i.e., 0% residue) compared to `r round(combined_summaries$perc_absent[1], digits = 0)`% in the original dataset. In the synthetic dataset, the median value on thin liquids was `r combined_summaries$median[6]` (IQR: `r combined_summaries$IQR_low[6]` - `r combined_summaries$IQR_high[6]`) compared to `r combined_summaries$median[1]` (IQR: `r combined_summaries$IQR_low[1]` - `r round(combined_summaries$IQR_high[1], digits = 2)`) in the original dataset. `r round(combined_summaries$perc_absent[4], digits = 2)`% of extremely thick liquids were classified as having no laryngeal vestibule residue compared to `r round(combined_summaries$perc_absent[2], digits = 2)`% in the original dataset. A similar pattern was appreciated for regular solids (`r round(combined_summaries$perc_absent[5], digits = 2)`% in synthetic vs. `r round(combined_summaries$perc_absent[3], digits = 2)`% in original dataset). Number of trials was lower for extremely thick (`r number_trials$Freq[1]` trials) and regular solid (`r number_trials$Freq[2]` trials) boluses compared to thin liquid (`r number_trials$Freq[3]` trials). When examined across 100 synthetic datasets, findings from the zero-inflated beta multilevel models indicate that `r swallowing$results_summary$synAgreement_pvalue_mu` of synthetic datasets were not statistically significantly different than the original dataset for both the zero-inflated and beta portions of the model (Table 3). Additionally, effect size categorizations were maintained for `r swallowing$results_summary$synAgreement_effectSize_nu` of both zero-inflated and beta portions of the model.
+Descriptively, the synthetic dataset classified `r round(combined_summaries$perc_absent[6], digits = 0)`% of laryngeal vestibule ratings on thin liquid boluses as 'absent' (i.e., 0% residue) compared to `r round(combined_summaries$perc_absent[1], digits = 0)`% in the original dataset. In the synthetic dataset, the median value on thin liquids was `r combined_summaries$median[6]` (IQR: `r combined_summaries$IQR_low[6]` - `r combined_summaries$IQR_high[6]`) compared to `r combined_summaries$median[1]` (IQR: `r combined_summaries$IQR_low[1]` - `r round(combined_summaries$IQR_high[1], digits = 2)`) in the original dataset. `r round(combined_summaries$perc_absent[4], digits = 2)`% of extremely thick liquids were classified as having no laryngeal vestibule residue compared to `r round(combined_summaries$perc_absent[2], digits = 2)`% in the original dataset. A similar pattern was appreciated for regular solids (`r round(combined_summaries$perc_absent[5], digits = 2)`% in synthetic vs. `r round(combined_summaries$perc_absent[3], digits = 2)`% in original dataset). Number of trials was lower for extremely thick (`r number_trials$Freq[1]` trials) and regular solid (`r number_trials$Freq[2]` trials) boluses compared to thin liquid (`r number_trials$Freq[3]` trials). When examined across 100 synthetic datasets, findings from the zero-inflated beta multilevel models indicate that `r swallowing$results_summary$synAgreement_pvalue_nu` and `r swallowing$results_summary$synAgreement_pvalue_mu` of synthetic datasets were not statistically significantly different than the original dataset for the zero-inflated and beta portions of the model, respectively (Table 3). Additionally, effect size categorizations were maintained for `r swallowing$results_summary$synAgreement_effectSize_nu` of both zero-inflated and beta portions of the model.
 
 ### Study 2: Vowel Acoustics as Predictors of Speech Intelligibility in Dysarthria
 
@@ -2364,6 +2363,8 @@ ggsave(
 articulation_es_viz <- 
   articulation$results_synthetic |> 
   ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=0.40, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
   geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
@@ -2382,6 +2383,8 @@ articulation_es_viz <-
 fluency_es_viz <- 
   fluency$results_synthetic |> 
   ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=Inf, xmax=-Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
   geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
@@ -2390,7 +2393,7 @@ fluency_es_viz <-
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
         axis.title.y = element_text(margin = margin(r = 2))) +
-  labs(x = "Glass' delta",
+  labs(x = "Glass' Δ",
        y = "Count") +
   ggtitle("B: Fluency",
           subtitle = "Mean difference of 0.36 (SD = 0.28)") +
@@ -2400,6 +2403,8 @@ fluency_es_viz <-
 voice_es_viz <- 
   voice$results_synthetic |> 
   ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=0.50, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
   geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
@@ -2418,15 +2423,17 @@ voice_es_viz <-
 hearing_es_viz <- 
   hearing$results_synthetic |> 
   ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
   geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
-  scale_x_continuous(breaks = c(1, 1.2, 1.4, 1.56, 1.8, 2, 2.2), limits = c(1, 2.20)) +
+  scale_x_continuous(breaks = c(1, 1.2, 1.4, 1.56, 1.8, 2, 2.2), limits = c(0.90, 2.20)) +
   theme(legend.position = "top",
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
         axis.title.y = element_text(margin = margin(r = 2))) +
-  labs(x = "√(3/pi) x odds ratio",
+  labs(x = "√(3/𝜋) x odds ratio",
        y = "Count") +
   ggtitle("D: Hearing",
           subtitle = "Mean difference of 0.18 (SD = 0.14)") +
@@ -2436,6 +2443,8 @@ hearing_es_viz <-
 language_es_viz <- 
   language$results_synthetic |> 
   ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=0.50, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
   geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
@@ -2455,6 +2464,8 @@ language_es_viz <-
 aac_es_viz <- 
   aac$results_synthetic |> 
   ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
   geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
@@ -2463,7 +2474,7 @@ aac_es_viz <-
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
         axis.title.y = element_text(margin = margin(r = 2))) +
-  labs(x = "Cohen's w",
+  labs(x = "Cohen's 𝜔",
        y = "Count") +
   ggtitle("F: Communication modalities",
           subtitle = "Mean difference of 7.24 (SD = 5.08)") +
@@ -2473,15 +2484,17 @@ aac_es_viz <-
 cognition_es_viz <- 
   cognition$results_synthetic |> 
   ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=0.80, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
   geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
-  scale_x_continuous(breaks = c(0.75, 1, 1.25, 1.53, 1.75, 2), limits = c(0.70, 2.1)) +
+  scale_x_continuous(breaks = c(0.80, 1, 1.25, 1.53, 1.75, 2), limits = c(0.70, 2.1)) +
   theme(legend.position = "top",
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
         axis.title.y = element_text(margin = margin(r = 2))) +
-  labs(x = "√(3/pi) x odds ratio",
+  labs(x = "√(3/𝜋) x odds ratio",
        y = "Count") +
   ggtitle("G: Cognition",
           subtitle = "Mean difference of 0.28 (SD = 0.19)") +
@@ -2491,6 +2504,8 @@ cognition_es_viz <-
 social_es_viz <- 
   social$results_synthetic |> 
   ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=-0.80, xmax=-Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
   geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
@@ -2499,7 +2514,7 @@ social_es_viz <-
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
         axis.title.y = element_text(margin = margin(r = 2))) +
-  labs(x = "√(3/pi) x odds ratio",
+  labs(x = "√(3/𝜋) x odds ratio",
        y = "Count") +
   ggtitle("H: Social aspects of communication",
           subtitle = "Mean difference of 0.21 (SD = 0.20)") +
@@ -2618,7 +2633,10 @@ cols2 <- tibble(
     sub("0.", ".", social$results_summary$effect_size)
   ),
   `P-value\nAgreement` = c(
-    swallowing$results_summary$synAgreement_pvalue_mu,
+    paste0(swallowing$results_summary$synAgreement_pvalue_nu, 
+           " (zero-inflated) & ", 
+           swallowing$results_summary$synAgreement_pvalue_mu, 
+           " (beta)"),
     articulation$results_summary$synAgreement_pvalue,
     fluency$results_summary$synAgreement_pvalue,
     voice$results_summary$synAgreement_pvalue,
@@ -2629,7 +2647,10 @@ cols2 <- tibble(
     social$results_summary$synAgreement_pvalue
   ),
   `Effect Size Categorization\nAgreement` = c(
-    swallowing$results_summary$synAgreement_effectSize_mu,
+    paste0(swallowing$results_summary$synAgreement_effectSize_nu, 
+           " (zero-inflated) & ", 
+           swallowing$results_summary$synAgreement_effectSize_mu, 
+           " (beta)"),
     articulation$results_summary$synAgreement_effectSize,
     fluency$results_summary$synAgreement_effectSize,
     voice$results_summary$synAgreement_effectSize,
@@ -2650,7 +2671,7 @@ t2 <- flextable(cols2) |>
     i = 1,
     j = 4,
     value = as_paragraph(
-      "Caption: 100 synthetic datasets were generated for each domain. For the Swallowing domain, a zero-inflated beta multilevel model was performed to directly compare original and synthetic datasets."
+      "Caption: 100 synthetic datasets were generated for each domain. For the Swallowing domain, a zero-inflated beta multilevel model was performed to directly compare original and synthetic datasets. The percentage of non-significant p-values, which is indicative of no statistically significant difference between dataset types, is shown for both zero-inflated and beta portions of the model."
     ),
     ref_symbols = c("a"),
     part = "header"
@@ -2664,7 +2685,29 @@ print(doc, target = fileout)
 
 # Discussion
 
-XXX
+Majority of studies demonstrated high levels of *p*-value and effect size categorization agreement compared to original study's results. Lower agreement was not uniformly explained by lower number of observations than *synthpop* recommends (> 130), suggesting that researchers should confirm the accuracy of synthetic data and provide this comparison in supplemental manuscript materials.
+
+Data sharing exists on a continuum (eg fully closed, available upon request, restricted access to select researchers, partial/analytic dataset, fully open dataset). 
+
+Important emphasis: de-identified data should be shared whenever possible from ethical/IRB perspective. Synthetic data should be reserved for situations where the data cannot be de-identified and participants did not consent for identifiable data to be shared. Since synthetic data 
+
+*Study Limitations*: We relied on a priori thresholds (e.g., 'significant' p-values and effect size categories) to determine whether synthetic data maintained relationships from the original study. 
+
+
+Tutorial
+
+Steps to ensure data is open and reproducible (Howard et al., 2024)
+* Store data files in a freely downloadable or protected access repository (e.g., https://osf.io, https://nda.nih.gov, https:// www.ldbase.org, https://www.icpsr.umich.edu). 
+* Include enough data to reproduce all elements of a study, including variables used for descriptive statistics and item-level data behind composite-scale scores.  
+* Provide a data dictionary or codebook.  
+* Provide syntax files that document all statistical analyses (and ensure the files referenced in syntax match the files included with open data).
+* As possible and practical, statistical analyses should be performed in freely available software for maximal reproducibility. Otherwise, include copies of data and syntax files from proprietary software in a generic format (e.g., .csv files for data; .txt or .pdf for syntax).  
+* In the repository in which data and/or materials are stored, include detailed instructions (e.g., a “Read Me” file) to help visitors navigate and use the provided files.
+
+Decision-tree (eg diagram that Austin created)
+* Guidance on when to obtain IRB approval, how to define 'de-identified' data, etc.
+
+
 
 # Conclusions
 
@@ -2704,13 +2747,13 @@ Figure 2. Visualization of data distributions from synthetic and original data f
 
 <br>
 
-Figure 3. Distribution of log-transformed p-values in synthetic datasets across ASHA domains.
+Figure 3. Distribution of log-transformed *p*-values in synthetic datasets across ASHA domains.
 
-*Caption*: Each panel displays the distribution of log-transformed p-values across 100 synthetic datasets for a given ASHA domain. The dashed line indicates the threshold for statistical significance from the original study. Shaded green areas indicate synthetic p-values that maintained the statistical inferential result of the original study. The mean difference and standard deviation of raw p-values compared to the p-value reported in the original study is shown below each panel's title.
+*Caption*: Each panel displays the distribution of log-transformed *p*-values across 100 synthetic datasets for a given ASHA domain. The dashed line indicates the threshold for statistical significance from the original study. Shaded green areas indicate synthetic *p*-values that maintained the statistical inferential result of the original study. The mean difference and standard deviation of raw *p*-values compared to the *p*-value reported in the original study is shown below each panel's title.
 
 <br>
 
 Figure 4. Distribution of effect sizes in synthetic datasets across ASHA domains.
 
-*Caption*: Each panel displays the distribution of effect sizes across 100 synthetic datasets  for a given ASHA domain. The dashed line indicates the effect size reported in the original study. The mean difference and standard deviation of the effect size compared to the result reported in the original study is shown below each panel's title.
+*Caption*: Each panel displays the distribution of effect sizes across 100 synthetic datasets for a given ASHA domain. The dashed line indicates the effect size reported in the original study and the light blue shaded area indicates the range of the effect size categorization. The mean difference and standard deviation of the effect size compared to the result reported in the original study is shown below each panel's title.
 :::
