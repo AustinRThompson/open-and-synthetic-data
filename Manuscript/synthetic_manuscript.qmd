@@ -2150,7 +2150,7 @@ articulation_pval_viz <-
        y = "Density") +
   ggtitle("A: Articulation",
           subtitle = "Mean difference of 0.05 (SD = 0.10)") +
-  geom_vline(xintercept = log(.05), color = "black", 
+  geom_vline(xintercept = log(articulation$results_original$p_value), color = "black", 
              size = 0.75, linetype = "dashed", alpha = 0.75)
 
 fluency_pval_viz <- 
@@ -2176,7 +2176,7 @@ fluency_pval_viz <-
        y = "Density") +
   ggtitle("B: Fluency",
           subtitle = "Mean difference of 0.0000007 (SD = 0.00003)") +
-  geom_vline(xintercept = log(.05), color = "black", 
+  geom_vline(xintercept = log(fluency$results_original$p_value), color = "black", 
              size = 0.75, linetype = "dashed", alpha = 0.75)
   
 voice_pval_viz <- 
@@ -2202,7 +2202,7 @@ voice_pval_viz <-
        y = "Density") +
   ggtitle("C: Voice and resonance",
           subtitle = "Mean difference of 0.005 (SD = 0.05)") +
-  geom_vline(xintercept = log(.05), color = "black", 
+  geom_vline(xintercept = log(voice$results_original$p_value), color = "black", 
              size = 0.75, linetype = "dashed", alpha = 0.75)
   
 hearing_pval_viz <- 
@@ -2228,7 +2228,7 @@ hearing_pval_viz <-
        y = "Density") +
   ggtitle("D: Hearing",
           subtitle = "Mean difference of 0.03 (SD = 0.04)") +
-  geom_vline(xintercept = log(.05), color = "black", 
+  geom_vline(xintercept = log(hearing$results_original$p_value), color = "black", 
              size = 0.75, linetype = "dashed", alpha = 0.75)
   
 language_pval_viz <- 
@@ -2254,7 +2254,7 @@ language_pval_viz <-
        y = "Density") +
   ggtitle("E: Receptive and expressive language",
           subtitle = "Mean difference of 0.0009 (SD = 0.002)") +
-  geom_vline(xintercept = log(.05), color = "black", 
+  geom_vline(xintercept = log(language$results_original$p_value), color = "black", 
              size = 0.75, linetype = "dashed", alpha = 0.75)
   
 aac_pval_viz <- 
@@ -2280,7 +2280,7 @@ aac_pval_viz <-
        y = "Density") +
   ggtitle("F: Communication modalities",
           subtitle = "Mean difference of 0.00004 (SD = 0.0002)") +
-  geom_vline(xintercept = log(.05), color = "black", 
+  geom_vline(xintercept = log(aac$results_original$p_value), color = "black", 
              size = 0.75, linetype = "dashed", alpha = 0.75)
   
 cognition_pval_viz <- 
@@ -2306,7 +2306,7 @@ cognition_pval_viz <-
        y = "Density") +
   ggtitle("G: Cognition",
           subtitle = "Mean difference of 0.25 (SD = 0.28)") +
-  geom_vline(xintercept = log(.05), color = "black", 
+  geom_vline(xintercept = log(cognition$results_original$p_value), color = "black", 
              size = 0.75, linetype = "dashed", alpha = 0.75)
   
 social_pval_viz <- 
@@ -2332,7 +2332,7 @@ social_pval_viz <-
        y = "Density") +
   ggtitle("H: Social aspects of communication",
           subtitle = "Mean difference of 0.01 (SD = 0.07)") +
-  geom_vline(xintercept = log(.05), color = "black", 
+  geom_vline(xintercept = log(social$results_original$p_value), color = "black", 
              size = 0.75, linetype = "dashed", alpha = 0.75)
 
 # Combine effect size figures together
@@ -2359,7 +2359,7 @@ ggsave(
     bg = "white"
   )
 
-# Visualize effect size distributions
+ # Visualize effect size distributions
 articulation_es_viz <- 
   articulation$results_synthetic |> 
   ggplot(aes(x = effect_size)) +
