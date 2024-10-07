@@ -110,9 +110,15 @@ library(insight) # create tables
 
 # Introduction {style="text-align: center;"}
 
-Transparency and openness are fundamental tenets of science, with computational reproducibility playing a key role in maintaining these values. Computational reproducibility refers to the ability to recreate a study's results using the original data. Nowadays, the vast majority of scientific studies use some degree of computation, including processing data, conducting descriptive or inferential statistics, and visualizing results. When these computations are reproducible, the transparency and confidence in findings are enhanced. Achieving computational reproducibility, however, requires authors to share their data. Both the National Institutes of Health and the National Science Foundation mandate data sharing and management plans to ensure that scientific data supporting a study is shared upon publication and aligns with FAIR (Findability, Accessibility, Interoperability, and Reuse) principles of digital assets [@wilkinson_etal16; @watson_etal23]. Providing open, publicly available data benefits scientists, funding bodies, and society at large by enabling researchers to verify results, generate new knowledge (e.g., meta-analyses, secondary analyses), develop hypotheses, and minimize redundant data collection [@chow_etal23]. In this sense, sharing data promotes a cumulative and self-correcting science.
+Transparency and openness are fundamental tenets of science, with computational reproducibility playing a key role in maintaining these values. Computational reproducibility refers to the ability to recreate a study's results using the original data. Nowadays, the vast majority of scientific studies use some degree of computation, including processing data, conducting descriptive or inferential statistics, and visualizing results. When these computations are reproducible, the transparency and confidence in findings are enhanced. Achieving computational reproducibility, however, requires authors to share their data. Both the National Institutes of Health and the National Science Foundation mandate data sharing and management plans to ensure that scientific data supporting a study is shared upon publication and aligns with FAIR (Findability, Accessibility, Interoperability, and Reuse) principles of digital assets [@wilkinson_etal16; @watson_etal23]. 
 
-Despite the clear benefits of open data and its growing adoption in other fields like psychology and the biobehavioral sciences [@quintana20], only 26% of a sample of researchers in the field of Communication Sciences and Disorders (CSD) reported sharing their data publicly at least once [@elamin_etal23]. Both individual and system-level barriers hinder data sharing, including a lack of time, knowledge, support from colleagues, and perceived incentives. Privacy and confidentiality concerns, particularly in low-incidence populations, also pose significant challenges [@pfeiffer_etal24]. Researchers have traditionally attempted to minimize disclosure risks by anonymizing datasets, aggregating results, or releasing a subset of the data; however, these practices do not fully eliminate the risk of identification in low-incidence populations. For example, re-identifying an individual in an incomplete dataset requires only a few demographic attributes [@rocher_etal19]. A further challenge in sharing data can occur when researchers do not prospectively obtain consent to share data and may not be able to contact participants after data collection [@pfeiffer_etal24].
+Providing open, publicly available data benefits scientists, funding bodies, and society at large by enabling researchers to verify results, generate new knowledge (e.g., meta-analyses, secondary analyses), develop hypotheses, and minimize redundant data collection [@chow_etal23]. In this sense, sharing data promotes a cumulative and self-correcting science. Despite the clear benefits of open data and its growing adoption in other fields like psychology and the biobehavioral sciences [@quintana20], only 26% of a sample of researchers in the field of Communication Sciences and Disorders (CSD) reported sharing their data publicly at least once [@elamin_etal23]. 
+
+Understanding the nuances of data sharing requires a closer look at the different types of data generated throughout a research project’s life cycle. These include raw collected data, processed intermediate data, and final analysis data (Table 1). However, a common misconception is that open data refers solely to sharing raw data (e.g., audio recordings, videos, MRI data) [@pfeiffer_etal24]. In reality, sharing intermediate or analysis data can also support reproducibility while reducing privacy and confidentiality concerns associated with sharing raw data. However, these different types of data offer varying levels of utility: sharing raw data enables maximum reproducibility and secondary research opportunities, while analysis data (although easier to share) primarily supports computational reproducibility.
+
+##### Table 1 here.
+
+Both individual and system-level barriers hinder data sharing, including a lack of time, knowledge, support from colleagues, and perceived incentives [@pfeiffer_etal24]. Furthermore, each type of data comes with unique challenges regarding data sharing. For raw data, it is common that researchers often do not obtain consent to share data or cannot contact participants after data collection. Additionally, sharing de-identified raw or intermediate data may require additional approval from the institutional review board. Even when de-identification is possible, anonymized intermediate or analysis datasets can still carry re-identification risks, especially in small samples or vulnerable populations where indirect identifiers (e.g., gender, age, or race) may compromise participant confidentiality [@rocher_etal19]. Therefore, although sharing de-identified analysis data is the minimum requirement for ensuring computational reproducibility and promoting cumulative science, concerns about privacy and confidentiality may persist.
 
 Synthetic data generation offers a potential solution to maintaining participants' privacy and confidentiality in publicly available datasets [@rubin93; @drechsler_haensch24]. Synthetic data involves creating an artificial dataset that does not represent real individuals, ensuring no risk of disclosure since participants in the synthetic dataset do not correspond to real individuals. Importantly, synthetic data retains the statistical properties and relationships of the original data, allowing researchers to reproduce study findings, explore the dataset, and develop new questions and hypotheses. Synthetic data generation is widely used across medical research, industry, and government agencies, most notably by the United States Census Bureau [@jarmin_etal14a]. Though synthetic data methods were first proposed more than 30 years ago [@rubin93], recent analytic and software developments have made it easier and more efficient to generate high-quality synthetic data [@nowok_etal16].
 
@@ -122,11 +128,11 @@ Despite the potential utility of synthetic data to promote data sharing in the f
 
 ## Description of Original Datasets from ASHA 'Big Nine' Domains
 
-Authors performed a manual search to obtain publicly available datasets from previously published research articles related to the 'Big Nine' ASHA domains: swallowing [@curtis_etal23a], articulation [@thompson_etal23], fluency [@elsherif_etal21], voice and resonance [@novotny_etal16], hearing [@battal_etal19], communication modalities [@king_etal22], receptive and expressive language [@kearney_etal23], cognitive aspects of communication [@clough_etal23], and social aspects of communication [@chanchaochai_schwarz23]. Authors then reproduced an analysis from each study. Table 1 provides a description of the population, analysis, and open materials for each study.
+Authors performed a manual search to obtain publicly available datasets from previously published research articles related to the 'Big Nine' ASHA domains: swallowing [@curtis_etal23a], articulation [@thompson_etal23], fluency [@elsherif_etal21], voice and resonance [@novotny_etal16], hearing [@battal_etal19], communication modalities [@king_etal22], receptive and expressive language [@kearney_etal23], cognitive aspects of communication [@clough_etal23], and social aspects of communication [@chanchaochai_schwarz23]. Authors then reproduced an analysis from each study. Table 2 provides a description of the population, analysis, and open materials for each study.
 
-##### Table 1 here.
+##### Table 2 here.
 
-```{r table 1, echo = FALSE, include = TRUE}
+```{r table 2, echo = FALSE, include = TRUE}
 # This code reads in a template, generates table 2, 
 # and then saves it as word doc in the appropriate folder
 
@@ -224,22 +230,22 @@ cols2 <- tibble(
 set_flextable_defaults(font.family = "Times New Roman")
 
 t2 <- flextable(cols2) |>
-  set_caption("Table 1: Characteristics of included studies by ASHA domain.") |> 
+  set_caption("Table 2: Characteristics of included studies by ASHA domain.") |> 
   set_table_properties(layout = "autofit", width = 1)
 
 doc <- read_docx(here("manuscript", "templates-data", "template.docx"))
 doc <- body_add_flextable(doc, value = t2)
-fileout <- here("manuscript", "tables-figures", "table1.docx") # uncomment to write in your working directory
+fileout <- here("manuscript", "tables-figures", "table2.docx") # uncomment to write in your working directory
 print(doc, target = fileout)
 ```
 
 ## Generation of Synthetic Datasets and Comparison with Original Dataset
 
-Synthetic data generation and statistical analyses were conducted in R version 4.2.1 [@rcoreteam22]. Synthetic data was generated with the *synthpop* R package (version 1.8.0) [@nowok_etal16]. Specifically, *synthpop* uses a non-parametric classification and regression tree approach that generates data by sampling from a probability distribution and can handle any type of data. Our aims were twofold: (1) to determine whether a synthetic dataset maintained the statistical properties and relationships of the original dataset and (2) to examine whether this remained stable when generating multiple synthetic datasets. In light of these aims, our approach involved generating 100 different synthetic datasets for each original dataset from an ASHA 'Big Nine' domain. A statistical model with the original dataset was fit, and the *p*-value and effect size were recorded. If 95% of *p*-values and effect sizes from the synthetic datasets demonstrated a similar result as the original study, then this indicated that synthetic data maintained the statistical relationship. Specifically, we further defined this as a similar inferential result for *p*-values (i.e., a 'significant' or 'non-significant' *p*-value based on the original study's alpha level) and effect sizes that maintained their categorization based on conventional thresholds (e.g., a 'medium' effect size). Measures of effect size and their interpretation for each study are provided in Table 2. If variability between the 100 synthetic datasets was appreciated, we visualized and described the dispersion of this distribution. The analysis plan for this study was preregistered on the Open Science Framework (https://osf.io/vhgq2).
+Synthetic data generation and statistical analyses were conducted in R version 4.2.1 [@rcoreteam22]. Synthetic data was generated with the *synthpop* R package (version 1.8.0) [@nowok_etal16]. Specifically, *synthpop* uses a non-parametric classification and regression tree approach that generates data by sampling from a probability distribution and can handle any type of data. Our aims were twofold: (1) to determine whether a synthetic dataset maintained the statistical properties and relationships of the original dataset and (2) to examine whether this remained stable when generating multiple synthetic datasets. In light of these aims, our approach involved generating 100 different synthetic datasets for each original dataset from an ASHA 'Big Nine' domain. A statistical model with the original dataset was fit, and the *p*-value and effect size were recorded. If 95% of *p*-values and effect sizes from the synthetic datasets demonstrated a similar result as the original study, then this indicated that synthetic data maintained the statistical relationship. Specifically, we further defined this as a similar inferential result for *p*-values (i.e., a 'significant' or 'non-significant' *p*-value based on the original study's alpha level) and effect sizes that maintained their categorization based on conventional thresholds (e.g., a 'medium' effect size). Measures of effect size and their interpretation for each study are provided in Table 3. If variability between the 100 synthetic datasets was appreciated, we visualized and described the dispersion of this distribution. The analysis plan for this study was preregistered on the Open Science Framework (https://osf.io/vhgq2).
 
-##### Table 2 here.
+##### Table 3 here.
 
-```{r table 2, echo = FALSE, include = TRUE}
+```{r table 3, echo = FALSE, include = TRUE}
 cols3 <- tibble(
     `Statistical Test` = c(
     "Hierarchical linear regression",
@@ -281,12 +287,12 @@ cols3 <- tibble(
 set_flextable_defaults(font.family = "Times New Roman")
 
 t3 <- flextable(cols3) |>
-  set_caption("Table 2: Effect size measures and interpretation by statistical test.") |> 
+  set_caption("Table 3: Effect size measures and interpretation by statistical test.") |> 
   set_table_properties(layout = "autofit", width = 1)
 
 doc <- read_docx(here("manuscript", "templates-data", "template.docx"))
 doc <- body_add_flextable(doc, value = t3)
-fileout <- here("manuscript", "tables-figures", "table2.docx")
+fileout <- here("manuscript", "tables-figures", "table3.docx")
 print(doc, target = fileout)
 ```
 
@@ -739,7 +745,7 @@ number_trials <- table(swallowing_original_data$bolus_consistency) |>
   as.data.frame()
 ```
 
-Descriptively, the synthetic dataset classified `r round(combined_summaries$perc_absent[6], digits = 0)`% of laryngeal vestibule ratings on thin liquid boluses as 'absent' (i.e., 0% residue) compared to `r round(combined_summaries$perc_absent[1], digits = 0)`% in the original dataset. In the synthetic dataset, the median value on thin liquids was `r combined_summaries$median[6]` (IQR: `r combined_summaries$IQR_low[6]` - `r combined_summaries$IQR_high[6]`) compared to `r combined_summaries$median[1]` (IQR: `r combined_summaries$IQR_low[1]` - `r round(combined_summaries$IQR_high[1], digits = 2)`) in the original dataset. `r round(combined_summaries$perc_absent[4], digits = 2)`% of extremely thick liquids were classified as having no laryngeal vestibule residue compared to `r round(combined_summaries$perc_absent[2], digits = 2)`% in the original dataset. A similar pattern was appreciated for regular solids (`r round(combined_summaries$perc_absent[5], digits = 2)`% in synthetic vs. `r round(combined_summaries$perc_absent[3], digits = 2)`% in original dataset). When examined across 100 synthetic datasets, findings from the zero-inflated beta multilevel models indicate that `r swallowing$results_summary$synAgreement_pvalue_nu` and `r swallowing$results_summary$synAgreement_pvalue_mu` of synthetic datasets were not statistically significantly different than the original dataset for the zero-inflated and beta portions of the model, respectively (Table 3). Additionally, effect size categorizations were maintained for `r swallowing$results_summary$synAgreement_effectSize_nu` of both zero-inflated and beta portions of the model.
+Descriptively, the synthetic dataset classified `r round(combined_summaries$perc_absent[6], digits = 0)`% of laryngeal vestibule ratings on thin liquid boluses as 'absent' (i.e., 0% residue) compared to `r round(combined_summaries$perc_absent[1], digits = 0)`% in the original dataset. In the synthetic dataset, the median value on thin liquids was `r combined_summaries$median[6]` (IQR: `r combined_summaries$IQR_low[6]` - `r combined_summaries$IQR_high[6]`) compared to `r combined_summaries$median[1]` (IQR: `r combined_summaries$IQR_low[1]` - `r round(combined_summaries$IQR_high[1], digits = 2)`) in the original dataset. `r round(combined_summaries$perc_absent[4], digits = 2)`% of extremely thick liquids were classified as having no laryngeal vestibule residue compared to `r round(combined_summaries$perc_absent[2], digits = 2)`% in the original dataset. A similar pattern was appreciated for regular solids (`r round(combined_summaries$perc_absent[5], digits = 2)`% in synthetic vs. `r round(combined_summaries$perc_absent[3], digits = 2)`% in original dataset). When examined across 100 synthetic datasets, findings from the zero-inflated beta multilevel models indicate that `r swallowing$results_summary$synAgreement_pvalue_nu` and `r swallowing$results_summary$synAgreement_pvalue_mu` of synthetic datasets were not statistically significantly different than the original dataset for the zero-inflated and beta portions of the model, respectively (Table 4). Additionally, effect size categorizations were maintained for `r swallowing$results_summary$synAgreement_effectSize_nu` of both zero-inflated and beta portions of the model.
 
 ### Study 2: Vowel Acoustics as Predictors of Speech Intelligibility in Dysarthria
 
@@ -879,7 +885,7 @@ base::saveRDS(object = articulation,
               file = here::here("Data","02_Articulation","analysisData.RDS"))
 ```
 
-Thompson et al. (2023) examined the relationship between vowel space area and speech intelligibility among 40 speakers with dysarthria of varying etiologies, including Parkinson's disease, amyotrophic lateral sclerosis, Huntington's disease, and cerebellar ataxia. A linear regression model revealed a statistically significant relationship between vowel space area and intelligibility (*p* \< .001) with a Cohen's *f* of 0.59, corresponding to a conventionally "large" effect size (Table 2).
+Thompson et al. (2023) examined the relationship between vowel space area and speech intelligibility among 40 speakers with dysarthria of varying etiologies, including Parkinson's disease, amyotrophic lateral sclerosis, Huntington's disease, and cerebellar ataxia. A linear regression model revealed a statistically significant relationship between vowel space area and intelligibility (*p* \< .001) with a Cohen's *f* of 0.59, corresponding to a conventionally "large" effect size (Table 3).
 
 Below we import the original dataset, wrangle the data, and generate a synthetic data set. The data wrangling steps include (1) importing the original dataset, (2) removing the reliability trials from the dataset, (3) removing a string character from the SpeakerID variable, and (4) selecting only the variables needed for the analysis.
 
@@ -2546,10 +2552,9 @@ ggsave(
   )
 ```
 
+##### Table 4 here.
 
-##### Table 3 here.
-
-```{r table 3, echo = FALSE}
+```{r table 4, echo = FALSE}
 
 # This code reads in a template, generates table 3, 
 # and then saves it as word doc in the appropriate folder
@@ -2665,7 +2670,7 @@ cols2 <- tibble(
 set_flextable_defaults(font.family = "Times New Roman")
 
 t2 <- flextable(cols2) |>
-  set_caption("Table 3: Stability of synthetic datasets across ASHA domains.") |> 
+  set_caption("Table 4: Stability of synthetic datasets across ASHA domains.") |> 
   set_table_properties(layout = "autofit", width = 1) |> 
   footnote(
     i = 1,
@@ -2679,27 +2684,47 @@ t2 <- flextable(cols2) |>
 
 doc <- read_docx(here("manuscript", "templates-data", "template.docx"))
 doc <- body_add_flextable(doc, value = t2)
-fileout <- here("manuscript", "tables-figures", "table3.docx") # uncomment to write in your working directory
+fileout <- here("manuscript", "tables-figures", "table4.docx") # uncomment to write in your working directory
 print(doc, target = fileout)
 ```
 
 # Discussion
 
-Although computational reproducibility is a core principle of science, data sharing is uncommon in CSD, partly due to concerns regarding disclosure risk [@pfeiffer_etal24]. This study demonstrates the utility of synthetic datasets to protect participant confidentiality while preserving the statistical properties and relationships of the original data. The utility of synthetic data is further strengthened by the range of datasets included in the current study, which varied by domain (across nine ASHA domains), sample size (from 40 to >8,000 data points), statistical models (from simple correlations to multilevel model with 3-way interactions), and effect sizes (from conventionally "small" to "large"). These results suggest that synthetic datasets can be effectively used across a wide range of studies in the field of CSD.
+Although computational reproducibility is a core principle of science, data sharing is uncommon in CSD, partly due to concerns regarding disclosure risk [@pfeiffer_etal24]. This study demonstrates the utility of synthetic datasets to protect participant confidentiality while preserving the statistical properties and relationships of the original analysis data. The utility of synthetic data is further strengthened by the range of datasets included in the current study, which varied by domain (across nine ASHA domains), sample size (from 40 to >8,000 data points), statistical models (from simple correlations to multilevel model with 3-way interactions), and effect sizes (from conventionally "small" to "large"). These results suggest that synthetic datasets can be effectively used across a wide range of studies in the field of CSD to preserve participant confidentiality when sharing data.
 
-One key finding is that lower agreement between synthetic and original datasets was not consistently due to having fewer observations than recommended by the *synthpop* package (i.e., fewer than 130). This highlights the importance of verifying the accuracy of synthetic datasets and providing these comparisons in supplemental manuscript materials. Since synthetic datasets are intended for sharing sensitive or identifiable data, researchers should generate multiple versions of a synthetic dataset and select the one that most closely reproduces the statistical findings of the original analysis. If the synthetic dataset fails to sufficiently maintain these relationships, it should not be shared.
+One key finding is that lower agreement between synthetic and original datasets was not attributed to sample size, despite the *synthpop* package's recommendation of a minimum of 130 observations for generating synthetic datasets [@nowok_etal16]. For example, in the original study from the cognition domain, which included over 8,000 observations, only 35% of synthetic datasets maintained the same inferential result as the original dataset. Instead, *p*-value and effect size agreement between the synthetic and original datasets was influenced by the original data’s proximity to the statistical significance or effect size thresholds. For example, the original cognition study reported a *p*-value of .013, resulting in a 35% agreement rate for synthetic datasets. Conversely, studies that reported an original *p*-value of <.001 showed a *p*-value agreement rate of 97-100%, with the exception of the articulation study, which had a *p*-value agreement of 71%.
 
-Data sharing exists on a continuum, from fully closed to fully open access. To ensure computational reproducibility and promote a cumulative science, de-identified data should be shared whenever ethically permissible. Synthetic data should be reserved for instances where the data cannot be de-identified, and participants did not consent to sharing identifiable data. Data availability statements like *"available upon reasonable request"* are ubiquitous, despite recent research in related fields shows poor compliance with less than half of studies providing requested data [@tedersoo_etal21]. Although ASHA currently lists this as an acceptable data availability statement for authors, it is evident that this statement is not transparent (i.e., the availability of the data is purposefully vague and unclear) and may even exacerbate inequities. For instance, researchers using this statement may not devote the time to properly organize their data, thereby hindering its availability when requested, or may restrict access to unnecessarily protect their data from reuse. This not only limits access for others with fewer resources or opportunities, but also is a direct barrier to a cumulative and transparent scientific literature. Synthetic data can help mitigate these concerns since the original data remains private, while still providing a version of the dataset that maintains the statistical properties necessary for computational reproducibility. Therefore, it is our hope that ASHA will consider removing this statement and instead provide synthetic data as an alternative option to data sharing.
+These findings highlight the importance of verifying the accuracy of synthetic datasets and providing these comparisons in supplemental manuscript materials. To ensure synthetic data quality, researchers should generate multiple versions of a synthetic dataset and select the one that most closely reproduces the statistical findings of the original analysis. If the synthetic dataset fails to sufficiently maintain these relationships, it should not be shared.
 
-Sharing data offers significant benefits for both the scientific community and the researcher collecting the data. From the perspective of scientific progress, open data enables researchers to verify results during peer review or after publication, leading to a more transparent and reliable scientific record. Open data also facilitates the generation of new knowledge through secondary analyses or meta-analysis. This is especially important since traditional meta-analyses that rely on studies with aggregate data or slight variations in statistical methods can be challenging to conduct. Open data allows for a higher-quality synthesis of data across studies, such as individual participant data (IPD) meta-analyses, yielding more precise and robust estimates. Moreover, open data minimizes redundant data collection. For instance, normative data or control groups can serve as historical comparisons for studies with patient populations, saving valuable time and resources. Lastly, sharing data benefits researchers directly, as studies have shown that openly shared data are associated with higher citation rates for the original work [@piwowar_etal07; @piwowar_vision13; @drachen_etal16].
+This study is not without limitations. We used predetermined thresholds (e.g., 'significant' *p*-values and effect size categories) to evaluate whether synthetic data maintained the relationships observed in the original study. When the original analyses had *p*-values near the threshold for significance (e.g., .01 < *p* < .05) or effect sizes near the boundary of a category, lower agreement was more likely. This likely reflects the distribution of synthetic data across both sides of these thresholds rather than actual poor agreement (Figures 3 & 4). Additionally, it's important to recognize that synthetic data is inherently a proxy and cannot entirely preserve all statistical properties of the original dataset. Therefore, researchers should provide de-identified (or identifiable when ethical approval is obtained) data whenever possible, as well as evaluate the utility of the synthetic dataset in the context of their own study. Finally, open data alone does not ensure computational reproducibility. Instead, both open data and accompanied code or syntax is required to reproduce analyses. In fact, recent research showed that a high percentage of findings from registered reports that provided open data were unable to be reproduced [@obels_etal20a]. Reproducible workflows in languages like R have been proposed and warrant consideration [@peikert_etal21a].
 
-Closed data is not only inefficient and counterproductive to cumulative science, but also conflicts with research ethics. Researchers hold an ethical obligation to ensure that clinical research maximizes the use of patient data. Patients participate in research studies with the expectation that their data will help answer important public health questions. However, many research questions cannot be fully addressed in a single study due to factors like low statistical power or unrepresentative samples. Publicly sharing data ensures its longevity and value for the scientific community. Moreover, researchers conducting publicly funded studies are obligated to return the data they collected to the general public that funded their research - a sentiment that has recently been emphasized by funding agencies like the National Institutes of Health and the National Science Foundation [@wilkinson_etal16; @watson_etal23].
+## Data Sharing Framework
 
-This study is not without limitations. We used predetermined thresholds (e.g., 'significant' p-values and effect size categories) to evaluate whether synthetic data maintained the relationships observed in the original study. When the original analyses had *p*-values near the threshold for significance (e.g., .01 < *p* < .05) or effect sizes near the boundary of a category, lower agreement was more likely. This likely reflects the distribution of synthetic data across both sides of these thresholds rather than actual poor agreement (Figures 3 & 4). Additionally, it's important to recognize that synthetic data is inherently a proxy and cannot entirely preserve all statistical properties of the original dataset. Therefore, researchers should provide de-identified (or identifiable when ethical approval is obtained) data whenever possible and in cases where synthetic data is used must evaluate its utility in the context of their own study. Finally, open data alone does not ensure computational reproducibility. Instead, both open data and accompanied code or syntax is required to reproduce analyses. In fact, recent research showed that a high percentage of findings from registered reports that provided open data were unable to be reproduced [@obels_etal20a]. Reproducible workflows in languages like R have been proposed and warrant consideration [@peikert_etal21a].
+Sharing data is not a trivial task and requires careful planning from the beginning of a project. Unfortunately, researchers lack formal data management training, and doctoral coursework on best practices is uncommon. Fortunately, an abundance of resources exist that outline each step of data sharing in detail (e.g., [@meyer18; @shero_hart20; @lewis24]). Here we provide a framework to briefly discuss the benefits of data sharing, how to decide when and what type of data to share, and recommendations on steps to move towards data sharing as the norm in CSD. This framework is by no means meant to be exhaustive; instead, we hope this framework will foster discussion on the merits and current barriers of data sharing in CSD.
 
-## Tutorial on Data Sharing
+### Benefits of Data Sharing
 
-Sharing findable, accessible, interoperable, and reusable data is not a trivial task and requires careful planning from the beginning of a project. Unfortunately, most researchers lack formal training in data management, and current doctoral programs do not typically offer coursework to teach these data sharing practices to the next generation of researchers. Fortunately, there are an abundance of resources that outline each step of data sharing in detail (e.g., [@meyer18; @shero_hart20; @lewis24]). Here we provide an abbreviated tutorial to describe the following steps:
+Sharing data offers substantial benefits for both the scientific community and the researcher collecting the data. Open data enables researchers to verify results during peer review or after publication, leading to a more transparent and reliable scientific record. Publicly available data also allows researchers to generate new knowledge through secondary analyses or meta-analysis, accelerating scientific discoveries and the implementation of research in clinical practice. Access to data is critical for meta-analyses, since traditional meta-analyses that rely on studies with aggregate data or slight variations in statistical methods can be especially challenging to conduct. Specifically, open data allows for a higher-quality synthesis of data across studies via individual participant data (IPD) meta-analyses, yielding more precise and robust estimates and greater scientific impact [@yu_romero24]. Moreover, open data minimizes redundant data collection. For instance, normative data or control groups can serve as historical comparisons for studies with patient populations, saving valuable time and resources. Lastly, sharing data benefits researchers directly, as studies have shown that openly shared data are associated with higher citation rates for the original work [@piwowar_etal07; @piwowar_vision13; @drachen_etal16].
+
+Closed data is not only inefficient and counterproductive to cumulative science, but also conflicts with research ethics. Researchers hold an ethical responsibility to maximize the use of clinical data and patients agree to participate in research studies with the understanding that their data will help answer important public health questions. However, many research questions cannot be fully addressed in a single study, often due to factors like low statistical power or unrepresentative samples. Data sharing extends the value and longevity of collected data. Alternatively, keeping data closed places an undue burden on future participants. Many research methodologies are invasive and pose additional risk to the participant (e.g., radiation from videofluroscopic swallow studies) or requires extensive travel and time to participate. If previously collected data are not made open, future participants may be unnecessarily subjected to the same procedures.
+
+Beyond the advantages of open data for the scientific community, researcher, and participant, data sharing also fulfills an important ethical obligation to society. Researchers conducting publicly funded studies have a responsibility to return the data to the public that financed their research - a sentiment that has recently been emphasized by funding agencies like the National Institutes of Health and the National Science Foundation (Watson et al., 2023; Wilkinson et al., 2016). Even in cases where research is not publicly funded, participants arguably have the right to see their data shared and used to its fullest potential. In our experience, when participants are informed during the consent process about the potential for their data to be shared and reused, they overwhelmingly support data sharing to maximize the impact of their contribution.
+
+Although some researchers may consider data availability statements like "available upon reasonable request" as a step toward data sharing (Table 5), recent research has shown poor compliance with less than half of studies providing requested data [@tedersoo_etal21]. Moreover, purposefully vague and unclear data availability statements may exacerbate inequities in the field. Researchers may not devote the time to properly organize their data, thereby hindering its availability when requested, or may restrict access to unnecessarily protect their data from reuse. This practice limits access, particularly for those with fewer resources or opportunities, and poses a direct barrier to a cumulative and transparent scientific literature. In cases where data is identifiable or where informed consent cannot be obtained, synthetic data offers a solution by preserving the privacy of the original data while maintaining the statistical properties necessary for computational reproducibility. Consequently, some degree of data sharing is achievable, suggesting that data sharing becoming the norm in CSD, not the exception.
+
+### Considerations for Deciding When and What Data to Share
+
+### Moving Forward
+
+
+
+
+
+Then, we can walk the reader through identifying what type of data to share using the “Can I share my data” flowchart.
+In the introduction, we discussed the challenges with sharing each type of data. However, here, we can discuss the benefits of sharing each type of data.
+Sharing analysis data/synthetic data can help researchers conduct meta-analyses, which has implications for cumulative science.
+Sharing raw and/or intermediate data can relieve the burden of each research team collecting data in their silos, therefore, speeding up our ability to investigate these populations, which can be especially helpful for these low-incidence/less well-understood populations.
+
 
 Ideas: 
 - planning what data you'd like to share (raw vs analyzed)
@@ -2722,7 +2747,7 @@ Decision-tree (eg diagram that Austin created)
 
 # Conclusions
 
-XXX
+To ensure computational reproducibility and promote a cumulative science, de-identified data should be shared whenever ethically permissible. Synthetic data should be reserved for instances where the data cannot be de-identified, and participants did not consent to sharing identifiable data.
 
 \newpage
 
@@ -2742,7 +2767,23 @@ We would like to thank the authors of the studies included in this manuscript fo
 ::: {custom-style="noIndentParagraph"}
 # Table and Figure Captions
 
-Table 1. Table 1: Characteristics of included studies by ASHA domain.
+Table 1: Description of types of data.
+
+<br>
+
+Table 2: Characteristics of included studies by ASHA domain.
+
+<br>
+
+Table 3: Effect size measures and interpretation by statistical test.
+
+<br>
+
+Table 4: Stability of synthetic datasets across ASHA domains.
+
+<br>
+
+Table 5: Pros and cons of different levels of data access.
 
 <br>
 
