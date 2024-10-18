@@ -26,8 +26,9 @@ ui <- fluidPage(
             p("5. Generate synthetic data."),
             p("6. Compare synthetic and original data."),
             p("7. Download the synthetic data."),
+            p("Note that this website does not store any data that is uploaded. It merely generates a synthetic version of the uploaded dataset with R code that is freely available on the Open Science Framework (https://osf.io/yhkqf/)."),
             h3("Download Example Data File"),
-            p("Data must be in long format. Below is an example of this format from Curtis et al. (2023)."),
+            p("Data must be in long format. Below is an example of this format from Curtis et al. (2023) [https://osf.io/4anzm/]."),
             actionButton("download_example", "Download Example Data")
         ),
         

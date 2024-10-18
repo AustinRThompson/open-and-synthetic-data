@@ -65,7 +65,7 @@ EK: 1, 2, 3, 6, 9, 11, 12, 14
 
 <br>
 
-**Study Preregistration and Data Availability**: The study preregistration (https://osf.io/vhgq2) and associated data and analysis scripts (https://osf.io/yhkqf/?view_only=) are publicly available on the Open Science Framework (**Note**: *update both private links when these are made public after peer review*).
+**Study Preregistration and Data Availability**: The study preregistration (https://osf.io/vhgq2) and associated data and analysis scripts (https://osf.io/yhkqf/) are publicly available on the Open Science Framework.
 
 \newpage
 
@@ -117,6 +117,66 @@ Providing open, publicly available data benefits scientists, funding bodies, and
 Understanding the nuances of data sharing requires a closer look at the different types of data generated throughout a research project’s life cycle. These include raw collected data, processed intermediate data, and final analysis data (Table 1). However, a common misconception is that open data refers solely to sharing raw data (e.g., audio recordings, videos, MRI data) [@pfeiffer_etal24]. In reality, sharing intermediate or analysis data can also support reproducibility while reducing privacy and confidentiality concerns associated with sharing raw data. However, these different types of data offer varying levels of utility: sharing raw data enables maximum reproducibility and secondary research opportunities, while analysis data (although easier to share) primarily supports computational reproducibility.
 
 ##### Table 1 here.
+
+```{r table 1, echo = FALSE, include = TRUE}
+# This code reads in a template, generates table 2, 
+# and then saves it as word doc in the appropriate folder
+
+cols2 <- tibble(
+  ` ` = c(
+    "Description",
+    "Examples",
+    "Acoustic Data (Thompson et al., 2023)",
+    "Swallowing Data (Curtis et al., 2023)",
+    "Eye Tracking Data (Baron et al., 2023)",
+    "Focus Group or Interview Data (Pfeiffer et al., 2024)",
+    "Survey Data (Riccardi, 2024)",
+    "Assessment Tool Data (Pfeiffer & Landa, 2024)"
+  ),
+  `Raw Data` = c(
+    "Original, unmodified data collected from studies.\n\nAlso known as primary data, microdata, individual-level data.",
+    "",
+    "Raw audio recordings.",
+    "Video files from flexible endoscopic evaluations of swallowing.",
+    "Eye movement recordings (gaze, saccades, fixations).",
+    "Audio recordings and transcripts.",
+    "Raw survey responses.",
+    "Raw, unscored assessment protocols."
+  ),
+  `Intermediate Data` = c(
+    "Cleaned, de-identified, and processed data, used for creating the analysis data.\n\nAlso known as cleaned data, transactional data, processed data.",
+    "",
+    "Extracted formant data.",
+    "Not applicable.",
+    "Cleaned data with merged fixations and removed artifacts.",
+    "De-identified transcripts.",
+    "Cleaned and coded responses.",
+    "Scored protocols with calculated totals and subscales."
+  ),
+  `Analysis Data` = c(
+    "Final dataset containing variables used in statistical analyses.\n\nAlso known as derived data, result data, aggregate data.",
+    "",
+    "Dataset containing average vowel space area per speaker.",
+    "Dataset containing ratings of swallowing safety and efficiency.",
+    "Dataset containing summary of fixation durations, reading times, and target proportions.",
+    "Dataset containing coded categories and themes from qualitative analysis.",
+    "Dataset containing summary scores and frequencies of survey responses.",
+    "Dataset containing standard scores, confidence intervals, percentile ranks."
+  )
+)
+
+set_flextable_defaults(font.family = "Times New Roman")
+
+t2 <- flextable(cols2) |>
+  set_caption("Table 1: Description of types of data.") |> 
+  set_table_properties(layout = "autofit", width = 1) |>
+  bg(i = 2, bg = "#D3D3D3") # Change second row background to light grey
+
+doc <- read_docx(here("manuscript", "templates-data", "template.docx"))
+doc <- body_add_flextable(doc, value = t2)
+fileout <- here("manuscript", "tables-figures", "table1.docx") # uncomment to write in your working directory
+print(doc, target = fileout)
+```
 
 Both individual and system-level barriers hinder data sharing, including a lack of time, knowledge, support from colleagues, and perceived incentives [@pfeiffer_etal24]. Furthermore, each type of data comes with unique challenges regarding data sharing. For raw data, it is common that researchers often do not obtain consent to share data or cannot contact participants after data collection. Additionally, sharing de-identified raw or intermediate data may require additional approval from the institutional review board. Even when de-identification is possible, anonymized intermediate or analysis datasets can still carry re-identification risks, especially in small samples or vulnerable populations where indirect identifiers (e.g., gender, age, or race) may compromise participant confidentiality [@rocher_etal19]. Therefore, although sharing de-identified analysis data is the minimum requirement for ensuring computational reproducibility and promoting cumulative science, concerns about privacy and confidentiality may persist.
 
@@ -296,11 +356,11 @@ fileout <- here("manuscript", "tables-figures", "table3.docx")
 print(doc, target = fileout)
 ```
 
-In addition to these inferential comparisons, we provide a brief tutorial to guide the reader through the required steps to generate synthetic data. This is accomplished in the context of two datasets [@curtis_etal23a; @thompson_etal23] with additional data visualization and detailed R code. Since @curtis_etal23a did not perform inferential tests, we directly compared each synthetic dataset to the original data with a zero-inflated beta multilevel model with the *gamlss* package (version 5.4.3) [@stasinopoulos_rigby07]. This model included fixed effects of dataset type (synthetic/original) and bolus consistency (thin liquid/extremely thick/regular), and a random intercept of participant. Due to issues with model convergence, the fixed effect structure was simplified to only include dataset type. The *p*-value from both zero-inflated and beta portions of the model were evaluated and *p* \< .05 was interpreted as evidence of no statistically significant difference between the synthetic and original dataset.
+In addition to these inferential comparisons, we provide a brief tutorial to guide the reader through the required steps to generate synthetic data. This is accomplished in the context of two datasets [@curtis_etal23a; @thompson_etal23] with additional data visualization and detailed R code. Since @curtis_etal23a did not perform inferential tests, we directly compared each synthetic dataset to the original data with a zero-inflated beta multilevel model with the *gamlss* package (version 5.4.3) [@stasinopoulos_rigby07]. This model included fixed effects of dataset type (synthetic/original) and bolus consistency (thin liquid/extremely thick/regular), and a random intercept of participant. Due to issues with model convergence, the fixed effect structure was simplified to only include dataset type. The *p*-value from both zero-inflated and beta portions of the model were evaluated and *p* \< .05 was interpreted no statistically significant difference between the synthetic and original dataset.
 
 # Results
 
-The tutorial data and accompanying code can be accessed on the Open Science Framework (https://osf.io/yhkqf/). To get started, download R (https://cran.r-project.org/) and an interface like RStudio (https://posit.co/download/rstudio-desktop/). Open the *open-and-synthetic-data.Rproj* file in RStudio and then X file. **Add more here about the tutorial scripts**.
+The tutorial data and accompanying code can be accessed on the Open Science Framework (https://osf.io/yhkqf/). To get started, download R (https://cran.r-project.org/) and an interface like RStudio (https://posit.co/download/rstudio-desktop/). Open the *open-and-synthetic-data.Rproj* file in RStudio and then open the file called *synthetic_manuscript.qmd*.
 
 ### Study 1: Normative Reference Values for Swallowing Outcomes
 ```{r}
@@ -542,13 +602,11 @@ rm(
 # Saving the data and results for easy importing later.
 base::saveRDS(object = swallowing,
               file = here::here("Data","01_Swallowing","analysisData.RDS"))
-
-
 ```
 
 Curtis et al. (2023) examined normative reference values for swallowing outcomes during flexible endoscopic evaluations of swallowing among 39 non-dysphagic, community-dwelling adults. In this observational cohort study, participants were administered 15 swallowing trials that varied by bolus size, consistency, contrast agent, and swallowing instructions. A variety of swallowing outcomes were measured, including the amount of laryngeal vestibule residue rated with the Visual Analysis of Swallowing Efficiency and Safety. Median and interquartile ranges (IQR) were used to describe the distribution of laryngeal vestibule residue ratings.
 
-To generate synthetic data, we first load in the original dataset, wrangle the dataset using the *tidyverse* collection of packages [@wickham_etal19] (v. 1.3.2) and then create a synthetic dataset with the syn() function from the *synthpop* package. The data wrangling steps include (1) loading required R packages, (2) importing the original dataset csv file, (3) reformatting variable names for consistency and readability, (4) selecting the variables needed for the analysis, (4) converting appropriate categorical variables to factors, and (5) calculating the laryngeal vestibule severity rating as a percentage. These steps are shown below with the following commands:
+To generate synthetic data, we first load in the original dataset, wrangle the dataset using the *tidyverse* collection of packages [@wickham_etal19] (v. 1.3.2). The data wrangling steps include (1) loading required R packages, (2) importing the original dataset csv file, (3) reformatting variable names for consistency and readability, (4) selecting the variables needed for the analysis, (5) converting appropriate categorical variables to factors, and (6) calculating the laryngeal vestibule severity rating as a percentage. These steps are shown below with the following commands:
 
 ```{r echo = TRUE, include = TRUE}
 # load required packages
@@ -573,7 +631,7 @@ swallowing_original_data <-
          )
 ```
 
-Next, we create a synthetic dataset with the syn() function from the *synthpop* package. Within the function, 'method' specifies the synthesising method for the data. The default in synthpop is "cart" (Classification and Regression Tree). If a synthetic dataset fails to generate with this method, Nowok et al. (2018) recommend an alternative implementation of the CART technique from package *party* [@hothorn_etal06]. This dataset, for example, required the 'ctree' CART specification. Next, specify the number of synthetic datasets to generate within 'm'. Once the synthetic dataset is generated, extract and convert it to a dataframe for additional wrangling and visualization.
+Next, we create a synthetic dataset with the syn() function from the *synthpop* package. Within the function, 'method' specifies the synthesising method for the data. The default in synthpop is "cart" (Classification and Regression Tree). If a synthetic dataset fails to generate with this method, Nowok et al. (2018) recommend an alternative implementation of the CART technique from package *party* [@hothorn_etal06]. This dataset, for example, required the 'ctree' CART specification. Next, specify the number of synthetic datasets to generate within 'm'. Once the synthetic dataset is generated, extract and convert it to a dataframe for additional data wrangling and visualization.
 
 ```{r echo = TRUE, include = TRUE}
 # Create a synthetic dataset
@@ -587,7 +645,7 @@ synthetic_data <-
 synthetic_dataset <- as.data.frame(synthetic_data$syn)
 ```
 
-An important step in the process is to assess the general utility of the synthetic dataset by visualizing any obvious differences compared to the original dataset. This can be easily accomplished with the compare() function in the *synthpop* package or manually with data wrangling and the ggplot package. Figure 1 suggests that the synthetic dataset demonstrated similar distributions for the variables of bolus consistency and laryngeal vestibule residue rating.
+An important step in this process is to assess the general utility of the synthetic dataset by visualizing any obvious differences compared to the original dataset. This can be easily accomplished with the compare() function in the *synthpop* package or manually with data wrangling and the ggplot package. Figure 1 suggests that the synthetic dataset demonstrated similar distributions for the variables of bolus consistency and laryngeal vestibule residue rating.
 
 ```{r echo = TRUE, include = TRUE}
 # Comparison of original and synthetic datasets with synthpop package
@@ -744,6 +802,8 @@ combined_summaries <- full_join(original_summary, synthetic_summary)
 number_trials <- table(swallowing_original_data$bolus_consistency) |> 
   as.data.frame()
 ```
+
+##### Figure 1 here.
 
 Descriptively, the synthetic dataset classified `r round(combined_summaries$perc_absent[6], digits = 0)`% of laryngeal vestibule ratings on thin liquid boluses as 'absent' (i.e., 0% residue) compared to `r round(combined_summaries$perc_absent[1], digits = 0)`% in the original dataset. In the synthetic dataset, the median value on thin liquids was `r combined_summaries$median[6]` (IQR: `r combined_summaries$IQR_low[6]` - `r combined_summaries$IQR_high[6]`) compared to `r combined_summaries$median[1]` (IQR: `r combined_summaries$IQR_low[1]` - `r round(combined_summaries$IQR_high[1], digits = 2)`) in the original dataset. `r round(combined_summaries$perc_absent[4], digits = 2)`% of extremely thick liquids were classified as having no laryngeal vestibule residue compared to `r round(combined_summaries$perc_absent[2], digits = 2)`% in the original dataset. A similar pattern was appreciated for regular solids (`r round(combined_summaries$perc_absent[5], digits = 2)`% in synthetic vs. `r round(combined_summaries$perc_absent[3], digits = 2)`% in original dataset). When examined across 100 synthetic datasets, findings from the zero-inflated beta multilevel models indicate that `r swallowing$results_summary$synAgreement_pvalue_nu` and `r swallowing$results_summary$synAgreement_pvalue_mu` of synthetic datasets were not statistically significantly different than the original dataset for the zero-inflated and beta portions of the model, respectively (Table 4). Additionally, effect size categorizations were maintained for `r swallowing$results_summary$synAgreement_effectSize_nu` of both zero-inflated and beta portions of the model.
 
@@ -984,6 +1044,8 @@ ggsave(plot = fig2a_combined,
        width = 9,
        height = 5)
 ```
+
+##### Figure 2 here.
 
 Findings from the 100 generated synthetic datasets indicate that `r articulation$results_summary$synAgreement_pvalue` of datasets demonstrated the same inferential result (i.e., a statistically significant *p*-value). For the effect size, `r articulation$results_summary$synAgreement_effectSize` of synthetic datasets maintained a 'large' effect size categorization.
 
@@ -2147,7 +2209,7 @@ articulation_pval_viz <-
   ) +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
-  # scale_x_continuous(breaks = c(0, 0.2, 0.4, 0.59, 0.80), limits = c(0, 0.80)) +
+  scale_x_continuous(limits = c(-35, 0)) +
   theme(legend.position = "top",
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
@@ -2173,7 +2235,7 @@ fluency_pval_viz <-
   ) +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
-  # scale_x_continuous(breaks = c(0, 0.2, 0.4, 0.59, 0.80), limits = c(0, 0.80)) +
+  scale_x_continuous(limits = c(-35, 0)) +
   theme(legend.position = "top",
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
@@ -2199,7 +2261,7 @@ voice_pval_viz <-
   ) +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
-  # scale_x_continuous(breaks = c(0, 0.2, 0.4, 0.59, 0.80), limits = c(0, 0.80)) +
+  scale_x_continuous(limits = c(-35, 0)) +
   theme(legend.position = "top",
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
@@ -2225,7 +2287,7 @@ hearing_pval_viz <-
   ) +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
-  # scale_x_continuous(breaks = c(0, 0.2, 0.4, 0.59, 0.80), limits = c(0, 0.80)) +
+  scale_x_continuous(limits = c(-35, 0)) +
   theme(legend.position = "top",
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
@@ -2251,7 +2313,7 @@ language_pval_viz <-
   ) +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
-  # scale_x_continuous(breaks = c(0, 0.2, 0.4, 0.59, 0.80), limits = c(0, 0.80)) +
+  scale_x_continuous(limits = c(-35, 0)) +
   theme(legend.position = "top",
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
@@ -2277,7 +2339,7 @@ aac_pval_viz <-
   ) +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
-  # scale_x_continuous(breaks = c(0, 0.2, 0.4, 0.59, 0.80), limits = c(0, 0.80)) +
+  scale_x_continuous(limits = c(-35, 0)) +
   theme(legend.position = "top",
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
@@ -2303,7 +2365,7 @@ cognition_pval_viz <-
   ) +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
-  # scale_x_continuous(breaks = c(0, 0.2, 0.4, 0.59, 0.80), limits = c(0, 0.80)) +
+  scale_x_continuous(limits = c(-35, 0)) +
   theme(legend.position = "top",
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
@@ -2329,7 +2391,7 @@ social_pval_viz <-
   ) +
   cowplot::theme_cowplot() +
   scale_y_continuous(expand = c(0, 0)) +
-  # scale_x_continuous(breaks = c(0, 0.2, 0.4, 0.59, 0.80), limits = c(0, 0.80)) +
+  scale_x_continuous(limits = c(-35, 0)) +
   theme(legend.position = "top",
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
@@ -2341,7 +2403,7 @@ social_pval_viz <-
   geom_vline(xintercept = log(social$results_original$p_value), color = "black", 
              size = 0.75, linetype = "dashed", alpha = 0.75)
 
-# Combine effect size figures together
+# Combine p-value figures together
 pval_combined <- cowplot::plot_grid(articulation_pval_viz,
                    fluency_pval_viz,
                    voice_pval_viz,
@@ -2365,7 +2427,7 @@ ggsave(
     bg = "white"
   )
 
- # Visualize effect size distributions
+# Visualize effect size distributions
 articulation_es_viz <- 
   articulation$results_synthetic |> 
   ggplot(aes(x = effect_size)) +
@@ -2552,6 +2614,10 @@ ggsave(
   )
 ```
 
+##### Figure 3 here.
+
+##### Figure 4 here.
+
 ##### Table 4 here.
 
 ```{r table 4, echo = FALSE}
@@ -2700,54 +2766,37 @@ This study is not without limitations. We used predetermined thresholds (e.g., '
 
 ## Data Sharing Framework
 
-Sharing data is not a trivial task and requires careful planning from the beginning of a project. Unfortunately, researchers lack formal data management training, and doctoral coursework on best practices is uncommon. Fortunately, an abundance of resources exist that outline each step of data sharing in detail (e.g., [@meyer18; @shero_hart20; @lewis24]). Here we provide a framework to briefly discuss the benefits of data sharing, how to decide when and what type of data to share, and recommendations on steps to move towards data sharing as the norm in CSD. This framework is by no means meant to be exhaustive; instead, we hope this framework will foster discussion on the merits and current barriers of data sharing in CSD.
+In this framework, we aim to empower researchers who may feel uncertain or unmotivated to consider data sharing for their current or future work. We begin by examining the scientific and ethical implications of closed data, followed by an evaluation of the commonly used “available upon request” approach to data sharing, which we argue is insufficient. Finally, we outline the benefits of open data practices, emphasizing that sharing different types of data (raw, intermediate, analysis, and synthetic) can offer various levels of utility and impact.
 
-### Benefits of Data Sharing
+### Ethical and Scientific Need for Open Data
 
-Sharing data offers substantial benefits for both the scientific community and the researcher collecting the data. Open data enables researchers to verify results during peer review or after publication, leading to a more transparent and reliable scientific record. Publicly available data also allows researchers to generate new knowledge through secondary analyses or meta-analysis, accelerating scientific discoveries and the implementation of research in clinical practice. Access to data is critical for meta-analyses, since traditional meta-analyses that rely on studies with aggregate data or slight variations in statistical methods can be especially challenging to conduct. Specifically, open data allows for a higher-quality synthesis of data across studies via individual participant data (IPD) meta-analyses, yielding more precise and robust estimates and greater scientific impact [@yu_romero24]. Moreover, open data minimizes redundant data collection. For instance, normative data or control groups can serve as historical comparisons for studies with patient populations, saving valuable time and resources. Lastly, sharing data benefits researchers directly, as studies have shown that openly shared data are associated with higher citation rates for the original work [@piwowar_etal07; @piwowar_vision13; @drachen_etal16].
+Closed data impedes cumulative science and raises ethical concerns. Researchers have an ethical responsibility to maximize the use of clinical data, as participants typically enroll in research with the expectation that their data will help answer important public health questions. In fact, studies on participants' motivations, particularly in non-experimental, observational research where there is no direct benefit, show that altruism is a key factor for participation (i.e., “I signed up because this study might be able to help future patients in my situation”) [@soulemd_etal16]. Thus, it is essential that researchers ensure participants’ data is fully utilized to benefit future patients, clinical outcomes, and scientific knowledge.
 
-Closed data is not only inefficient and counterproductive to cumulative science, but also conflicts with research ethics. Researchers hold an ethical responsibility to maximize the use of clinical data and patients agree to participate in research studies with the understanding that their data will help answer important public health questions. However, many research questions cannot be fully addressed in a single study, often due to factors like low statistical power or unrepresentative samples. Data sharing extends the value and longevity of collected data. Alternatively, keeping data closed places an undue burden on future participants. Many research methodologies are invasive and pose additional risk to the participant (e.g., radiation from videofluroscopic swallow studies) or requires extensive travel and time to participate. If previously collected data are not made open, future participants may be unnecessarily subjected to the same procedures.
+Additionally, many research questions cannot be fully answered in a single study due to limitations like small or unrepresentative samples. Sharing data extends the value of collected datasets and allows other researchers to build on previous findings. Closed data practices also place an undue burden on future participants, particularly in studies involving invasive methodologies (e.g., radiation from videofluoroscopic swallow studies or neuroimaging) or require extensive travel and time. If previously collected data is not shared, future participants may undergo unnecessary procedures to duplicate these data.
 
-Beyond the advantages of open data for the scientific community, researcher, and participant, data sharing also fulfills an important ethical obligation to society. Researchers conducting publicly funded studies have a responsibility to return the data to the public that financed their research - a sentiment that has recently been emphasized by funding agencies like the National Institutes of Health and the National Science Foundation (Watson et al., 2023; Wilkinson et al., 2016). Even in cases where research is not publicly funded, participants arguably have the right to see their data shared and used to its fullest potential. In our experience, when participants are informed during the consent process about the potential for their data to be shared and reused, they overwhelmingly support data sharing to maximize the impact of their contribution.
+Researchers conducting publicly funded studies are also ethically obligated to return data to the public that financed their research, a responsibility increasingly emphasized by funding agencies such as the National Institutes of Health and the National Science Foundation [@wilkinson_etal16; @watson_etal23]. Even in cases where research is privately funded, participants arguably have the right to see their data shared and used to its fullest potential. In our experience, when participants are informed during the consent process about the potential for their data to be shared and reused, they overwhelmingly support data sharing to maximize the impact of their contribution.
 
-Although some researchers may consider data availability statements like "available upon reasonable request" as a step toward data sharing (Table 5), recent research has shown poor compliance with less than half of studies providing requested data [@tedersoo_etal21]. Moreover, purposefully vague and unclear data availability statements may exacerbate inequities in the field. Researchers may not devote the time to properly organize their data, thereby hindering its availability when requested, or may restrict access to unnecessarily protect their data from reuse. This practice limits access, particularly for those with fewer resources or opportunities, and poses a direct barrier to a cumulative and transparent scientific literature. In cases where data is identifiable or where informed consent cannot be obtained, synthetic data offers a solution by preserving the privacy of the original data while maintaining the statistical properties necessary for computational reproducibility. Consequently, some degree of data sharing is achievable, offering the potential for data sharing to become the norm in CSD, not the exception.
+Although some researchers may consider data availability statements like "available upon reasonable request" as a step toward data sharing, recent research has shown poor compliance with less than half of studies providing requested data [@tedersoo_etal21]. In many cases, researchers do not devote the time to properly organize their data, thereby hindering its availability when requested or may restrict access to protect their data from reuse. Moreover, purposefully vague and unclear data availability statements may exacerbate inequities in the field. This practice limits access, particularly for those with fewer resources or opportunities, and poses a direct barrier to a cumulative and transparent scientific literature.
 
-### Considerations for Deciding When and What Data to Share
+### Benefits of Open Data
 
-### Moving Forward
+Open data offers substantial benefits for both the scientific community and researcher. For example, studies show that openly shared data is associated with higher citation rates for the original work [@piwowar_etal07; @piwowar_vision13; @drachen_etal16]. However, sharing data is not always straightforward, and researchers must consider when and what types of data to share. Figure 5 proposes a decision tree to guide researchers through the process of deciding which type of data to share. For practical guides on obtaining consent, sharing data, and ensuring FAIR data principles, we direct our readers to [@ohmann_etal17]. Different types of data can be shared, including raw, intermediate, analysis, and synthetic data (Table 1), each providing varying levels of utility and benefit.
 
+##### Figure 5 here.
 
+**Analysis Data.** Sharing analysis data enables others to verify results during peer review or post-publication, promoting a more transparent and reliable scientific record. This practice also allows science to be self-correcting [@vazire_holcombe22]. Analysis data is particularly important for meta-analyses, as these depend on comprehensive reporting of descriptive statistics. Unfortunately, many studies do not report all necessary details (e.g., means, standard deviations, and sample sizes) or use different statistical analyses, making it challenging to synthesize results across studies. Sharing analysis datasets can fill this gap, allowing more studies to be included in meta-analyses and resulting in more robust analyses (e.g., individual participant meta-analysis) [@eisenhauer21; @yu_romero24] and conclusions [@chow_etal23], which is especially valuable for studying low-incidence populations in fields like CSD.
 
+**Raw or Intermediate Data.** Sharing raw or intermediate data further enhances transparency by enabling researchers to reproduce the calculations behind analysis data. Different operational definitions or analysis steps are often a barrier to inclusion in a meta-analysis. Sharing this type of data ensures that secondary analyses can be performed with alternate methodologies or operational definitions, as the field progresses. In this sense, sharing raw or intermediate data facilitates the generation of new knowledge and accelerates scientific discovery. Despite its many benefits, there are instances where sharing raw or intermediate data may not be feasible. For example, researchers may not have obtained consent from participants for data sharing, or the institutional review board may impose project-specific guidelines that restrict sharing this type of data. Even de-identified data may carry risks, as participants could be re-identified through indirect identifiers.
 
+**Synthetic Data.** In such cases, synthetic data offers a viable alternative. Synthetic data maintains the statistical properties of the original data while protecting participant privacy, thus facilitating computational reproducibility. In this study, we demonstrated how synthetic data can be generated using the *synthpop* package in R across a wide range of datasets in the field of CSD. Recognizing that coding expertise may be a barrier for some researchers, we have also developed a free Shiny website that interfaces with *synthpop*, allowing researchers to easily generate synthetic versions of their data (https://csdsynthetic.shinyapps.io/synthetic_data_generation/).
 
-Then, we can walk the reader through identifying what type of data to share using the “Can I share my data” flowchart.
-In the introduction, we discussed the challenges with sharing each type of data. However, here, we can discuss the benefits of sharing each type of data.
-Sharing analysis data/synthetic data can help researchers conduct meta-analyses, which has implications for cumulative science.
-Sharing raw and/or intermediate data can relieve the burden of each research team collecting data in their silos, therefore, speeding up our ability to investigate these populations, which can be especially helpful for these low-incidence/less well-understood populations.
+## Moving Forward
 
+Current training models and incentive structures are not well-equipped to promote data sharing. To encourage open science practices like data sharing, larger systemic changes are likely necessary at both the organizational level (e.g., ASHA, societies) and within academic institutions. For example, doctoral programs should offer coursework that introduces these concepts and educates future researchers on best practices for data sharing. Fortunately, many resources are available for current researchers to familiarize themselves with these practices [@lewis24]. Additionally, institutions must incentivize data sharing and recognize open science efforts as valuable scholarly contributions. Although ASHA has introduced open science badges to acknowledge these efforts, it remains unclear if this is enough to encourage large-scale participation. Ultimately, a broader cultural shift is needed in the field - from the current individualistic, siloed approach to a more collaborative and pro-social view of science.
 
-Ideas: 
-- planning what data you'd like to share (raw vs analyzed)
-- obtaining approval from an institutional review board
-- creating a data dictionary or codebook to describe the data
-- providing code to reproduce analyses
-- selecting repositories to store the data
+## Conclusions
 
-*SCRAP*
-Steps to ensure data is open and reproducible (Howard et al., 2024)
-* Store data files in a freely downloadable or protected access repository (e.g., https://osf.io, https://nda.nih.gov, https:// www.ldbase.org, https://www.icpsr.umich.edu). 
-* Include enough data to reproduce all elements of a study, including variables used for descriptive statistics and item-level data behind composite-scale scores.  
-* Provide a data dictionary or codebook.  
-* Provide syntax files that document all statistical analyses (and ensure the files referenced in syntax match the files included with open data).
-* As possible and practical, statistical analyses should be performed in freely available software for maximal reproducibility. Otherwise, include copies of data and syntax files from proprietary software in a generic format (e.g., .csv files for data; .txt or .pdf for syntax).  
-* In the repository in which data and/or materials are stored, include detailed instructions (e.g., a “Read Me” file) to help visitors navigate and use the provided files.
-
-Decision-tree (eg diagram that Austin created)
-* Guidance on when to obtain IRB approval, how to define 'de-identified' data, etc.
-
-# Conclusions
-
-To ensure computational reproducibility and promote a cumulative science, de-identified data should be shared whenever ethically permissible. Synthetic data should be reserved for instances where the data cannot be de-identified, and participants did not consent to sharing identifiable data.
+This study assessed the utility of the *synthpop* package in R for generating synthetic data in situations where sharing original data poses risks of participant re-identification. We demonstrated that synthetic data can be effectively applied across various data types and research areas within the CSD field. In most cases, the synthetic data closely matched the *p*-values and effect sizes of the original data, though a few instances showed lower agreement. Therefore, researchers using synthetic data should verify its accuracy in reproducing their original findings before sharing. Finally, we provide a framework for data sharing, emphasizing that whether researchers share raw, intermediate, analysis, or synthetic data, some form of data sharing is achievable for all. Our overarching goal is to establish data sharing as the standard practice, rather than the exception, in CSD.
 
 \newpage
 
@@ -2783,10 +2832,6 @@ Table 4: Stability of synthetic datasets across ASHA domains.
 
 <br>
 
-Table 5: Pros and cons of different levels of data access.
-
-<br>
-
 Figure 1. Visualization of data distributions from synthetic and original data for Study #1 (Curtis et al., 2023). 
 
 *Caption*: Panel A displays the overall distribution of laryngeal vestibule residue. Panel B displays the frequency of values by bolus consistency.
@@ -2808,4 +2853,8 @@ Figure 3. Distribution of log-transformed *p*-values in synthetic datasets acros
 Figure 4. Distribution of effect sizes in synthetic datasets across ASHA domains.
 
 *Caption*: Each panel displays the distribution of effect sizes across 100 synthetic datasets for a given ASHA domain. The dashed line indicates the effect size reported in the original study and the light blue shaded area indicates the range of the effect size categorization. The mean difference and standard deviation of the effect size compared to the result reported in the original study is shown below each panel's title.
+
+<br>
+
+Figure 5. Decision tree for data sharing.
 :::
