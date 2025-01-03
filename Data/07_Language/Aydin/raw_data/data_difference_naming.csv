@@ -1,0 +1,45 @@
+item,questions,category,subcategory,type,post_minus_pre_scores,phase
+60,"1. ""Aklýnýza gelen ev eþyalarýný söyleyin""",naming,categorical,,0,1
+61,"2. ""Aklýnýza gelen mutfak eþyalarýný söyleyin""",naming,categorical,,0,1
+62,1. Kaþýk ,naming,confrontation,,0,1
+63,2. Anahtar,naming,confrontation,,0,1
+64,3. Bardak,naming,confrontation,,2,1
+65,4. Göz,naming,confrontation,,0,1
+66, 5. Sigara,naming,confrontation,,0,1
+67,6. Para,naming,confrontation,,2,1
+68,7.Telefon,naming,confrontation,,0,1
+69,8. Ýlaç,naming,confrontation,,0,1
+70,9. Saat,naming,confrontation,,0,1
+71,10. Gözlük,naming,confrontation,,0,1
+72,1. Akþam evde ne seyredersin? ,naming,answer,noun,0,1
+73,2. Elimizde kac parmak var? ,naming,answer,noun,-3,1
+74,3. Çorap nereye giyilir?,naming,answer,noun,0,1
+75, 4. Baþýn aðrýrsa ne içersin?,naming,answer,noun,0,1
+76,5. Nezle olunca burnunu neyle silersin?,naming,answer,noun,0,1
+77,1. Býçakla ne yaparsýn?,naming,answer,verb,-3,1
+78,2. Karnýn acýkýnca ne yaparsin?,naming,answer,verb,0,1
+79,3. Bardakla ne yaparsýn? ,naming,answer,verb,0,1
+80,4. Çiviyi çekiçle ne yaparsýn?,naming,answer,verb,-3,1
+81,5. Yattýðýn zaman ne yaparsýn?,naming,answer,verb,0,1
+60,"1. ""Aklýnýza gelen ev eþyalarýný söyleyin""",naming,categorical,,0,2
+61,"2. ""Aklýnýza gelen mutfak eþyalarýný söyleyin""",naming,categorical,,0,2
+62,1. Kaþýk ,naming,confrontation,,0,2
+63,2. Anahtar,naming,confrontation,,1,2
+64,3. Bardak,naming,confrontation,,-1,2
+65,4. Göz,naming,confrontation,,1,2
+66, 5. Sigara,naming,confrontation,,0,2
+67,6. Para,naming,confrontation,,-2,2
+68,7.Telefon,naming,confrontation,,1,2
+69,8. Ýlaç,naming,confrontation,,1,2
+70,9. Saat,naming,confrontation,,0,2
+71,10. Gözlük,naming,confrontation,,0,2
+72,1. Akþam evde ne seyredersin? ,naming,answer,noun,1.5,2
+73,2. Elimizde kac parmak var? ,naming,answer,noun,1.5,2
+74,3. Çorap nereye giyilir?,naming,answer,noun,0,2
+75, 4. Baþýn aðrýrsa ne içersin?,naming,answer,noun,0,2
+76,5. Nezle olunca burnunu neyle silersin?,naming,answer,noun,0,2
+77,1. Býçakla ne yaparsýn?,naming,answer,verb,1,2
+78,2. Karnýn acýkýnca ne yaparsin?,naming,answer,verb,0,2
+79,3. Bardakla ne yaparsýn? ,naming,answer,verb,0,2
+80,4. Çiviyi çekiçle ne yaparsýn?,naming,answer,verb,0,2
+81,5. Yattýðýn zaman ne yaparsýn?,naming,answer,verb,0,2

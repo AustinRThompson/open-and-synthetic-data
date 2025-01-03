@@ -1,0 +1,49 @@
+item,questions,category,subcategory,type,post_minus_pre_scores,phase
+26,1. Evin kapýsýný onunla kilitleriz (ANAHTAR),auditory_comprehension,objects,,0,1
+27,"2. Tiryakilik yapar, dumaný içe çekerek içilir (SÝGARA) ",auditory_comprehension,objects,,0,1
+28,3. Alýþveriþte harcarýz (PARA),auditory_comprehension,objects,,0,1
+29,4. Daha iyi görebilmek için takarýz (GÖZLÜK),auditory_comprehension,objects,,0,1
+30,5. Uzaktakilerle konuþmak için kullanýrýz (TELEFON),auditory_comprehension,objects,,-1.5,1
+31,6. Görme organýmýzdýr (GÖZ),auditory_comprehension,objects,,0,1
+32,Meyveler,auditory_comprehension,categories,understand_categories,3,1
+33,Harfler,auditory_comprehension,categories,understand_categories,0,1
+34, Sayýlar,auditory_comprehension,categories,understand_categories,0,1
+35, Renkler,auditory_comprehension,categories,understand_categories,0,1
+36, Oturuyorlar ,auditory_comprehension,categories,understand_categories,0,1
+37,Kýrmýzý elma ,auditory_comprehension,categories,understand_details,0,1
+38,B harfi,auditory_comprehension,categories,understand_details,0,1
+39, 8 rakamý,auditory_comprehension,categories,understand_details,3,1
+40,Mavi renk,auditory_comprehension,categories,understand_details,1.5,1
+41,Kýz oturuyor,auditory_comprehension,categories,understand_details,0,1
+42,Ýki arabanýn dikkatsiz þoförleri çarpýþtý ,auditory_comprehension,sentence_variation,simple_sentence,0,1
+43,Birisi üçüncü tahta sandalyeyi kýrmýþ ,auditory_comprehension,sentence_variation,simple_sentence,0,1
+44, Abisi uyuyor ama küçük kardeþ uyanýk ,auditory_comprehension,sentence_variation,simple_sentence,0,1
+45,Diþçiden çok korkuyor; bu yüzden diþlerini hep fýrçalar ,auditory_comprehension,sentence_variation,simple_sentence,3,1
+46,Aðýr olduðu için kadýn bavullarýný taþýtýyor,auditory_comprehension,sentence_variation,complex_sentence,3,1
+47,Merdivenden düþen kýzýn bacaðý kýrýlmýþ ,auditory_comprehension,sentence_variation,complex_sentence,0,1
+48,"Çocuk, yaramazlýk yapýp, annesinin en güzel vazosunu kýrdý ",auditory_comprehension,sentence_variation,complex_sentence,0,1
+49, Çok yorulmasýna raðmen paketlerini kendi taþýyor ,auditory_comprehension,sentence_variation,complex_sentence,0,1
+26,1. Evin kapýsýný onunla kilitleriz (ANAHTAR),auditory_comprehension,objects,,0,2
+27,"2. Tiryakilik yapar, dumaný içe çekerek içilir (SÝGARA) ",auditory_comprehension,objects,,0,2
+28,3. Alýþveriþte harcarýz (PARA),auditory_comprehension,objects,,0,2
+29,4. Daha iyi görebilmek için takarýz (GÖZLÜK),auditory_comprehension,objects,,0,2
+30,5. Uzaktakilerle konuþmak için kullanýrýz (TELEFON),auditory_comprehension,objects,,0,2
+31,6. Görme organýmýzdýr (GÖZ),auditory_comprehension,objects,,0,2
+32,Meyveler,auditory_comprehension,categories,understand_categories,0,2
+33,Harfler,auditory_comprehension,categories,understand_categories,0,2
+34, Sayýlar,auditory_comprehension,categories,understand_categories,0,2
+35, Renkler,auditory_comprehension,categories,understand_categories,0,2
+36, Oturuyorlar ,auditory_comprehension,categories,understand_categories,0,2
+37,Kýrmýzý elma ,auditory_comprehension,categories,understand_details,0,2
+38,B harfi,auditory_comprehension,categories,understand_details,0,2
+39, 8 rakamý,auditory_comprehension,categories,understand_details,-1.5,2
+40,Mavi renk,auditory_comprehension,categories,understand_details,3,2
+41,Kýz oturuyor,auditory_comprehension,categories,understand_details,0,2
+42,Ýki arabanýn dikkatsiz þoförleri çarpýþtý ,auditory_comprehension,sentence_variation,simple_sentence,0,2
+43,Birisi üçüncü tahta sandalyeyi kýrmýþ ,auditory_comprehension,sentence_variation,simple_sentence,-1.5,2
+44, Abisi uyuyor ama küçük kardeþ uyanýk ,auditory_comprehension,sentence_variation,simple_sentence,0,2
+45,Diþçiden çok korkuyor; bu yüzden diþlerini hep fýrçalar ,auditory_comprehension,sentence_variation,simple_sentence,0,2
+46,Aðýr olduðu için kadýn bavullarýný taþýtýyor,auditory_comprehension,sentence_variation,complex_sentence,0,2
+47,Merdivenden düþen kýzýn bacaðý kýrýlmýþ ,auditory_comprehension,sentence_variation,complex_sentence,0,2
+48,"Çocuk, yaramazlýk yapýp, annesinin en güzel vazosunu kýrdý ",auditory_comprehension,sentence_variation,complex_sentence,0,2
+49, Çok yorulmasýna raðmen paketlerini kendi taþýyor ,auditory_comprehension,sentence_variation,complex_sentence,-1.5,2

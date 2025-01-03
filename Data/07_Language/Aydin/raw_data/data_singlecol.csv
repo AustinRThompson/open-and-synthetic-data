@@ -1,0 +1,481 @@
+item,questions,category,subcategory,type,scores,time
+26,1. Evin kapýsýný onunla kilitleriz (ANAHTAR),auditory_comprehension,objects,,3,1
+27,"2. Tiryakilik yapar, dumaný içe çekerek içilir (SÝGARA) ",auditory_comprehension,objects,,3,1
+28,3. Alýþveriþte harcarýz (PARA),auditory_comprehension,objects,,3,1
+29,4. Daha iyi görebilmek için takarýz (GÖZLÜK),auditory_comprehension,objects,,3,1
+30,5. Uzaktakilerle konuþmak için kullanýrýz (TELEFON),auditory_comprehension,objects,,3,1
+31,6. Görme organýmýzdýr (GÖZ),auditory_comprehension,objects,,3,1
+32,Meyveler,auditory_comprehension,categories,understand_categories,0,1
+33,Harfler,auditory_comprehension,categories,understand_categories,3,1
+34, Sayýlar,auditory_comprehension,categories,understand_categories,3,1
+35, Renkler,auditory_comprehension,categories,understand_categories,3,1
+36, Oturuyorlar ,auditory_comprehension,categories,understand_categories,3,1
+37,Kýrmýzý elma ,auditory_comprehension,categories,understand_details,3,1
+38,B harfi,auditory_comprehension,categories,understand_details,0,1
+39, 8 rakamý,auditory_comprehension,categories,understand_details,0,1
+40,Mavi renk,auditory_comprehension,categories,understand_details,0,1
+41,Kýz oturuyor,auditory_comprehension,categories,understand_details,3,1
+42,Ýki arabanýn dikkatsiz þoförleri çarpýþtý ,auditory_comprehension,sentence_variation,simple_sentence,3,1
+43,Birisi üçüncü tahta sandalyeyi kýrmýþ ,auditory_comprehension,sentence_variation,simple_sentence,3,1
+44, Abisi uyuyor ama küçük kardeþ uyanýk ,auditory_comprehension,sentence_variation,simple_sentence,3,1
+45,Diþçiden çok korkuyor; bu yüzden diþlerini hep fýrçalar ,auditory_comprehension,sentence_variation,simple_sentence,0,1
+46,Aðýr olduðu için kadýn bavullarýný taþýtýyor,auditory_comprehension,sentence_variation,complex_sentence,0,1
+47,Merdivenden düþen kýzýn bacaðý kýrýlmýþ ,auditory_comprehension,sentence_variation,complex_sentence,3,1
+48,"Çocuk, yaramazlýk yapýp, annesinin en güzel vazosunu kýrdý ",auditory_comprehension,sentence_variation,complex_sentence,3,1
+49, Çok yorulmasýna raðmen paketlerini kendi taþýyor ,auditory_comprehension,sentence_variation,complex_sentence,3,1
+50,1. Alo,repetition,,,0,1
+51,2.Sekiz ,repetition,,,0,1
+52,3.Çeþme,repetition,,,0,1
+53,4. Buzdolabi,repetition,,,0,1
+54,5. Karyola,repetition,,,0,1
+55,6. Patika ,repetition,,,0,1
+56,7. Kahve fali,repetition,,,0,1
+57,8. Dantel mendil,repetition,,,0,1
+58,9. Daldaki karga gak dedi ,repetition,,,0,1
+59,10.Tekir kedi pis suyu lýkýr likýr içti ,repetition,,,0,1
+60,"1. ""Aklýnýza gelen ev eþyalarýný söyleyin""",naming,categorical,,0,1
+61,"2. ""Aklýnýza gelen mutfak eþyalarýný söyleyin""",naming,categorical,,0,1
+62,1. Kaþýk ,naming,confrontation,,0,1
+63,2. Anahtar,naming,confrontation,,0,1
+64,3. Bardak,naming,confrontation,,0,1
+65,4. Göz,naming,confrontation,,0,1
+66, 5. Sigara,naming,confrontation,,0,1
+67,6. Para,naming,confrontation,,0,1
+68,7.Telefon,naming,confrontation,,0,1
+69,8. Ýlaç,naming,confrontation,,0,1
+70,9. Saat,naming,confrontation,,0,1
+71,10. Gözlük,naming,confrontation,,0,1
+72,1. Akþam evde ne seyredersin? ,naming,answer,noun,0,1
+73,2. Elimizde kac parmak var? ,naming,answer,noun,3,1
+74,3. Çorap nereye giyilir?,naming,answer,noun,3,1
+75, 4. Baþýn aðrýrsa ne içersin?,naming,answer,noun,0,1
+76,5. Nezle olunca burnunu neyle silersin?,naming,answer,noun,0,1
+77,1. Býçakla ne yaparsýn?,naming,answer,verb,3,1
+78,2. Karnýn acýkýnca ne yaparsin?,naming,answer,verb,0,1
+79,3. Bardakla ne yaparsýn? ,naming,answer,verb,0,1
+80,4. Çiviyi çekiçle ne yaparsýn?,naming,answer,verb,3,1
+81,5. Yattýðýn zaman ne yaparsýn?,naming,answer,verb,0,1
+82,1. Gözlerini kapa ,reading,silent/command,,0,1
+83,2. Üfle,reading,silent/command,,0,1
+84,3. Iþaret parmaðýný göster,reading,silent/command,,0,1
+85,4. Diþini fýrçalar gibi yap,reading,silent/command,,0,1
+86,K,reading,letter/number,,0,1
+87,A,reading,letter/number,,0,1
+88, S,reading,letter/number,,0,1
+89,7,reading,letter/number,,0,1
+90,13,reading,letter/number,,0,1
+91,1. Elmalar,reading,word,,0,1
+92,2. Kedi ve köpek ,reading,word,,0,1
+93,3. Kurþun kalem kutusu ,reading,word,,0,1
+94,4. Saat onu on geçiyor,reading,word,,0,1
+95,5. Çocuk bisikletin yanýnda duruyor,reading,word,,0,1
+96, 1. Elmalar,reading,matching,,1,1
+97,2. Kedi ve köpek ,reading,matching,,0,1
+98,3. Kurþun kalem kutusu,reading,matching,,0,1
+99,4. Saat onu on geçiyor ,reading,matching,,0,1
+100,5. Çocuk bisikletin yanýnda duruyor,reading,matching,,0,1
+101,Paragraph,reading,paragraph,,0,1
+102,1. Bebekler sigara ……………… (ÝÇMEZ),grammar,,,0,1
+103,2. Güneþ doðudan ……………… (DOÐAR),grammar,,,0,1
+104,"3. Kýþ geldi, kar yaðýyor. Hava çok ………    (SOÐUK)",grammar,,,0,1
+105,4. Cumartesi'den sonra gelen gün ………(PAZAR),grammar,,,0,1
+106, 5. Dün gece yatmadan önce kitap …………(OKUDUM),grammar,,,0,1
+107,6. Ali'nin hastalýðý geçti. Yarýn okula ……    (GÝDECEK),grammar,,,0,1
+108,7. Annemin kocasý (benim) ………. (BABAM),grammar,,,0,1
+109,8. Odanýn kapýsý …………. (KAPALI/AÇIK),grammar,,,0,1
+110,9. Kaþým gözümün ……… (ÜSTÜNDE),grammar,,,0,1
+111,"10. Ýki çocuðum var; biri oðlan, biri …………. (KIZ)",grammar,,,0,1
+112,1. Kapý çaldý; açmadan ne sorarsýnýz? (KÝM O?),pragmatics,,,0,1
+113,2. Birisi hapþýrýrsa ne dersiniz? (ÇOK YAÞA),pragmatics,,,0,1
+114,3. Misafirleriniz gidiyorlar; uðurlarken ne dersiniz? (GÜLE GÜLE),pragmatics,,,0,1
+115,4. Telefon çaldý Açtýðýnýzda ilk ne dersiniz? (ALO),pragmatics,,,0,1
+116,5. Çok güzel bir yemek yediniz. Sofradan kalkýyorsunuz; yemeði piþiren kiþiye ne dersiniz? (ELÝNE SAÐLIK),pragmatics,,,0,1
+117,"6. Birisi size 'Günaydýn ' derse, siz ne dersiniz? GÜNAYDIN)",pragmatics,,,0,1
+118,7. Saçýnýz çok uzadý. Berbere/Kuaföre gittiniz; ne dersiniz? (SAÇIMI KES),pragmatics,,,0,1
+119,8. Arkadaþýnýz hasta. Ziyaretine gittiniz; ne dersiniz? (GEÇMÝÞ OLSUN),pragmatics,,,0,1
+120,"9. Bir ayakkabý almak istiyorsunuz, Üzerinde fiyatý yok: satýcýya ne sorarsýnýz? (NE KADAR?/ KAÇ LÝRA?)",pragmatics,,,0,1
+121,"10. Size 'Nasýlsýnýz?"" diye sordular. Nasýl cevaplarsýnýz? (ÝYÝYÝM / HASTAYIM, vs) ",pragmatics,,,0,1
+26,1. Evin kapýsýný onunla kilitleriz (ANAHTAR),auditory_comprehension,objects,,3,2
+27,"2. Tiryakilik yapar, dumaný içe çekerek içilir (SÝGARA) ",auditory_comprehension,objects,,3,2
+28,3. Alýþveriþte harcarýz (PARA),auditory_comprehension,objects,,3,2
+29,4. Daha iyi görebilmek için takarýz (GÖZLÜK),auditory_comprehension,objects,,3,2
+30,5. Uzaktakilerle konuþmak için kullanýrýz (TELEFON),auditory_comprehension,objects,,0,2
+31,6. Görme organýmýzdýr (GÖZ),auditory_comprehension,objects,,3,2
+32,Meyveler,auditory_comprehension,categories,understand_categories,3,2
+33,Harfler,auditory_comprehension,categories,understand_categories,3,2
+34, Sayýlar,auditory_comprehension,categories,understand_categories,3,2
+35, Renkler,auditory_comprehension,categories,understand_categories,3,2
+36, Oturuyorlar ,auditory_comprehension,categories,understand_categories,3,2
+37,Kýrmýzý elma ,auditory_comprehension,categories,understand_details,3,2
+38,B harfi,auditory_comprehension,categories,understand_details,0,2
+39, 8 rakamý,auditory_comprehension,categories,understand_details,3,2
+40,Mavi renk,auditory_comprehension,categories,understand_details,3,2
+41,Kýz oturuyor,auditory_comprehension,categories,understand_details,3,2
+42,Ýki arabanýn dikkatsiz þoförleri çarpýþtý ,auditory_comprehension,sentence_variation,simple_sentence,3,2
+43,Birisi üçüncü tahta sandalyeyi kýrmýþ ,auditory_comprehension,sentence_variation,simple_sentence,3,2
+44, Abisi uyuyor ama küçük kardeþ uyanýk ,auditory_comprehension,sentence_variation,simple_sentence,3,2
+45,Diþçiden çok korkuyor; bu yüzden diþlerini hep fýrçalar ,auditory_comprehension,sentence_variation,simple_sentence,3,2
+46,Aðýr olduðu için kadýn bavullarýný taþýtýyor,auditory_comprehension,sentence_variation,complex_sentence,3,2
+47,Merdivenden düþen kýzýn bacaðý kýrýlmýþ ,auditory_comprehension,sentence_variation,complex_sentence,3,2
+48,"Çocuk, yaramazlýk yapýp, annesinin en güzel vazosunu kýrdý ",auditory_comprehension,sentence_variation,complex_sentence,3,2
+49, Çok yorulmasýna raðmen paketlerini kendi taþýyor ,auditory_comprehension,sentence_variation,complex_sentence,3,2
+50,1. Alo,repetition,,,0,2
+51,2.Sekiz ,repetition,,,0,2
+52,3.Çeþme,repetition,,,0,2
+53,4. Buzdolabi,repetition,,,0,2
+54,5. Karyola,repetition,,,0,2
+55,6. Patika ,repetition,,,0,2
+56,7. Kahve fali,repetition,,,0,2
+57,8. Dantel mendil,repetition,,,0,2
+58,9. Daldaki karga gak dedi ,repetition,,,0,2
+59,10.Tekir kedi pis suyu lýkýr likýr içti ,repetition,,,0,2
+60,"1. ""Aklýnýza gelen ev eþyalarýný söyleyin""",naming,categorical,,0,2
+61,"2. ""Aklýnýza gelen mutfak eþyalarýný söyleyin""",naming,categorical,,0,2
+62,1. Kaþýk ,naming,confrontation,,0,2
+63,2. Anahtar,naming,confrontation,,0,2
+64,3. Bardak,naming,confrontation,,2,2
+65,4. Göz,naming,confrontation,,0,2
+66, 5. Sigara,naming,confrontation,,0,2
+67,6. Para,naming,confrontation,,0,2
+68,7.Telefon,naming,confrontation,,0,2
+69,8. Ýlaç,naming,confrontation,,0,2
+70,9. Saat,naming,confrontation,,0,2
+71,10. Gözlük,naming,confrontation,,0,2
+72,1. Akþam evde ne seyredersin? ,naming,answer,noun,0,2
+73,2. Elimizde kac parmak var? ,naming,answer,noun,0,2
+74,3. Çorap nereye giyilir?,naming,answer,noun,3,2
+75, 4. Baþýn aðrýrsa ne içersin?,naming,answer,noun,0,2
+76,5. Nezle olunca burnunu neyle silersin?,naming,answer,noun,0,2
+77,1. Býçakla ne yaparsýn?,naming,answer,verb,0,2
+78,2. Karnýn acýkýnca ne yaparsin?,naming,answer,verb,0,2
+79,3. Bardakla ne yaparsýn? ,naming,answer,verb,0,2
+80,4. Çiviyi çekiçle ne yaparsýn?,naming,answer,verb,0,2
+81,5. Yattýðýn zaman ne yaparsýn?,naming,answer,verb,0,2
+82,1. Gözlerini kapa ,reading,silent/command,,0,2
+83,2. Üfle,reading,silent/command,,0,2
+84,3. Iþaret parmaðýný göster,reading,silent/command,,0,2
+85,4. Diþini fýrçalar gibi yap,reading,silent/command,,0,2
+86,K,reading,letter/number,,0,2
+87,A,reading,letter/number,,0,2
+88, S,reading,letter/number,,0,2
+89,7,reading,letter/number,,0,2
+90,13,reading,letter/number,,0,2
+91,1. Elmalar,reading,word,,0,2
+92,2. Kedi ve köpek ,reading,word,,0,2
+93,3. Kurþun kalem kutusu ,reading,word,,0,2
+94,4. Saat onu on geçiyor,reading,word,,0,2
+95,5. Çocuk bisikletin yanýnda duruyor,reading,word,,0,2
+96, 1. Elmalar,reading,matching,,0,2
+97,2. Kedi ve köpek ,reading,matching,,0,2
+98,3. Kurþun kalem kutusu,reading,matching,,0,2
+99,4. Saat onu on geçiyor ,reading,matching,,0,2
+100,5. Çocuk bisikletin yanýnda duruyor,reading,matching,,0,2
+101,Paragraph,reading,paragraph,,0,2
+102,1. Bebekler sigara ……………… (ÝÇMEZ),grammar,,,0,2
+103,2. Güneþ doðudan ……………… (DOÐAR),grammar,,,0,2
+104,"3. Kýþ geldi, kar yaðýyor. Hava çok ………    (SOÐUK)",grammar,,,0,2
+105,4. Cumartesi'den sonra gelen gün ………(PAZAR),grammar,,,0,2
+106, 5. Dün gece yatmadan önce kitap …………(OKUDUM),grammar,,,0,2
+107,6. Ali'nin hastalýðý geçti. Yarýn okula ……    (GÝDECEK),grammar,,,0,2
+108,7. Annemin kocasý (benim) ………. (BABAM),grammar,,,2,2
+109,8. Odanýn kapýsý …………. (KAPALI/AÇIK),grammar,,,0,2
+110,9. Kaþým gözümün ……… (ÜSTÜNDE),grammar,,,0,2
+111,"10. Ýki çocuðum var; biri oðlan, biri …………. (KIZ)",grammar,,,0,2
+112,1. Kapý çaldý; açmadan ne sorarsýnýz? (KÝM O?),pragmatics,,,0,2
+113,2. Birisi hapþýrýrsa ne dersiniz? (ÇOK YAÞA),pragmatics,,,0,2
+114,3. Misafirleriniz gidiyorlar; uðurlarken ne dersiniz? (GÜLE GÜLE),pragmatics,,,0,2
+115,4. Telefon çaldý Açtýðýnýzda ilk ne dersiniz? (ALO),pragmatics,,,0,2
+116,5. Çok güzel bir yemek yediniz. Sofradan kalkýyorsunuz; yemeði piþiren kiþiye ne dersiniz? (ELÝNE SAÐLIK),pragmatics,,,0,2
+117,"6. Birisi size 'Günaydýn ' derse, siz ne dersiniz? GÜNAYDIN)",pragmatics,,,0,2
+118,7. Saçýnýz çok uzadý. Berbere/Kuaföre gittiniz; ne dersiniz? (SAÇIMI KES),pragmatics,,,0,2
+119,8. Arkadaþýnýz hasta. Ziyaretine gittiniz; ne dersiniz? (GEÇMÝÞ OLSUN),pragmatics,,,0,2
+120,"9. Bir ayakkabý almak istiyorsunuz, Üzerinde fiyatý yok: satýcýya ne sorarsýnýz? (NE KADAR?/ KAÇ LÝRA?)",pragmatics,,,0,2
+121,"10. Size 'Nasýlsýnýz?"" diye sordular. Nasýl cevaplarsýnýz? (ÝYÝYÝM / HASTAYIM, vs) ",pragmatics,,,0,2
+26,1. Evin kapýsýný onunla kilitleriz (ANAHTAR),auditory_comprehension,objects,,3,3
+27,"2. Tiryakilik yapar, dumaný içe çekerek içilir (SÝGARA) ",auditory_comprehension,objects,,3,3
+28,3. Alýþveriþte harcarýz (PARA),auditory_comprehension,objects,,3,3
+29,4. Daha iyi görebilmek için takarýz (GÖZLÜK),auditory_comprehension,objects,,3,3
+30,5. Uzaktakilerle konuþmak için kullanýrýz (TELEFON),auditory_comprehension,objects,,3,3
+31,6. Görme organýmýzdýr (GÖZ),auditory_comprehension,objects,,3,3
+32,Meyveler,auditory_comprehension,categories,understand_categories,3,3
+33,Harfler,auditory_comprehension,categories,understand_categories,3,3
+34, Sayýlar,auditory_comprehension,categories,understand_categories,3,3
+35, Renkler,auditory_comprehension,categories,understand_categories,3,3
+36, Oturuyorlar ,auditory_comprehension,categories,understand_categories,3,3
+37,Kýrmýzý elma ,auditory_comprehension,categories,understand_details,3,3
+38,B harfi,auditory_comprehension,categories,understand_details,0,3
+39, 8 rakamý,auditory_comprehension,categories,understand_details,3,3
+40,Mavi renk,auditory_comprehension,categories,understand_details,0,3
+41,Kýz oturuyor,auditory_comprehension,categories,understand_details,3,3
+42,Ýki arabanýn dikkatsiz þoförleri çarpýþtý ,auditory_comprehension,sentence_variation,simple_sentence,3,3
+43,Birisi üçüncü tahta sandalyeyi kýrmýþ ,auditory_comprehension,sentence_variation,simple_sentence,3,3
+44, Abisi uyuyor ama küçük kardeþ uyanýk ,auditory_comprehension,sentence_variation,simple_sentence,3,3
+45,Diþçiden çok korkuyor; bu yüzden diþlerini hep fýrçalar ,auditory_comprehension,sentence_variation,simple_sentence,3,3
+46,Aðýr olduðu için kadýn bavullarýný taþýtýyor,auditory_comprehension,sentence_variation,complex_sentence,3,3
+47,Merdivenden düþen kýzýn bacaðý kýrýlmýþ ,auditory_comprehension,sentence_variation,complex_sentence,3,3
+48,"Çocuk, yaramazlýk yapýp, annesinin en güzel vazosunu kýrdý ",auditory_comprehension,sentence_variation,complex_sentence,3,3
+49, Çok yorulmasýna raðmen paketlerini kendi taþýyor ,auditory_comprehension,sentence_variation,complex_sentence,3,3
+50,1. Alo,repetition,,,0,3
+51,2.Sekiz ,repetition,,,0,3
+52,3.Çeþme,repetition,,,0,3
+53,4. Buzdolabi,repetition,,,0,3
+54,5. Karyola,repetition,,,0,3
+55,6. Patika ,repetition,,,0,3
+56,7. Kahve fali,repetition,,,0,3
+57,8. Dantel mendil,repetition,,,0,3
+58,9. Daldaki karga gak dedi ,repetition,,,0,3
+59,10.Tekir kedi pis suyu lýkýr likýr içti ,repetition,,,0,3
+60,"1. ""Aklýnýza gelen ev eþyalarýný söyleyin""",naming,categorical,,0,3
+61,"2. ""Aklýnýza gelen mutfak eþyalarýný söyleyin""",naming,categorical,,0,3
+62,1. Kaþýk ,naming,confrontation,,0,3
+63,2. Anahtar,naming,confrontation,,0,3
+64,3. Bardak,naming,confrontation,,2,3
+65,4. Göz,naming,confrontation,,0,3
+66, 5. Sigara,naming,confrontation,,0,3
+67,6. Para,naming,confrontation,,4,3
+68,7.Telefon,naming,confrontation,,0,3
+69,8. Ýlaç,naming,confrontation,,0,3
+70,9. Saat,naming,confrontation,,0,3
+71,10. Gözlük,naming,confrontation,,0,3
+72,1. Akþam evde ne seyredersin? ,naming,answer,noun,0,3
+73,2. Elimizde kac parmak var? ,naming,answer,noun,0,3
+74,3. Çorap nereye giyilir?,naming,answer,noun,3,3
+75, 4. Baþýn aðrýrsa ne içersin?,naming,answer,noun,0,3
+76,5. Nezle olunca burnunu neyle silersin?,naming,answer,noun,0,3
+77,1. Býçakla ne yaparsýn?,naming,answer,verb,0,3
+78,2. Karnýn acýkýnca ne yaparsin?,naming,answer,verb,0,3
+79,3. Bardakla ne yaparsýn? ,naming,answer,verb,0,3
+80,4. Çiviyi çekiçle ne yaparsýn?,naming,answer,verb,0,3
+81,5. Yattýðýn zaman ne yaparsýn?,naming,answer,verb,0,3
+82,1. Gözlerini kapa ,reading,silent/command,,0,3
+83,2. Üfle,reading,silent/command,,0,3
+84,3. Iþaret parmaðýný göster,reading,silent/command,,0,3
+85,4. Diþini fýrçalar gibi yap,reading,silent/command,,0,3
+86,K,reading,letter/number,,0,3
+87,A,reading,letter/number,,4,3
+88, S,reading,letter/number,,0,3
+89,7,reading,letter/number,,0,3
+90,13,reading,letter/number,,2,3
+91,1. Elmalar,reading,word,,0,3
+92,2. Kedi ve köpek ,reading,word,,0,3
+93,3. Kurþun kalem kutusu ,reading,word,,0,3
+94,4. Saat onu on geçiyor,reading,word,,0,3
+95,5. Çocuk bisikletin yanýnda duruyor,reading,word,,0,3
+96, 1. Elmalar,reading,matching,,0,3
+97,2. Kedi ve köpek ,reading,matching,,0,3
+98,3. Kurþun kalem kutusu,reading,matching,,0,3
+99,4. Saat onu on geçiyor ,reading,matching,,0,3
+100,5. Çocuk bisikletin yanýnda duruyor,reading,matching,,0,3
+101,Paragraph,reading,paragraph,,0,3
+102,1. Bebekler sigara ……………… (ÝÇMEZ),grammar,,,0,3
+103,2. Güneþ doðudan ……………… (DOÐAR),grammar,,,0,3
+104,"3. Kýþ geldi, kar yaðýyor. Hava çok ………    (SOÐUK)",grammar,,,0,3
+105,4. Cumartesi'den sonra gelen gün ………(PAZAR),grammar,,,2,3
+106, 5. Dün gece yatmadan önce kitap …………(OKUDUM),grammar,,,0,3
+107,6. Ali'nin hastalýðý geçti. Yarýn okula ……    (GÝDECEK),grammar,,,0,3
+108,7. Annemin kocasý (benim) ………. (BABAM),grammar,,,4,3
+109,8. Odanýn kapýsý …………. (KAPALI/AÇIK),grammar,,,0,3
+110,9. Kaþým gözümün ……… (ÜSTÜNDE),grammar,,,0,3
+111,"10. Ýki çocuðum var; biri oðlan, biri …………. (KIZ)",grammar,,,4,3
+112,1. Kapý çaldý; açmadan ne sorarsýnýz? (KÝM O?),pragmatics,,,0,3
+113,2. Birisi hapþýrýrsa ne dersiniz? (ÇOK YAÞA),pragmatics,,,0,3
+114,3. Misafirleriniz gidiyorlar; uðurlarken ne dersiniz? (GÜLE GÜLE),pragmatics,,,0,3
+115,4. Telefon çaldý Açtýðýnýzda ilk ne dersiniz? (ALO),pragmatics,,,0,3
+116,5. Çok güzel bir yemek yediniz. Sofradan kalkýyorsunuz; yemeði piþiren kiþiye ne dersiniz? (ELÝNE SAÐLIK),pragmatics,,,0,3
+117,"6. Birisi size 'Günaydýn ' derse, siz ne dersiniz? GÜNAYDIN)",pragmatics,,,0,3
+118,7. Saçýnýz çok uzadý. Berbere/Kuaföre gittiniz; ne dersiniz? (SAÇIMI KES),pragmatics,,,0,3
+119,8. Arkadaþýnýz hasta. Ziyaretine gittiniz; ne dersiniz? (GEÇMÝÞ OLSUN),pragmatics,,,0,3
+120,"9. Bir ayakkabý almak istiyorsunuz, Üzerinde fiyatý yok: satýcýya ne sorarsýnýz? (NE KADAR?/ KAÇ LÝRA?)",pragmatics,,,0,3
+121,"10. Size 'Nasýlsýnýz?"" diye sordular. Nasýl cevaplarsýnýz? (ÝYÝYÝM / HASTAYIM, vs) ",pragmatics,,,0,3
+26,1. Evin kapýsýný onunla kilitleriz (ANAHTAR),auditory_comprehension,objects,,3,4
+27,"2. Tiryakilik yapar, dumaný içe çekerek içilir (SÝGARA) ",auditory_comprehension,objects,,3,4
+28,3. Alýþveriþte harcarýz (PARA),auditory_comprehension,objects,,3,4
+29,4. Daha iyi görebilmek için takarýz (GÖZLÜK),auditory_comprehension,objects,,3,4
+30,5. Uzaktakilerle konuþmak için kullanýrýz (TELEFON),auditory_comprehension,objects,,3,4
+31,6. Görme organýmýzdýr (GÖZ),auditory_comprehension,objects,,3,4
+32,Meyveler,auditory_comprehension,categories,understand_categories,3,4
+33,Harfler,auditory_comprehension,categories,understand_categories,3,4
+34, Sayýlar,auditory_comprehension,categories,understand_categories,3,4
+35, Renkler,auditory_comprehension,categories,understand_categories,3,4
+36, Oturuyorlar ,auditory_comprehension,categories,understand_categories,3,4
+37,Kýrmýzý elma ,auditory_comprehension,categories,understand_details,3,4
+38,B harfi,auditory_comprehension,categories,understand_details,0,4
+39, 8 rakamý,auditory_comprehension,categories,understand_details,0,4
+40,Mavi renk,auditory_comprehension,categories,understand_details,3,4
+41,Kýz oturuyor,auditory_comprehension,categories,understand_details,3,4
+42,Ýki arabanýn dikkatsiz þoförleri çarpýþtý ,auditory_comprehension,sentence_variation,simple_sentence,3,4
+43,Birisi üçüncü tahta sandalyeyi kýrmýþ ,auditory_comprehension,sentence_variation,simple_sentence,0,4
+44, Abisi uyuyor ama küçük kardeþ uyanýk ,auditory_comprehension,sentence_variation,simple_sentence,3,4
+45,Diþçiden çok korkuyor; bu yüzden diþlerini hep fýrçalar ,auditory_comprehension,sentence_variation,simple_sentence,3,4
+46,Aðýr olduðu için kadýn bavullarýný taþýtýyor,auditory_comprehension,sentence_variation,complex_sentence,3,4
+47,Merdivenden düþen kýzýn bacaðý kýrýlmýþ ,auditory_comprehension,sentence_variation,complex_sentence,3,4
+48,"Çocuk, yaramazlýk yapýp, annesinin en güzel vazosunu kýrdý ",auditory_comprehension,sentence_variation,complex_sentence,3,4
+49, Çok yorulmasýna raðmen paketlerini kendi taþýyor ,auditory_comprehension,sentence_variation,complex_sentence,0,4
+50,1. Alo,repetition,,,2,4
+51,2.Sekiz ,repetition,,,0,4
+52,3.Çeþme,repetition,,,2,4
+53,4. Buzdolabi,repetition,,,2,4
+54,5. Karyola,repetition,,,2,4
+55,6. Patika ,repetition,,,2,4
+56,7. Kahve fali,repetition,,,0,4
+57,8. Dantel mendil,repetition,,,0,4
+58,9. Daldaki karga gak dedi ,repetition,,,0,4
+59,10.Tekir kedi pis suyu lýkýr likýr içti ,repetition,,,0,4
+60,"1. ""Aklýnýza gelen ev eþyalarýný söyleyin""",naming,categorical,,0,4
+61,"2. ""Aklýnýza gelen mutfak eþyalarýný söyleyin""",naming,categorical,,0,4
+62,1. Kaþýk ,naming,confrontation,,0,4
+63,2. Anahtar,naming,confrontation,,2,4
+64,3. Bardak,naming,confrontation,,0,4
+65,4. Göz,naming,confrontation,,0,4
+66, 5. Sigara,naming,confrontation,,0,4
+67,6. Para,naming,confrontation,,2,4
+68,7.Telefon,naming,confrontation,,0,4
+69,8. Ýlaç,naming,confrontation,,0,4
+70,9. Saat,naming,confrontation,,0,4
+71,10. Gözlük,naming,confrontation,,0,4
+72,1. Akþam evde ne seyredersin? ,naming,answer,noun,0,4
+73,2. Elimizde kac parmak var? ,naming,answer,noun,0,4
+74,3. Çorap nereye giyilir?,naming,answer,noun,3,4
+75, 4. Baþýn aðrýrsa ne içersin?,naming,answer,noun,0,4
+76,5. Nezle olunca burnunu neyle silersin?,naming,answer,noun,0,4
+77,1. Býçakla ne yaparsýn?,naming,answer,verb,0,4
+78,2. Karnýn acýkýnca ne yaparsin?,naming,answer,verb,0,4
+79,3. Bardakla ne yaparsýn? ,naming,answer,verb,0,4
+80,4. Çiviyi çekiçle ne yaparsýn?,naming,answer,verb,0,4
+81,5. Yattýðýn zaman ne yaparsýn?,naming,answer,verb,0,4
+82,1. Gözlerini kapa ,reading,silent/command,,0,4
+83,2. Üfle,reading,silent/command,,0,4
+84,3. Iþaret parmaðýný göster,reading,silent/command,,0,4
+85,4. Diþini fýrçalar gibi yap,reading,silent/command,,0,4
+86,K,reading,letter/number,,0,4
+87,A,reading,letter/number,,4,4
+88, S,reading,letter/number,,0,4
+89,7,reading,letter/number,,0,4
+90,13,reading,letter/number,,0,4
+91,1. Elmalar,reading,word,,0,4
+92,2. Kedi ve köpek ,reading,word,,0,4
+93,3. Kurþun kalem kutusu ,reading,word,,0,4
+94,4. Saat onu on geçiyor,reading,word,,0,4
+95,5. Çocuk bisikletin yanýnda duruyor,reading,word,,0,4
+96, 1. Elmalar,reading,matching,,0,4
+97,2. Kedi ve köpek ,reading,matching,,0,4
+98,3. Kurþun kalem kutusu,reading,matching,,0,4
+99,4. Saat onu on geçiyor ,reading,matching,,0,4
+100,5. Çocuk bisikletin yanýnda duruyor,reading,matching,,0,4
+101,Paragraph,reading,paragraph,,0,4
+102,1. Bebekler sigara ……………… (ÝÇMEZ),grammar,,,0,4
+103,2. Güneþ doðudan ……………… (DOÐAR),grammar,,,2,4
+104,"3. Kýþ geldi, kar yaðýyor. Hava çok ………    (SOÐUK)",grammar,,,0,4
+105,4. Cumartesi'den sonra gelen gün ………(PAZAR),grammar,,,2,4
+106, 5. Dün gece yatmadan önce kitap …………(OKUDUM),grammar,,,0,4
+107,6. Ali'nin hastalýðý geçti. Yarýn okula ……    (GÝDECEK),grammar,,,0,4
+108,7. Annemin kocasý (benim) ………. (BABAM),grammar,,,4,4
+109,8. Odanýn kapýsý …………. (KAPALI/AÇIK),grammar,,,0,4
+110,9. Kaþým gözümün ……… (ÜSTÜNDE),grammar,,,0,4
+111,"10. Ýki çocuðum var; biri oðlan, biri …………. (KIZ)",grammar,,,0,4
+112,1. Kapý çaldý; açmadan ne sorarsýnýz? (KÝM O?),pragmatics,,,0,4
+113,2. Birisi hapþýrýrsa ne dersiniz? (ÇOK YAÞA),pragmatics,,,0,4
+114,3. Misafirleriniz gidiyorlar; uðurlarken ne dersiniz? (GÜLE GÜLE),pragmatics,,,4,4
+115,4. Telefon çaldý Açtýðýnýzda ilk ne dersiniz? (ALO),pragmatics,,,2,4
+116,5. Çok güzel bir yemek yediniz. Sofradan kalkýyorsunuz; yemeði piþiren kiþiye ne dersiniz? (ELÝNE SAÐLIK),pragmatics,,,0,4
+117,"6. Birisi size 'Günaydýn ' derse, siz ne dersiniz? GÜNAYDIN)",pragmatics,,,0,4
+118,7. Saçýnýz çok uzadý. Berbere/Kuaföre gittiniz; ne dersiniz? (SAÇIMI KES),pragmatics,,,0,4
+119,8. Arkadaþýnýz hasta. Ziyaretine gittiniz; ne dersiniz? (GEÇMÝÞ OLSUN),pragmatics,,,0,4
+120,"9. Bir ayakkabý almak istiyorsunuz, Üzerinde fiyatý yok: satýcýya ne sorarsýnýz? (NE KADAR?/ KAÇ LÝRA?)",pragmatics,,,0,4
+121,"10. Size 'Nasýlsýnýz?"" diye sordular. Nasýl cevaplarsýnýz? (ÝYÝYÝM / HASTAYIM, vs) ",pragmatics,,,0,4
+26,1. Evin kapýsýný onunla kilitleriz (ANAHTAR),auditory_comprehension,objects,,3,5
+27,"2. Tiryakilik yapar, dumaný içe çekerek içilir (SÝGARA) ",auditory_comprehension,objects,,3,5
+28,3. Alýþveriþte harcarýz (PARA),auditory_comprehension,objects,,3,5
+29,4. Daha iyi görebilmek için takarýz (GÖZLÜK),auditory_comprehension,objects,,3,5
+30,5. Uzaktakilerle konuþmak için kullanýrýz (TELEFON),auditory_comprehension,objects,,3,5
+31,6. Görme organýmýzdýr (GÖZ),auditory_comprehension,objects,,3,5
+32,Meyveler,auditory_comprehension,categories,understand_categories,3,5
+33,Harfler,auditory_comprehension,categories,understand_categories,3,5
+34, Sayýlar,auditory_comprehension,categories,understand_categories,3,5
+35, Renkler,auditory_comprehension,categories,understand_categories,3,5
+36, Oturuyorlar ,auditory_comprehension,categories,understand_categories,3,5
+37,Kýrmýzý elma ,auditory_comprehension,categories,understand_details,3,5
+38,B harfi,auditory_comprehension,categories,understand_details,0,5
+39, 8 rakamý,auditory_comprehension,categories,understand_details,3,5
+40,Mavi renk,auditory_comprehension,categories,understand_details,3,5
+41,Kýz oturuyor,auditory_comprehension,categories,understand_details,3,5
+42,Ýki arabanýn dikkatsiz þoförleri çarpýþtý ,auditory_comprehension,sentence_variation,simple_sentence,3,5
+43,Birisi üçüncü tahta sandalyeyi kýrmýþ ,auditory_comprehension,sentence_variation,simple_sentence,3,5
+44, Abisi uyuyor ama küçük kardeþ uyanýk ,auditory_comprehension,sentence_variation,simple_sentence,3,5
+45,Diþçiden çok korkuyor; bu yüzden diþlerini hep fýrçalar ,auditory_comprehension,sentence_variation,simple_sentence,3,5
+46,Aðýr olduðu için kadýn bavullarýný taþýtýyor,auditory_comprehension,sentence_variation,complex_sentence,3,5
+47,Merdivenden düþen kýzýn bacaðý kýrýlmýþ ,auditory_comprehension,sentence_variation,complex_sentence,3,5
+48,"Çocuk, yaramazlýk yapýp, annesinin en güzel vazosunu kýrdý ",auditory_comprehension,sentence_variation,complex_sentence,3,5
+49, Çok yorulmasýna raðmen paketlerini kendi taþýyor ,auditory_comprehension,sentence_variation,complex_sentence,3,5
+50,1. Alo,repetition,,,4,5
+51,2.Sekiz ,repetition,,,2,5
+52,3.Çeþme,repetition,,,2,5
+53,4. Buzdolabi,repetition,,,2,5
+54,5. Karyola,repetition,,,0,5
+55,6. Patika ,repetition,,,4,5
+56,7. Kahve fali,repetition,,,0,5
+57,8. Dantel mendil,repetition,,,2,5
+58,9. Daldaki karga gak dedi ,repetition,,,2,5
+59,10.Tekir kedi pis suyu lýkýr likýr içti ,repetition,,,2,5
+60,"1. ""Aklýnýza gelen ev eþyalarýný söyleyin""",naming,categorical,,0,5
+61,"2. ""Aklýnýza gelen mutfak eþyalarýný söyleyin""",naming,categorical,,0,5
+62,1. Kaþýk ,naming,confrontation,,0,5
+63,2. Anahtar,naming,confrontation,,0,5
+64,3. Bardak,naming,confrontation,,2,5
+65,4. Göz,naming,confrontation,,2,5
+66, 5. Sigara,naming,confrontation,,0,5
+67,6. Para,naming,confrontation,,2,5
+68,7.Telefon,naming,confrontation,,2,5
+69,8. Ýlaç,naming,confrontation,,2,5
+70,9. Saat,naming,confrontation,,0,5
+71,10. Gözlük,naming,confrontation,,0,5
+72,1. Akþam evde ne seyredersin? ,naming,answer,noun,3,5
+73,2. Elimizde kac parmak var? ,naming,answer,noun,3,5
+74,3. Çorap nereye giyilir?,naming,answer,noun,3,5
+75, 4. Baþýn aðrýrsa ne içersin?,naming,answer,noun,0,5
+76,5. Nezle olunca burnunu neyle silersin?,naming,answer,noun,0,5
+77,1. Býçakla ne yaparsýn?,naming,answer,verb,2,5
+78,2. Karnýn acýkýnca ne yaparsin?,naming,answer,verb,0,5
+79,3. Bardakla ne yaparsýn? ,naming,answer,verb,0,5
+80,4. Çiviyi çekiçle ne yaparsýn?,naming,answer,verb,0,5
+81,5. Yattýðýn zaman ne yaparsýn?,naming,answer,verb,0,5
+82,1. Gözlerini kapa ,reading,silent/command,,0,5
+83,2. Üfle,reading,silent/command,,0,5
+84,3. Iþaret parmaðýný göster,reading,silent/command,,0,5
+85,4. Diþini fýrçalar gibi yap,reading,silent/command,,0,5
+86,K,reading,letter/number,,0,5
+87,A,reading,letter/number,,4,5
+88, S,reading,letter/number,,4,5
+89,7,reading,letter/number,,2,5
+90,13,reading,letter/number,,2,5
+91,1. Elmalar,reading,word,,0,5
+92,2. Kedi ve köpek ,reading,word,,0,5
+93,3. Kurþun kalem kutusu ,reading,word,,0,5
+94,4. Saat onu on geçiyor,reading,word,,0,5
+95,5. Çocuk bisikletin yanýnda duruyor,reading,word,,0,5
+96, 1. Elmalar,reading,matching,,0,5
+97,2. Kedi ve köpek ,reading,matching,,0,5
+98,3. Kurþun kalem kutusu,reading,matching,,0,5
+99,4. Saat onu on geçiyor ,reading,matching,,0,5
+100,5. Çocuk bisikletin yanýnda duruyor,reading,matching,,0,5
+101,Paragraph,reading,paragraph,,0,5
+102,1. Bebekler sigara ……………… (ÝÇMEZ),grammar,,,2,5
+103,2. Güneþ doðudan ……………… (DOÐAR),grammar,,,0,5
+104,"3. Kýþ geldi, kar yaðýyor. Hava çok ………    (SOÐUK)",grammar,,,0,5
+105,4. Cumartesi'den sonra gelen gün ………(PAZAR),grammar,,,2,5
+106, 5. Dün gece yatmadan önce kitap …………(OKUDUM),grammar,,,0,5
+107,6. Ali'nin hastalýðý geçti. Yarýn okula ……    (GÝDECEK),grammar,,,2,5
+108,7. Annemin kocasý (benim) ………. (BABAM),grammar,,,4,5
+109,8. Odanýn kapýsý …………. (KAPALI/AÇIK),grammar,,,0,5
+110,9. Kaþým gözümün ……… (ÜSTÜNDE),grammar,,,0,5
+111,"10. Ýki çocuðum var; biri oðlan, biri …………. (KIZ)",grammar,,,4,5
+112,1. Kapý çaldý; açmadan ne sorarsýnýz? (KÝM O?),pragmatics,,,0,5
+113,2. Birisi hapþýrýrsa ne dersiniz? (ÇOK YAÞA),pragmatics,,,0,5
+114,3. Misafirleriniz gidiyorlar; uðurlarken ne dersiniz? (GÜLE GÜLE),pragmatics,,,4,5
+115,4. Telefon çaldý Açtýðýnýzda ilk ne dersiniz? (ALO),pragmatics,,,4,5
+116,5. Çok güzel bir yemek yediniz. Sofradan kalkýyorsunuz; yemeði piþiren kiþiye ne dersiniz? (ELÝNE SAÐLIK),pragmatics,,,0,5
+117,"6. Birisi size 'Günaydýn ' derse, siz ne dersiniz? GÜNAYDIN)",pragmatics,,,0,5
+118,7. Saçýnýz çok uzadý. Berbere/Kuaföre gittiniz; ne dersiniz? (SAÇIMI KES),pragmatics,,,0,5
+119,8. Arkadaþýnýz hasta. Ziyaretine gittiniz; ne dersiniz? (GEÇMÝÞ OLSUN),pragmatics,,,0,5
+120,"9. Bir ayakkabý almak istiyorsunuz, Üzerinde fiyatý yok: satýcýya ne sorarsýnýz? (NE KADAR?/ KAÇ LÝRA?)",pragmatics,,,0,5
+121,"10. Size 'Nasýlsýnýz?"" diye sordular. Nasýl cevaplarsýnýz? (ÝYÝYÝM / HASTAYIM, vs) ",pragmatics,,,4,5

@@ -1,0 +1,21 @@
+item,questions,category,subcategory,type,post_minus_pre_scores,phase
+102,1. Bebekler sigara ……………… (ÝÇMEZ),grammar,,,0,1
+103,2. Güneþ doðudan ……………… (DOÐAR),grammar,,,0,1
+104,"3. Kýþ geldi, kar yaðýyor. Hava çok ………    (SOÐUK)",grammar,,,0,1
+105,4. Cumartesi'den sonra gelen gün ………(PAZAR),grammar,,,1,1
+106, 5. Dün gece yatmadan önce kitap …………(OKUDUM),grammar,,,0,1
+107,6. Ali'nin hastalýðý geçti. Yarýn okula ……    (GÝDECEK),grammar,,,0,1
+108,7. Annemin kocasý (benim) ………. (BABAM),grammar,,,3,1
+109,8. Odanýn kapýsý …………. (KAPALI/AÇIK),grammar,,,0,1
+110,9. Kaþým gözümün ……… (ÜSTÜNDE),grammar,,,0,1
+111,"10. Ýki çocuðum var; biri oðlan, biri …………. (KIZ)",grammar,,,2,1
+102,1. Bebekler sigara ……………… (ÝÇMEZ),grammar,,,1,2
+103,2. Güneþ doðudan ……………… (DOÐAR),grammar,,,1,2
+104,"3. Kýþ geldi, kar yaðýyor. Hava çok ………    (SOÐUK)",grammar,,,0,2
+105,4. Cumartesi'den sonra gelen gün ………(PAZAR),grammar,,,0,2
+106, 5. Dün gece yatmadan önce kitap …………(OKUDUM),grammar,,,0,2
+107,6. Ali'nin hastalýðý geçti. Yarýn okula ……    (GÝDECEK),grammar,,,1,2
+108,7. Annemin kocasý (benim) ………. (BABAM),grammar,,,0,2
+109,8. Odanýn kapýsý …………. (KAPALI/AÇIK),grammar,,,0,2
+110,9. Kaþým gözümün ……… (ÜSTÜNDE),grammar,,,0,2
+111,"10. Ýki çocuðum var; biri oðlan, biri …………. (KIZ)",grammar,,,-2,2

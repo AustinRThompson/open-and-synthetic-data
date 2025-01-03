@@ -1445,7 +1445,6 @@ hearing_results_synthetic <- hearing_data_synthetic$syn |>
   ) |> 
   add_column(domain = "Hearing")
 
-
 # Compile results ----
 hearing_results_summary <- data_frame(
   Domain = "Hearing",
@@ -1812,187 +1811,96 @@ base::saveRDS(object = language,
 ```
 
 ```{r recep_language_2, echo = FALSE}
-library(brms)
-
 # Import original data ----
-robinaugh_df <- read_csv(here::here("Data", "07_Language", "Robinaugh", "SDTBI001_Data.csv")) %>%
-  janitor::clean_names() %>%
-  mutate(condition = ifelse(condition == 0, 'untreated', 'treated'),
-         phase = as.factor(phase)) %>%
-  mutate_if(is.character, as.factor)
+language_data_original2 <-
+  tdcs_data <- read_csv(here::here("Data", "07_Language", "Aydin", "raw_data", "data_singlecol.csv")) |> 
+  # select only relevant variables
+  dplyr::select(c(scores, time, item))
 
 # Establish p_value for study
-## no p-value - bayesian model
-
-# Data wrangling
-df_coded2 <- robinaugh_df %>%
-  filter(session < 13) %>%
-  group_by(id) %>%
-  mutate(phase = ifelse(phase == 'Pre', 0, 1),
-         num_baselines = sum(phase == 0),
-         # slope change is calculated by (T-(n1 + 1))D
-         slope_change = (session - (num_baselines+1))*phase
-         ) %>%
-  select(id, set, condition, response, session, phase, slope_change) %>%
-  mutate(phase = ifelse(condition == "untreated", 0, phase),
-         slope_change = ifelse(condition == "untreated", 0, slope_change)) |> 
-  select(-condition) |> 
-  select(c(id, session, slope_change, response, set, phase))
+language_alpha2 <- .05
 
 # Analysis Function ----
-# fit bayesian interrupted time series model
-m.1b <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
-             (session + phase + slope_change | set/id), # 
-           family = bernoulli(),  #binomial in lme4
-           data = df_coded2, # both trained and untrained sets
-           iter = 4000, # number of total samples per chain
-           warmup = 1000, # number of samples tossed out per chain
-           inits = 'random', # each chain takes random starting values
-           chains = 4, # 4 total chains
-           cores = 4, # use 4 computer cores to run chains simultaneously
-           control = list(adapt_delta = .97), # to aid model convergence
-           prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
-                     prior(normal(0, 2), class = b), # prior distributions
-                     prior(normal(0, 2), class = sd),
-                     prior(lkj(2), class = cor)),
-           backend = 'cmdstan',
-           seed = 42,
-           refresh = 0, #for the markdown document 
-           file = here::here("Data", "07_Language", "Robinaugh", "new_approach"),
-           file_refit = "on_change"
-)
-
-model_summary_with_posteriors <- function(model_name){
-posterior_samples(model_name)[,1:4] %>%
-  summarize(across(.fns = function(x){val = mean(ifelse(abs(x)>0.18,0,1))})) %>%
-  t() %>%
-  as_tibble() %>%
-  rename(posterior_probability = V1) %>%
-  bind_cols(as_tibble(fixef(model_name, probs = c(0.05, .95)),
-                      rownames='Parameter')) %>%
-  select(Parameter, Estimate, Est.Error, Q5, Q95, `ROPE %` = posterior_probability) 
-} 
-
- # model_summary_with_posteriors(m.1b) %>%
- #  kableExtra::kable(digits = 2, caption = "M.1b model summary")
- 
- pred_d <- m.1b$data %>%
-  select(-response, -Intercept) %>% 
-  group_by(id) %>% # for each word
-  mutate(num_baselines = ifelse(set != 7, sum(phase == 0), 4)) %>% 
-  #Untrained Set 7 set to give posterior distributions at session 4 
-  #(last baseline without any tx) and session 12 (the last tx phase probe)
-  filter(session == num_baselines | session == max(session))
-
-# Effect size estimate of trained words
-es <- tidybayes::add_epred_draws(m.1b, newdata = pred_d |> filter(set != 7), 
-                      pred = 'value', seed = 42) %>% 
-  ungroup() %>% #
-  mutate(time_point = ifelse(slope_change == 0, 'entry', 'exit')) %>% #
-  select(time_point, id, value = .epred, draw = .draw) %>% #
-  group_by(draw, time_point) %>% #
-  summarize(num_corr = sum(value)) %>% #
-  pivot_wider(names_from = time_point, values_from = num_corr) %>% # 
-  mutate(effect_size = exit - entry) %>% #
-  ungroup() %>%  # 
-  select(effect_size) |> 
-  tidybayes::median_qi(effect_size)
-
 # Examine correlation between education (years) and reading t-scores
-robinaugh_analyze_data <- function(data) {
+language_analyze_data2 <- function(data) {
   
-  model <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
-             (session + phase + slope_change | set/id), # 
-           family = bernoulli(),  #binomial in lme4
-           data = data, # both trained and untrained sets
-           iter = 4000, # number of total samples per chain
-           warmup = 1000, # number of samples tossed out per chain
-           inits = 'random', # each chain takes random starting values
-           chains = 4, # 4 total chains
-           cores = 4, # use 4 computer cores to run chains simultaneously
-           control = list(adapt_delta = .97), # to aid model convergence
-           prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
-                     prior(normal(0, 2), class = b), # prior distributions
-                     prior(normal(0, 2), class = sd),
-                     prior(lkj(2), class = cor)),
-           backend = 'cmdstan',
-           seed = 42,
-           refresh = 0, #for the markdown document 
-           file_refit = "on_change"
-           ) # Creating the model
-  
-  # Obtain Effect size estimate of trained words
-  pred_d <- model$data %>%
-  select(-response, -Intercept) %>% 
-  group_by(id) %>% # for each word
-  mutate(num_baselines = ifelse(set != 7, sum(phase == 0), 4)) %>% 
-  #Untrained Set 7 set to give posterior distributions at session 4 
-  #(last baseline without any tx) and session 12 (the last tx phase probe)
-  filter(session == num_baselines | session == max(session))
-
-  es <- tidybayes::add_epred_draws(
-    model,
-    newdata = pred_d |> filter(set != 7),
-    pred = 'value',
-    seed = 42) %>%
-    ungroup() %>% #
-    mutate(time_point = ifelse(slope_change == 0, 'entry', 'exit')) %>% #
-    select(time_point, id, value = .epred, draw = .draw) %>% #
-    group_by(draw, time_point) %>% #
-    summarize(num_corr = sum(value)) %>% #
-    pivot_wider(names_from = time_point, values_from = num_corr) %>% #
-    mutate(effect_size = exit - entry) %>% #
-    ungroup() %>%  #
-    select(effect_size) |>
-    tidybayes::median_qi(effect_size)
+  #Friedman test on overall language scores at 5 time points
+  friedman.test(y=data$scores, groups=data$time, blocks=data$item)
   
   list(
-    p_value = NA, # Extracting p-values
-    effect_size = es$effect_size, # Extracting effect size
-    # CI
-    .lower = es$.lower,
-    .upper = es$.upper
+    p_value = model$p.value, # Extracting p-values
+    effect_size = model$statistic, # Extracting effect size
+    conf_int_lower = NA,
+    conf_int_upper = NA
   )
 }
 
 # Reproduce original results ----
-robinaugh_results_original <- robinaugh_analyze_data(df_coded2) |>
+language_results_original2 <- language_analyze_data2(language_data_original2) |>
   as.data.frame(row.names = NULL) |>
   mutate(
     dataset = "original",
-    sig = NA,
-    categorization = NA
+    sig = case_when(
+      p_value < language_alpha ~ "sig",
+      p_value >= language_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
+                               TRUE ~ "Negligible")
   )
 
 # Create synthetic data ----
-robinaugh_data_synthetic <- syn(df_coded2, # method = "ctree",
-                                m = 3, seed = 2024)
+language_data_synthetic2 <- syn(language_data_original2, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+### STUCK HERE - Need to loop through each synthetic dataset and run the friedman's test but keep getting an error
 
 # Perform analysis on each synthetic dataset
-robinaugh_results_synthetic <- robinaugh_data_synthetic$syn |>
-  purrr::map_df(~ robinaugh_analyze_data(.x), .id = "dataset") |>
+language_results_synthetic2 <- language_data_synthetic2$syn |>
+  purrr::map_df(~ language_analyze_data2(.x), .id = "dataset") |>
   dplyr::mutate(
-    sig = NA,
-    categorization = NA,
+    sig = case_when(
+      p_value < language_alpha ~ "sig",
+      p_value >= language_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - language_results_original2$p_value),
+    diff_effectSize = abs(effect_size - language_results_original2$effect_size)
   ) |> 
   add_column(domain = "Receptive and expressive language")
 
 # Compile results ----
-robinaugh__results_summary <- data_frame(
+language_results_summary <- data_frame(
   Domain = "Language",
-  Study = "Robinaugh et al. (2024)",
+  Study = "Kearney et al. (2023)",
   
   # Pulling sample size, p value, and effect sizes from the original results
-  N = 1,
-  p_value = NA,
-  effect_size_measure = "Median of posterior distribution",
-  effect_size = es$effect_size,
+  N = nrow(language_data_original),
+  p_value = ifelse(
+    language_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", language_results_original$p_value)),
+  effect_size_measure = "Correlation coefficient",
+  effect_size = round(language_results_original$effect_size, digits = 2),
   
   # Creating the % Agreement for p values between the original and the synthetic datasets
-  synAgreement_pvalue = NA,
+  synAgreement_pvalue = language_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(language_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == language_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(language_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(language_results_synthetic$diff_pvalue),
   
   # Creating the % Agreement for effect sizes between the original and the synthetic datasets
-  synAgreement_effectSize = robinaugh_results_synthetic |>
+  synAgreement_effectSize = language_results_synthetic |>
     count(categorization) |>
     dplyr::mutate(percent = n / nrow(language_results_synthetic) * 100,
                   percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
@@ -2025,7 +1933,8 @@ rm(
 
 # Saving the data and results for easy importing later.
 base::saveRDS(object = language,
-              file = here::here("Data","07_Language", "Robinaugh", "analysisData.RDS"))
+              file = here::here("Data","07_Language", "Kearney", "analysisData.RDS"))
+
 ```
 
 ```{r}
