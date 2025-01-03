@@ -1815,7 +1815,7 @@ base::saveRDS(object = language,
 language_data_original2 <-
   tdcs_data <- read_csv(here::here("Data", "07_Language", "Aydin", "raw_data", "data_singlecol.csv")) |> 
   # select only relevant variables
-  dplyr::select(c(scores, time, item))
+  dplyr::select(c(item, time, scores))
 
 # Establish p_value for study
 language_alpha2 <- .05
@@ -1825,7 +1825,7 @@ language_alpha2 <- .05
 language_analyze_data2 <- function(data) {
   
   #Friedman test on overall language scores at 5 time points
-  friedman.test(y=data$scores, groups=data$time, blocks=data$item)
+  model <- friedman.test(y=data$scores, groups=data$time, blocks=data$item)
   
   list(
     p_value = model$p.value, # Extracting p-values
@@ -1851,10 +1851,7 @@ language_results_original2 <- language_analyze_data2(language_data_original2) |>
   )
 
 # Create synthetic data ----
-language_data_synthetic2 <- syn(language_data_original2, 
-                                   # method = "ctree", 
-                                   m = 100,
-                                   seed = 2024)
+language_data_synthetic2 <- syn(language_data_original2, m = 100, seed = 2024)
 
 ### STUCK HERE - Need to loop through each synthetic dataset and run the friedman's test but keep getting an error
 
