@@ -569,12 +569,13 @@ combined_plots1 <- cowplot::plot_grid(
 
 # Add legend
 combined_plots_2 <- cowplot::plot_grid(
+  NULL,
   legend,
   combined_plots1,
   ncol = 1,
-  rel_heights = c(0.025, 1)
+  rel_heights = c(0.01, 0.025, 1)
 )
 
 ggsave(filename = "combined_plots2.png", plot = combined_plots_2,
-       device = "png", dpi = 300, bg = "white", height = 9, width = 6.5)
+       device = "png", dpi = 300, bg = "white", height = 9, width = 11)
 
