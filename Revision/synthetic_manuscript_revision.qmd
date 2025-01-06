@@ -431,6 +431,7 @@ swallowing_data_synthetic <- syn(swallowing_data_original,
              method = "ctree", 
              m = 100,
              seed = 2024)
+
 swallowing_data_synthetic <- swallowing_data_synthetic$syn
 
 # Initialize a list for synthetic results
@@ -584,20 +585,20 @@ swallowing <- list(
 )
 
 ## Cleaning up the environment
-rm(
-  swallowing_data_original,
-  swallowing_data_synthetic,
-  swallowing_model_original,
-  swallowing_results_original,
-  swallowing_results_synthetic,
-  swallowing_results_summary,
-  swallowing_alpha,
-  model,
-  model_fit,
-  data_combined,
-  data_synthetic,
-  i
-)
+# rm(
+#   swallowing_data_original,
+#   swallowing_data_synthetic,
+#   swallowing_model_original,
+#   swallowing_results_original,
+#   swallowing_results_synthetic,
+#   swallowing_results_summary,
+#   swallowing_alpha,
+#   model,
+#   model_fit,
+#   data_combined,
+#   data_synthetic,
+#   i
+# )
 
 # Saving the data and results for easy importing later.
 base::saveRDS(object = swallowing,
@@ -820,13 +821,13 @@ articulation_data_original <- rio::import(
   
   # Selecting just the variables we need
   dplyr::select(
-    SpeakerID, # ID
+    # SpeakerID, # ID
     VSA_b, # VSA in Bark
     Int = Int_OT # intelligibility (orthographic transcriptions)
-  ) |> 
+  )
   
   # convert SpeakerID to factor
-  mutate(SpeakerID = as.factor(SpeakerID))
+  # mutate(SpeakerID = as.factor(SpeakerID))
 
 ## Establish p_value for study
 articulation_alpha <- .05
@@ -931,14 +932,14 @@ articulation <- list(
 )
 
 ## Cleaning up the environment
-rm(
-  articulation_data_original,
-  articulation_data_synthetic,
-  articulation_results_original,
-  articulation_results_synthetic,
-  articulation_results_summary,
-  articulation_alpha
-)
+# rm(
+#   articulation_data_original,
+#   articulation_data_synthetic,
+#   articulation_results_original,
+#   articulation_results_synthetic,
+#   articulation_results_summary,
+#   articulation_alpha
+# )
 
 # Saving the data and results for easy importing later.
 base::saveRDS(object = articulation,
@@ -1058,7 +1059,7 @@ fluency_data_original <- rio::import(file = here::here("Data", "03_Fluency", "da
   
   # Selecting just the variables that we need
   dplyr::select(
-    Subject,
+    # Subject,
     Group,
     Nonwordrepetition
   )
@@ -1170,14 +1171,14 @@ fluency <- list(
 )
 
 ## Cleaning up the environment
-rm(
-  fluency_data_original,
-  fluency_data_synthetic,
-  fluency_results_original,
-  fluency_results_synthetic,
-  fluency_results_summary,
-  fluency_alpha
-)
+# rm(
+#   fluency_data_original,
+#   fluency_data_synthetic,
+#   fluency_results_original,
+#   fluency_results_synthetic,
+#   fluency_results_summary,
+#   fluency_alpha
+# )
 
 # Saving the data and results for easy importing later.
 base::saveRDS(object = fluency,
@@ -1191,7 +1192,7 @@ voice_data_original <-
   # clean variable names
   janitor::clean_names() |>
   # select only relevant variables
-  dplyr::select(c(names, efn_sd_d_b, median_of_raters))
+  dplyr::select(c(efn_sd_d_b, median_of_raters))
 
 # Establish p_value for study
 voice_alpha <- .05
@@ -1298,14 +1299,14 @@ voice <- list(
 )
 
 ## Cleaning up the environment
-rm(
-  voice_data_original,
-  voice_data_synthetic,
-  voice_results_original,
-  voice_results_synthetic,
-  voice_results_summary,
-  voice_alpha
-)
+# rm(
+#   voice_data_original,
+#   voice_data_synthetic,
+#   voice_results_original,
+#   voice_results_synthetic,
+#   voice_results_summary,
+#   voice_alpha
+# )
 
 # Saving the data and results for easy importing later.
 base::saveRDS(object = voice,
@@ -1491,14 +1492,14 @@ hearing <- list(
 )
 
 ## Cleaning up the environment
-rm(
-  hearing_data_original,
-  hearing_data_synthetic,
-  hearing_results_original,
-  hearing_results_synthetic,
-  hearing_results_summary,
-  hearing_alpha
-)
+# rm(
+#   hearing_data_original,
+#   hearing_data_synthetic,
+#   hearing_results_original,
+#   hearing_results_synthetic,
+#   hearing_results_summary,
+#   hearing_alpha
+# )
 
 # Saving the data and results for easy importing later.
 base::saveRDS(object = hearing,
@@ -1550,7 +1551,8 @@ aac_data_original <- qualtrics_csv(file = here::here("Data", "06_AAC", "data_Com
   ),
   var = factor(var, labels = c("Assessment", "Intervention"))) |>
   tidyr::drop_na(value) |> 
-    dplyr::select(-question)
+  dplyr::select(-question) |> 
+  filter(value == "Lack of/limited internet")
 
 # Establish p_value for study
 aac_alpha <- .05
@@ -1663,14 +1665,14 @@ aac <- list(
 )
 
 ## Cleaning up the environment
-rm(
-  aac_data_original,
-  aac_data_synthetic,
-  aac_results_original,
-  aac_results_synthetic,
-  aac_results_summary,
-  aac_alpha
-)
+# rm(
+#   aac_data_original,
+#   aac_data_synthetic,
+#   aac_results_original,
+#   aac_results_synthetic,
+#   aac_results_summary,
+#   aac_alpha
+# )
 
 # Saving the data and results for easy importing later.
 base::saveRDS(object = aac,
@@ -1684,7 +1686,7 @@ library(DescTools) # install.packages("DescTools")
 language_data_original <-
   read.csv(here::here("Data/07_Language/Kearney/demographics_CAT_reading.csv")) |>
   # select only relevant variables
-  dplyr::select(c(Filename, edu, tpost_cat_read_total))
+  dplyr::select(c(edu, tpost_cat_read_total))
 
 # Establish p_value for study
 language_alpha <- .05
@@ -2186,7 +2188,7 @@ social_data_original <-
     age = mean(Months),
     NVIQ = mean(SSIQ)
   ) |> 
-  dplyr::select(c(Subj, NVIQ, ParGroup))
+  dplyr::select(c(NVIQ, ParGroup))
 
 # Establish p_value for study
 social_alpha <- .05
@@ -2225,8 +2227,6 @@ social_results_original <- social_analyze_data(social_data_original) |>
                                abs(effect_size) >= 0.2 ~ "Small",
                                TRUE ~ "Negligible")
   )
-
-
 
 # Create synthetic data ----
 social_data_synthetic <- syn(social_data_original, 
