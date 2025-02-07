@@ -1,4 +1,4 @@
-"subject_id","time","sample_size","bs_variance","ws_variance","mean_peak_flow"
+"subject_id","time","sample_size","bs_variance","ws_variance","peak_flow"
 1,0,20,0.25,0.25,3.42094522494337
 1,1,20,0.25,0.25,3.25082936475601
 2,0,20,0.25,0.25,2.13207157591031
