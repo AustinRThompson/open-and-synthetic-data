@@ -1,0 +1,208 @@
+---
+title: "S1. Supplemental Materials"
+author: "Robinaugh et al."
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+S1. Supplemental materials for Robinaugh et al., Computer-Based Naming Treatment for Semantic Variant Primary Progressive Aphasia and a History of Traumatic Brain Injury: A Single-Case Experimental Design
+
+```{r setup, include=F}
+library(here)
+library(knitr)
+knitr::opts_chunk$set(echo = T, warning = F, message = F)
+```
+
+```{r packages, warning=F, message=F, include=F}
+# load packages
+library(kableExtra)
+library(tidyverse)
+library(brms)
+library(cmdstanr)
+library(tidybayes)
+library(bayesplot)
+library(ggthemes)
+library(bayestestR)
+library(janitor)
+library(lme4)
+```
+
+```{r reading in data, include=F}
+df <- read_csv('SDTBI001_Data.csv') %>%
+  clean_names() %>%
+  mutate(condition = ifelse(condition == 0, 'untreated', 'treated'),
+         phase = as.factor(phase)) %>%
+  mutate_if(is.character, as.factor) 
+
+```
+
+# Introduction
+ 
+This document includes all posterior estimates for population-level and group-level effects for the Bayesian Mixed-Effects models described in the manuscript (Robinaugh et al., "Computer-Based Naming Treatment for Semantic Variant Primary Progressive Aphasia and a History of Traumatic Brain Injury: A Single-Case Experimental Design") and further detailed in Appendix A and Appendix B.
+
+# Bayesian generalized mixed-effects model: naming performance
+
+Naming performance over the course of treatment was evaluated using an Interrupted Time Series approach and Bayesian mixed effects modeling of item-level responses (correct or incorrect) with population-level effects (i.e. fixed effects) of intercept, baseline slope, level change, and slope change. Models included group-level intercepts for items nested within sets with corresponding group-level slopes for the primary three population-level effects, allowing each item and set to have their own intercept (an estimate of performance prior to the first baseline session), baseline slope, level change, and slope change.
+
+## Interrupted Time Series Model
+
+```{r model setup, message = F, cache = T, include = F}
+df_coded2 <- df %>%
+  filter(session < 13) %>%
+  group_by(id) %>%
+  mutate(phase = ifelse(phase == 'Pre', 0, 1),
+         num_baselines = sum(phase == 0),
+         # slope change is calculated by (T-(n1 + 1))D
+         slope_change = (session - (num_baselines+1))*phase
+         ) %>%
+  select(id, set, condition, response, session, phase, slope_change) %>%
+  mutate(phase = ifelse(condition == "untreated", 0, phase),
+         slope_change = ifelse(condition == "untreated", 0, slope_change))
+
+```
+
+```{r model fitting,  message = F, cache = T, echo = T, results = 'hide'}
+# Model Fitting
+# Weakly informative priors assist model estimation
+
+m.1b <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
+             (session + phase + slope_change | set/id), # 
+           family = bernoulli(),  #binomial in lme4
+           data = df_coded2, # both trained and untrained sets
+           iter = 4000, # number of total samples per chain
+           warmup = 1000, # number of samples tossed out per chain
+           inits = 'random', # each chain takes random starting values
+           chains = 4, # 4 total chains
+           cores = 4, # use 4 computer cores to run chains simultaneously
+           control = list(adapt_delta = .97), # to aid model convergence
+           prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
+                     prior(normal(0, 2), class = b), # prior distributions
+                     prior(normal(0, 2), class = sd),
+                     prior(lkj(2), class = cor)),
+           backend = 'cmdstan',
+           seed = 42,
+           refresh = 0, #for the markdown document 
+           file = "new_approach",
+           file_refit = "on_change"
+)
+
+```
+
+## Interrupted Time Series Results
+
+```{r summary, message =F, cache =T}
+
+model_summary_with_posteriors <- function(model_name){
+posterior_samples(model_name)[,1:4] %>%
+  summarize(across(.fns = function(x){val = mean(ifelse(abs(x)>0.18,0,1))})) %>%
+  t() %>%
+  as_tibble() %>%
+  rename(posterior_probability = V1) %>%
+  bind_cols(as_tibble(fixef(model_name, probs = c(0.05, .95)),
+                      rownames='Parameter')) %>%
+  select(Parameter, Estimate, Est.Error, Q5, Q95, `ROPE %` = posterior_probability) 
+} 
+
+ model_summary_with_posteriors(m.1b) %>%
+  kable(digits = 2, caption = "M.1b model summary")
+```
+
+## Effect Size Estimate of Trained Words
+
+```{r effect size estimate, message = F, cache = T, echo = T}
+pred_d <- m.1b$data %>%
+  select(-response, -Intercept) %>% 
+  group_by(id) %>% # for each word
+  mutate(num_baselines = ifelse(set != 7, sum(phase == 0), 4)) %>% 
+  #Untrained Set 7 set to give posterior distributions at session 4 
+  #(last baseline without any tx) and session 12 (the last tx phase probe)
+  filter(session == num_baselines | session == max(session))
+
+es <- add_epred_draws(m.1b, newdata = pred_d |> filter(set != 7), 
+                      pred = 'value', seed = 42) %>% 
+  ungroup() %>% #
+  mutate(time_point = ifelse(slope_change == 0, 'entry', 'exit')) %>% #
+  select(time_point, id, value = .epred, draw = .draw) %>% #
+  group_by(draw, time_point) %>% #
+  summarize(num_corr = sum(value)) %>% #
+  pivot_wider(names_from = time_point, values_from = num_corr) %>% # 
+  mutate(effect_size = exit - entry) %>% #
+  ungroup() %>%  # 
+  select(effect_size)
+
+es %>% # only need one variable
+  tidybayes::median_qi(effect_size)
+
+```
+
+## Effect Size Estimate of Untrained Words
+
+```{r effect size estimate untreated, message = F, cache = T, echo = T}
+es_gen <- add_epred_draws(m.1b, newdata = pred_d |> filter(set == 7), 
+                          pred = 'value', seed = 42) %>% 
+  ungroup() %>% #
+  mutate(time_point = ifelse(session == 4, 'entry', 'exit')) %>% # 
+  select(time_point, id, value = .epred, draw = .draw) %>% #
+  group_by(draw, time_point) %>% #
+  summarize(num_corr = sum(value)) %>% #
+  pivot_wider(names_from = time_point, values_from = num_corr) %>% # 
+  mutate(effect_size = exit - entry) %>% #
+  ungroup() %>%  # 
+  select(effect_size)
+
+es_gen %>% # only need one variable
+  tidybayes::median_qi(effect_size)
+```
+
+# Bayesian generalized mixed-effects model: maintenance of trained words
+## Trained words
+
+Maintenance of gains (for trained words only) was evaluated using a generalized mixed-effects model with a four-level categorical population-level effect of timepoint (post-treatment, three month, six month, and 12 month follow-ups). Post-treatment was used as the reference value. Words were nested into sets and included as a group-level effect to reflect the structure of the data set, which includes six sets of trained words introduced to treatment at different time points during treatment. See Appendix B for a more detailed description of the model and analysis.
+
+```{r maintenance setup, message = F, cache = T, eval = T, include =F}
+df.mod3 <- df %>%
+  filter(phase == 'Post' | phase == 'ThreeMo' | phase == 'SixMo' | phase == 'TwelveMo') %>% # only post and threemo timepoints
+  droplevels() %>%
+  mutate(phase = as.factor(phase), # phase as factor
+         # condition as a factor with labels
+         condition = as.factor(condition)) 
+
+# post as reference 
+contrasts(df.mod3$phase)
+```
+
+``` {r postthree, message = F, echo = T, cache = T, eval = T, echo = T, results = 'hide'}
+m.3 <- brm(response ~ 0 + Intercept + phase +
+             (1|set/id) +
+             (session|id),
+           family = bernoulli(),  #binomial in lme
+           data = df.mod3 %>% filter(condition == 'treated'),
+           iter = 5000, # number of total samples per chain
+           warmup = 1000, # number of samples tossed out per chain
+           inits = 'random', # each chain takes random starting values
+           chains = 4, # 4 total chains
+           cores = 4, # use 4 computer cores to run chains simultaneously,
+           control = list(adapt_delta = .95), # to aid model convergence
+           prior = c(
+                     prior(normal(-1, 2), class = b, coef = Intercept),
+                     prior(normal(0, 2), class = b), # prior distributions!
+                     prior(normal(0, 2), class = sd),
+                     prior(lkj(2), class = cor)),
+           backend = 'cmdstan',
+           seed = 42,
+           refresh = 0 #this is only for the markdown document. 
+)
+
+
+```
+
+```{r maintenance summary, message = F, echo = T, cache = T}
+summary(m.3, prob = 0.90)
+```
+
+```{r session info}
+sessioninfo::session_info() 
+```
+
