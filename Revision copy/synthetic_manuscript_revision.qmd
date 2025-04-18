@@ -360,8 +360,6 @@ In addition to these inferential comparisons, we provide a brief tutorial to gui
 
 # Results
 
-The tutorial data and accompanying code can be accessed on the Open Science Framework (https://osf.io/yhkqf/). To get started, download R (https://cran.r-project.org/) and an interface like RStudio (https://posit.co/download/rstudio-desktop/). Open the *open-and-synthetic-data.Rproj* file in RStudio. To reproduce the tutorial code only, open the file called *tutorial_script.R*. To reproduce the manuscript, open the file called *synthetic_manuscript.qmd*.
-
 ### Study 1: Normative Reference Values for Swallowing Outcomes
 ```{r}
 # Import original data ----

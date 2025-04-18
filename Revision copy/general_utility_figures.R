@@ -210,11 +210,12 @@ voice_combined_data <- voice_data_synthetic_first |>
 
 # Scatterplot
 voice_p1 <- voice_combined_data |> 
-  mutate(median_of_raters = case_when(median_of_raters == 0 ~ "No",
+  mutate(median_of_raters = case_when(median_of_raters == 0 ~ "Normal",
                                       median_of_raters == 1 ~ "Mild",
-                                      median_of_raters == 2 ~ "Moderate"),
+                                      median_of_raters == 2 ~ "Moderate",
+                                      median_of_raters == 3 ~ "Severe"),
          median_of_raters = factor(median_of_raters,
-                                   levels = c("No", "Mild", "Moderate"))) |> 
+                                   levels = c("Normal", "Mild", "Moderate"))) |> 
   ggplot(aes(x = efn_sd_d_b, color = dataset_type, fill = dataset_type)) +
   geom_density(alpha = 0.5) +
   scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
@@ -229,7 +230,7 @@ voice_p1 <- voice_combined_data |>
   theme(legend.position = "none",
         axis.title.x = element_text(margin = margin(r = 8)),
         axis.title.y = element_text(margin = margin(t = 8))) +
-  facet_wrap(~median_of_raters, nrow = 1, scales = "free_x")
+  facet_wrap(~median_of_raters, nrow = 3, scales = "free_x")
 
 # Add title
 voice_title <- ggdraw() +
@@ -576,6 +577,6 @@ combined_plots_2 <- cowplot::plot_grid(
   rel_heights = c(0.01, 0.025, 1)
 )
 
-ggsave(filename = "combined_plots2.png", plot = combined_plots_2,
+ggsave(filename = here::here("Revision copy", "combined_plots2.png"), plot = combined_plots_2,
        device = "png", dpi = 300, bg = "white", height = 9, width = 11)
 

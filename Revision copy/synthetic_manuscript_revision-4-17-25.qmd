@@ -1,10 +1,10 @@
 ---
-title: "Synthetic Data in Communication Sciences and Disorders:  \nPromoting an Open, Reproducible, and Cumulative Science [preprint]"
+title: "Using Synthetic Data in Communication Sciences and Disorders to Promote Transparency and Reproducibility"
 # Line break in title requires 2 spaces followed by \n
 author: |
   James C. Borders^1^, Austin Thompson^2^, & Elaine Kearney^3,4^
 abstract: |
-  1.	Department of Biobehavioral Sciences, Teachers College Columbia University
+  1.	Department of Speech, Language, and Hearing Sciences, Boston University
   2.	Department of Communication Sciences and Disorders, University of Houston
   3.	School of Health and Rehabilitation Sciences, University of Queensland, Brisbane, Australia
   4.	Department of Speech Pathology, Princess Alexandra Hospital, Brisbane, Australia
@@ -40,7 +40,6 @@ The authors have no financial or non-financial disclosures.
 
 **Corresponding Author**:\
 James C. Borders, PhD, CCC-SLP\
-jcb2271\@tc.columbia.edu
 
 <br>
 
@@ -53,19 +52,11 @@ EK: 1, 2, 3, 6, 9, 11, 12, 14
 
 <br>
 
-**Funding**: None.
-
-<br>
-
 **Ethical Approval**: This study was deemed exempt by the Human Research Ethics Committee at the University of Queensland (#2024/HE001484).
 
 <br>
 
 **Keywords**: Open data; Reproducibility; Meta-science; Communication sciences and disorders
-
-<br>
-
-**Study Preregistration and Data Availability**: The study preregistration (https://osf.io/vhgq2) and associated data and analysis scripts (https://osf.io/yhkqf/) are publicly available on the Open Science Framework.
 
 \newpage
 
@@ -92,6 +83,7 @@ library(flextable) # create tables
 library(officer) # create tables
 library(insight) # create tables
 library(cowplot) # figures
+library(printy) # printing pretty p-values [remotes::install_github("tjmahr/printy")]
 
 # Function to add title to plots
 draw_label_theme <- function(label, theme = NULL, element = "text", ...) {
@@ -116,13 +108,13 @@ draw_label_theme <- function(label, theme = NULL, element = "text", ...) {
 
 # Abstract {style="text-align: center;"}
 
-**Purpose**: Reproducibility is a core principle of science and access to a study's data is essential to reproduce its findings. However, data sharing is uncommon in the field of Communication Sciences and Disorders (CSD), often due to concerns related to privacy and disclosure risks. Synthetic data offers a potential solution to this barrier by generating artificial datasets that do not represent real individuals yet retain statistical properties and relationships from the original data. This study evaluates the performance of synthetic data generation using open data from previously published studies across the American Speech-Language-Hearing Association (ASHA) 'Big Nine' domains.
+**Purpose**: Reproducibility is a core principle of science and access to a study’s data is essential to reproduce its findings. However, data sharing is uncommon in the field of Communication Sciences and Disorders (CSD), often due to concerns related to privacy and disclosure risks. Synthetic data offers a potential solution to this barrier by generating artificial datasets that do not represent real individuals yet retain statistical properties and relationships from the original data. This study aimed to explore the feasibility and preliminary utility of synthetic data promote transparency and reproducibility in the field of CSD.
 
-**Method**: Open datasets were obtained from previously published research within the ASHA domains of articulation, cognition, communication, fluency, hearing, language, social communication, voice and resonance, and swallowing. Synthetic datasets were generated with the *synthpop* R package. Inferential statistics (*p*-values) and effect sizes from synthetic datasets were compared to those from the original datasets.
+**Method**: Open datasets were obtained from previously published research within the American Speech-Language-Hearing Association ‘Big Nine’ domains (articulation, cognition, communication, fluency, hearing, language, social communication, voice and resonance, and swallowing) across a range of study outcomes and designs. Synthetic datasets were generated with the *synthpop* R package. General utility was assessed visually and with the standardized ratio of the propensity mean squared error (*S_pMSE*). Specific utility assessed whether inferential relationships from the original data were preserved in the synthetic dataset by comparing model fit indices, coefficients, and *p*-values.
 
-**Results**: Synthetic datasets maintained the direction of *p*-values in six out of the nine studies and effect size categorizations in five studies. In cases where synthetic datasets did not maintain 95% of the inferential or effect size results, the absolute mean difference between synthetic and original datasets was relatively low, suggesting that the distribution of results from synthetic datasets closely approximated the alpha or effect size categorization threshold.
+**Results**: Update.
 
-**Conclusion**: Findings suggest that synthetic data can effectively maintain statistical properties and relationships across a wide range of data commonly seen in the field of CSD. While some studies with fewer observations than recommended (i.e., n < 130) showed lower agreement and greater variability in *p*-values and effect size estimates, this was not consistently appreciated. Therefore, researchers who use synthetic data should assess its stability in preserving their results. This study concludes with a general framework on sharing open data to facilitate computational reproducibility and foster a cumulative science in the field of CSD.
+**Conclusion**: Findings suggest that synthetic data can effectively maintain statistical properties and relationships across a wide range of non-hierarchical data commonly seen in the field of CSD. While some studies with fewer observations than recommended (i.e., n < 130) showed lower agreement and greater variability in *p*-values and effect size estimates, this was not consistently appreciated. Therefore, researchers who use synthetic data should assess its utility in preserving their results for their own data and use-case.
 :::
 
 \newpage
@@ -199,17 +191,29 @@ fileout <- here("manuscript", "tables-figures", "table1.docx") # uncomment to wr
 print(doc, target = fileout)
 ```
 
-Both individual and system-level barriers hinder data sharing, including a lack of time, knowledge, support from colleagues, and perceived incentives [@pfeiffer_etal24]. Furthermore, each type of data comes with unique challenges regarding data sharing. For raw data, it is common that researchers often do not obtain consent to share data or cannot contact participants after data collection. Additionally, sharing de-identified raw or intermediate data may require additional approval from the institutional review board. Even when de-identification is possible, anonymized intermediate or analysis datasets can still carry re-identification risks, especially in small samples or vulnerable populations where indirect identifiers (e.g., gender, age, or race) may compromise participant confidentiality [@rocher_etal19]. Therefore, although sharing de-identified analysis data is the minimum requirement for ensuring computational reproducibility and promoting cumulative science, concerns about privacy and confidentiality may persist.
+Both individual and system-level barriers hinder data sharing, including a lack of time, knowledge, support from colleagues, and perceived incentives [@pfeiffer_etal24]. Furthermore, each type of data comes with unique challenges regarding data sharing. For raw data, it is common that researchers often do not obtain consent to share data or cannot contact participants after data collection. Additionally, sharing de-identified raw or intermediate data may require additional approval from the institutional review board. Even when de-identification is possible, anonymized intermediate or analysis datasets can still carry re-identification risks, especially in small samples or vulnerable populations where indirect identifiers (e.g., gender, age, or race) may compromise participant confidentiality [@rocher_etal19]. Therefore, although sharing de-identified analysis data is the minimum requirement for ensuring computational reproducibility and promoting cumulative science, concerns about privacy must be addressed when sharing sensitive data.
 
-Synthetic data generation offers a potential solution to maintaining participants' privacy and confidentiality in publicly available datasets [@rubin93; @drechsler_haensch24]. Synthetic data involves creating an artificial dataset that does not represent real individuals, ensuring no risk of disclosure since participants in the synthetic dataset do not correspond to real individuals. Importantly, synthetic data retains the statistical properties and relationships of the original data, allowing researchers to reproduce study findings, explore the dataset, and develop new questions and hypotheses. Synthetic data generation is widely used across medical research, industry, and government agencies, most notably by the United States Census Bureau [@jarmin_etal14a]. Though synthetic data methods were first proposed more than 30 years ago [@rubin93], recent analytic and software developments have made it easier and more efficient to generate high-quality synthetic data [@nowok_etal16].
+## Synthetic Data as an Approach to Promote Transparency and Reproducibility
 
-Despite the potential utility of synthetic data to promote data sharing in the field of CSD, this approach is not widely known or adopted in the field. Data commonly collected in CSD research poses unique challenges, including smaller sample sizes than are typically recommended for synthetic data generation and a wide range of outcomes and analyses [@borders_etal22a; @gaeta_brydges20]. Therefore, the present study aimed to examine the utility of synthetic data generation with open datasets from the 'Big Nine' American Speech-Language-Hearing Association (ASHA) domains. We hypothesized that synthetic datasets would maintain the statistical properties and relationships (i.e., *p*-value and effect size) of the original datasets, and that synthetic data would remain stable when generating multiple datasets. A secondary goal was to provide a framework to describe considerations when sharing data, thereby addressing concerns regarding researcher knowledge and participant confidentiality in open data.
+Synthetic data generation offers a promising solution to safeguarding participants’ privacy and confidentiality in publicly available datasets [@rubin93; @drechsler_haensch24]. This approach can be applied to a wide variety of data types (e.g., demographic information, outcome measures) and involves creating artificial datasets that do not represent real individuals, thereby significantly reducing the risk of disclosure. Importantly, synthetic data retains the statistical properties and relationships of the original data, enabling readers to evaluate key aspects of the study’s analysis workflow (e.g., data pre-processing, statistical modeling), reproduce study findings, explore datasets, and develop new questions or hypotheses. Synthetic data generation is widely used across medical research, industry, and government agencies, most notably by the United States Census Bureau [@jarmin_etal14a]. Although the concept of synthetic data methods was first proposed more than 30 years ago [@rubin93], recent analytic and software developments have streamlined the process, making it easier and more efficient to generate high-quality synthetic data [@nowok_etal16].
+
+The intended use of synthetic data influences the level of rigor and scrutiny required. For example, synthetic data can serve as a pedagogical tool to teach data analysis skills or novel statistical methods [@shepherd_etal17]. In such cases, preserving general statistical properties is sufficient, even if precise relationships between variables are not fully maintained. Similarly, synthetic data accompanying publications can facilitate reproducible workflows to illustrate data pre-processing steps or statistical models without reproducing exact study results. However, higher standards are required when synthetic data is used for hypothesis testing, meta-analyses, or methodological development [@raab_etal17]. In these scenarios, synthetic datasets must accurately preserve multivariable relationships to ensure their validity and utility.
+
+Two main approaches are used to assess the utility of synthetic datasets: general and specific [@snoke_etal18]. General utility evaluates whether the synthetic dataset maintains the overall statistical properties of the original dataset. This includes visual comparisons of univariate (e.g., bar charts, histograms) and bivariate joint distributions (e.g., scatterplots), as well as metrics to determine to what degree synthetic data is distinguishable from the original data (e.g., standardized propensity mean squared error; *S_pMSE*). Specific utility assesses whether inferential relationships from the original dataset are preserved in the synthetic dataset by comparing model fit indices and coefficients.
+
+## Application of Synthetic Data in Communication Sciences and Disorders
+
+Despite its potential to enhance data sharing in the field of CSD, synthetic data is not widely known or adopted in the field. Data commonly collected in CSD research poses unique challenges, including smaller sample sizes than are typically recommended for synthetic data generation and a wide range of study designs, outcomes, and analyses [@borders_etal22a; @gaeta_brydges20]. Moreover, reproducible workflows that detail important steps for data wrangle or statistical modeling are rarely provided in publications, further hindering transparency and reproducibility.
+
+To address this gap, the present study aimed to explore the feasibility and preliminary utility of synthetic data generation in CSD. We applied synthetic data methods to open datasets from the ‘Big Nine’ American Speech-Language-Hearing Association (ASHA) domains and hypothesized that synthetic datasets would preserve both the statistical properties (general utility) and the inferential results (specific utility) of the original data. It’s important to recognize that synthetic data must be evaluated on a case-by-case basis and that the utility of the datasets included in this manuscript may not apply to one’s own dataset. To this end, the broad goal of the current investigation was to provide a proof-of-concept to the interested reader.
 
 # Method
 
 ## Description of Original Datasets from ASHA 'Big Nine' Domains
 
-Authors performed a manual search to obtain publicly available datasets from previously published research articles related to the 'Big Nine' ASHA domains: swallowing [@curtis_etal23a], articulation [@thompson_etal23], fluency [@elsherif_etal21], voice and resonance [@novotny_etal16], hearing [@battal_etal19], communication modalities [@king_etal22], receptive and expressive language [@kearney_etal23], cognitive aspects of communication [@clough_etal23], and social aspects of communication [@chanchaochai_schwarz23]. Authors then reproduced an analysis from each study. Table 2 provides a description of the population, analysis, and open materials for each study.
+A convenience sampling approach was used to identify publicly available datasets from previously published research articles related to the ‘Big Nine’ ASHA domains: swallowing [@curtis_etal23a], articulation [@thompson_etal23], fluency [@elsherif_etal21], voice and resonance [@novotny_etal16], hearing [@battal_etal19], communication modalities [@king_etal22], receptive and expressive language [@kearney_etal23; @robinaugh_etal24a], cognitive aspects of communication [@clough_etal23], and social aspects of communication [@chanchaochai_schwarz23]. Given the prevalence of single subject experimental designs in the field of CSD, an additional study was included to ensure adequate representation [@robinaugh_etal24a], resulting in ten studies. These studies were classified by their study design, population, and statistical analysis (Table 2).
+
+It is important to note that not *all* research designs are represented due to the limited availability of public data in the field of CSD and the inherent challenge of including every possible study design. Instead, this approach was chosen to prioritize representation across all subfields to illustrate the application of synthetic data methods in CSD. To demonstrate the feasibility and preliminary utility of synthetic data, an analysis was chosen from each study and synthetic data was generated for those variables, as described below.
 
 ##### Table 2 here.
 
@@ -322,7 +326,19 @@ print(doc, target = fileout)
 
 ## Generation of Synthetic Datasets and Comparison with Original Dataset
 
-Synthetic data generation and statistical analyses were conducted in R version 4.2.1 [@rcoreteam22]. Synthetic data was generated with the *synthpop* R package (version 1.8.0) [@nowok_etal16]. Specifically, *synthpop* uses a non-parametric classification and regression tree approach that generates data by sampling from a probability distribution and can handle any type of data. Our aims were twofold: (1) to determine whether a synthetic dataset maintained the statistical properties and relationships of the original dataset and (2) to examine whether this remained stable when generating multiple synthetic datasets. In light of these aims, our approach involved generating 100 different synthetic datasets for each original dataset from an ASHA 'Big Nine' domain. A statistical model with the original dataset was fit, and the *p*-value and effect size were recorded. If 95% of *p*-values and effect sizes from the synthetic datasets demonstrated a similar result as the original study, then this indicated that synthetic data maintained the statistical relationship. Specifically, we further defined this as a similar inferential result for *p*-values (i.e., a 'significant' or 'non-significant' *p*-value based on the original study's alpha level) and effect sizes that maintained their categorization based on conventional thresholds (e.g., a 'medium' effect size). Measures of effect size and their interpretation for each study are provided in Table 3. If variability between the 100 synthetic datasets was appreciated, we visualized and described the dispersion of this distribution. The analysis plan for this study was preregistered on the Open Science Framework (https://osf.io/vhgq2).
+Synthetic data generation and statistical analyses were conducted in R version 4.2.1 [@rcoreteam22]. The *synthpop* R package (version 1.8.0) [@nowok_etal16] was used to generate synthetic data via complete conditional specification [@drechsler_haensch24]. This method synthesizes one variable at a time: the first variable is generated by random sampling from the original dataset, and subsequent variables are synthesized conditionally based on previously synthesized variables. This stepwise approach captures relationships between variables incrementally rather than attempting to synthesize all relationships simultaneously. 
+
+For example, consider a dataset containing three variables: participant ID, age, and weight. The process would begin by synthesizing participant ID through random sampling from its observed distribution. Age would then be synthesized conditionally based on the synthetic participant ID values, with synthetic values drawn from predictions informed by the original data. Finally, weight would be synthesized conditionally on both participant ID and age, with synthetic values similarly sampled from predictions.
+
+Synthpop inherently manages missing data and maintains relationships between missingness and other variables using a tree-based algorithm, specifically classification and regression trees (CART), for data synthesis [@nowok_etal16]. Alternatively, users can select other tree-based methods, such as random forests, or parametric models like linear or logistic regression. This process resembles multiple imputation by chained equations (MICE) for handling missing data [@vanbuuren_vanbuuren12] but with a key distinction: instead of imputing only missing values, synthpop generates entirely synthetic data [@raghunathan21], significantly reducing disclosure risk.
+Nowok et al. (2016) provide an in-depth overview of the synthpop package’s features. Briefly, synthesis is largely automated using the syn() function. Users can customize various options, including the modeling approach, choice of predictors, order of synthesized variables, smoothing parameters for continuous variables to enhance privacy, and rules for maintaining logical relationships.
+
+## Evaluation of General and Specific Utility
+
+In the present study, we aimed to explore the feasibility and preliminary utility of synthetic data to promote transparency and reproducibility in CSD. Utility was operationalized as general (does the synthetic data resemble the original data in its statistical properties and distribution?) and specific (is the inferential relationship between variables maintained?). To evaluate general utility, we visually compared univariate (e.g.., bar charts, histograms) and bivariate joint distributions (e.g., scatterplots) between the original and synthetic dataset, and evaluated the predicted probability that a record comes from the synthetic versus original data, known as the standardized propensity mean squared error (*S_pMSE*). Standardized propensity scores closer to zero indicate greater general utility (typically with a standard deviation of one), where a value of zero indicates that the original and synthetic data are identical [@snoke_etal18]. Notably, a value of zero is highly unlikely since synthetic data generation aims to achieve distributional similarity.
+
+To assess specific utility, a statistical analysis was selected from each study and performed separately with the original and the synthetic data. Greater overlap in effect size or coefficient confidence intervals and similar p-value inferences (i.e., significant or non-significant) indicated greater specific utility. Since Curtis et al. (2023) examined median and interquartile ranges (IQR) instead of inferential statistical models, only general utility was examined. The pre-registered analysis plan and corresponding deviations are publicly available on the Open Science Framework (https://osf.io/vhgq2).
+
 
 ##### Table 3 here.
 
@@ -377,11 +393,7 @@ fileout <- here("manuscript", "tables-figures", "table3.docx")
 print(doc, target = fileout)
 ```
 
-In addition to these inferential comparisons, we provide a brief tutorial to guide the reader through the required steps to generate synthetic data. This is accomplished in the context of two datasets [@curtis_etal23a; @thompson_etal23] with additional data visualization and detailed R code. Since @curtis_etal23a did not perform inferential tests, we directly compared each synthetic dataset to the original data with a zero-inflated beta multilevel model with the *gamlss* package (version 5.4.3) [@stasinopoulos_rigby07]. This model included fixed effects of dataset type (synthetic/original) and bolus consistency (thin liquid/extremely thick/regular), and a random intercept of participant. Due to issues with model convergence, the fixed effect structure was simplified to only include dataset type. The *p*-value from both zero-inflated and beta portions of the model were evaluated and *p* \< .05 was interpreted no statistically significant difference between the synthetic and original dataset.
-
 # Results
-
-The tutorial data and accompanying code can be accessed on the Open Science Framework (https://osf.io/yhkqf/). To get started, download R (https://cran.r-project.org/) and an interface like RStudio (https://posit.co/download/rstudio-desktop/). Open the *open-and-synthetic-data.Rproj* file in RStudio. To reproduce the tutorial code only, open the file called *tutorial_script.R*. To reproduce the manuscript, open the file called *synthetic_manuscript.qmd*.
 
 ### Swallowing
 ```{r}
@@ -501,9 +513,9 @@ swallowing_general_utility_plot <- cowplot::ggdraw(final_plot) +
 
 Curtis et al. (2023) provided normative reference values for swallowing outcomes during flexible endoscopic evaluations of swallowing in a sample of 39 community-dwelling adults without dysphagia. In this observational cohort study, each participant completed 15 swallowing trials that varied by bolus size, consistency, contrast agent, and swallowing instructions. Several swallowing outcomes were measured, including the amount of laryngeal vestibule residue, which was rated using the Visual Analysis of Swallowing Efficiency and Safety. No inferential statistics were conducted; instead, the distribution of laryngeal vestibule residue ratings was summarized using median and interquartile ranges.
 
-##### Figure 1 here.
+In the synthetic dataset, the primary outcome (laryngeal vestibule residue ratings) closely mirrored the original data (Figure 1A). The frequency of zero values was nearly identical and the distribution of values greater than zero was also similar, with only minor deviations at higher residue ratings. The *S_pMSE* value was `r round(swallowing_s_pMSE_value, digits = 2)`, indicating strong overall similarity and general utility between the synthetic and original data.
 
-In the synthetic dataset, the primary outcome (laryngeal vestibule residue ratings) closely mirrored the original data. The frequency frequency of zero values was nearly identical and the distribution of values greater than zero was also similar, with only minor deviations at higher residue ratings. The *S_pMSE* value was `r round(swallowing_s_pMSE_value, digits = 2)`, indicating strong overall similarity and general utility between the synthetic and original data.
+##### Figure 1 here.
 
 ### Articulation
 
@@ -690,71 +702,92 @@ base::saveRDS(object = articulation,
 
 Thompson et al. (2023) examined the relationship between vowel space area and speech intelligibility among 40 speakers with dysarthria of varying etiologies (e.g., Parkinson's disease, amyotrophic lateral sclerosis, Huntington's disease, and ataxia). A linear regression model revealed a statistically significant relationship between vowel space area and intelligibility (*p* \< .001) with a Cohen's *f* of 0.59, corresponding to a conventionally "large" effect size (Table 3).
 
-Compared to original data, the synthetic data demonstrated a similar distribution (Figure 1). General utility was high for both variables of vowel space area (*S_pMSE* = `r round(articulation_s_pMSE_value$S_pMSE[1], digits = 2)`) and intelligibility (*S_pMSE* = `r round(articulation_s_pMSE_value$S_pMSE[2], digits = 2)`). Specific utility was high as the statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r round(articulation_results_synthetic[1,]$p_value, digits = 3)`) and effect size magnitude (*f* = `r round(articulation_results_synthetic[1,]$effect_size, digits = 2)`, 95% CI: `r round(articulation_results_synthetic[1,]$conf_int_lower, digits = 2)`, `r round(articulation_results_synthetic[1,]$conf_int_upper, digits = 2)`).
+Compared to original data, the synthetic data demonstrated a similar distribution (Figure 1). General utility was high for both variables of vowel space area (*S_pMSE* = `r round(articulation_s_pMSE_value$S_pMSE[1], digits = 2)`) and intelligibility (*S_pMSE* = `r round(articulation_s_pMSE_value$S_pMSE[2], digits = 2)`). Specific utility was high as the statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(articulation_results_synthetic[1,]$p_value)`) and effect size magnitude (*f* = `r round(articulation_results_synthetic[1,]$effect_size, digits = 2)`).
 
 ### Fluency
 ```{r echo = FALSE}
-
-```
-
-
-
-### Voice and Resonance
-```{r echo = FALSE}
-
-```
-
-
-### Hearing
-```{r echo = FALSE}
-
-```
-
-
-### Communication Modalities
-```{r echo = FALSE}
-
-```
-
-
-### Receptive and Expressive Language
-```{r echo = FALSE}
-
-```
-
-
-### Cognitive Aspects of Communication
-```{r echo = FALSE}
-
-```
-
-
-### Social Aspects of Communication
-```{r echo = FALSE}
-
-```
-
-
-
-
-
-
-
-
-
-### Results for Studies 3 - 9
-```{r fluency, echo = FALSE}
 # Import original data ----
-fluency_data_original <- rio::import(file = here::here("Data", "03_Fluency", "data_Dyslexia Stutter Master.csv")) |>
+fluency_data_original <- rio::import(file = here::here("Data", 
+                                                       "03_Fluency", 
+                                                       "data_Dyslexia Stutter Master.csv")) |>
   dplyr::filter(Rejection == 0) |>
   dplyr::filter(Group != "AWD") |>
   # Selecting just the variables that we need
-  dplyr::select(Group, Nonwordrepetition)
+  dplyr::select(Subject, Group, Nonwordrepetition)
 
 # Establish p_value for study
 fluency_alpha <- .05
 
-# Analysis Function ----
+# Create synthetic datasets ----
+fluency_data_synthetic <- syn(fluency_data_original, 
+             method = "ctree", 
+             m = 100,
+             seed = 2024)
+
+fluency_data_synthetic_first <- fluency_data_synthetic$syn[[1]]
+
+# General Utility ----
+
+# Calculate utility with s_pMSE
+fluency_utility_df <- utility.tables(
+  fluency_data_synthetic_first,
+  fluency_data_original,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+fluency_s_pMSE_value <- fluency_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Extract the data frames
+fluency_data_original <- fluency_data_original |> 
+  mutate(dataset_type = "Original")
+
+# Combine the data frames
+fluency_combined_data <- fluency_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(fluency_data_original)
+
+# Data viz
+fluency_p1 <- 
+  fluency_combined_data |> 
+  mutate(Group = case_when(Group == "AWS" ~ "Adults Who Stutter",
+                           Group == "NT" ~ "Neurotypical Adults")) |> 
+  ggplot(aes(x = Nonwordrepetition, 
+             color = dataset_type, fill = dataset_type)) +
+  geom_density(alpha = 0.80) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_x_continuous(breaks = c(0, 5, 10, 15, 20),
+                     limits = c(0, 22)) +
+  labs(x = "Non-word Repetition",
+       y = "Density",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  facet_wrap(~Group, nrow = 2)
+
+# Add title
+fluency_title <- ggdraw() +
+  draw_label_theme("C: Fluency (Elsherifa et al., 2021)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+fluency_final_plot <- cowplot::plot_grid(
+  fluency_title,
+  fluency_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Specific Utility ----
 # Examine the difference between neurotypical and stuttering in non-word repetition
 fluency_analyze_data <- function(data) {
   t_test <- stats::t.test(
@@ -788,14 +821,7 @@ fluency_results_original <- (fluency_analyze_data(fluency_data_original)) |>
                                TRUE ~ "Negligible")
   )
 
-
-# Create synthetic data ----
-fluency_data_synthetic <- syn(fluency_data_original,
-                              # method = "ctree",
-                              m = 100,
-                              seed = 2024)
-
-# Perform analysis on each synthetic dataset
+# Perform analysis on synthetic dataset
 fluency_results_synthetic <- fluency_data_synthetic$syn |>
   purrr::map_df(~ fluency_analyze_data(.x), .id = "dataset") |>
   dplyr::mutate(
@@ -810,7 +836,6 @@ fluency_results_synthetic <- fluency_data_synthetic$syn |>
     diff_effectSize = abs(effect_size - fluency_results_original$effect_size)
   ) |> 
   add_column(domain = "Fluency")
-
 
 # Compile results ----
 fluency_results_summary <- data_frame(
@@ -872,19 +897,94 @@ base::saveRDS(object = fluency,
               file = here::here("Data","03_Fluency","analysisData.RDS"))
 ```
 
-```{r voice, echo = FALSE}
+Elsherif et al. (2021) compared non-word repetitions between 80 neurotypical adults and 34 adults who stutter. An independent samples t-test demonstrated a statistically significant difference in non-word repetitions between these groups (*p* \< .001) with a large effect size (Δ = 1.26).
+
+Compared to original data, the synthetic data similar distributions (Figure 1C). General utility was high for the outcome of non-word repetitions (*S_pMSE* = `r round(fluency_s_pMSE_value$S_pMSE[3], digits = 2)`) and the statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(fluency_results_synthetic[1,]$p_value)`) and effect size magnitude (*f* = `r abs(round(fluency_results_synthetic[1,]$effect_size, digits = 2))`).
+
+### Voice and Resonance
+```{r echo = FALSE}
 # Load data ----
 voice_data_original <-
-  readxl::read_excel(here::here("Data/04_Voice_Resonance/RawData.xlsx"), range = "B3:Z114") |>
+  readxl::read_excel(here::here("Data/04_Voice_Resonance/RawData.xlsx"), 
+                     range = "B3:Z114") |>
   # clean variable names
   janitor::clean_names() |>
   # select only relevant variables
-  dplyr::select(c(efn_sd_d_b, median_of_raters))
+  dplyr::select(c(efn_sd_d_b, median_of_raters)) |> 
+  mutate(median_of_raters_cat = case_when(median_of_raters == 0 ~ "Normal",
+                                      median_of_raters == 1 ~ "Mild",
+                                      median_of_raters == 2 ~ "Moderate",
+                                      median_of_raters == 3 ~ "Severe"),
+         median_of_raters_cat = factor(median_of_raters_cat,
+                                   levels = c("Normal", "Mild", "Moderate"))) |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
 
 # Establish p_value for study
 voice_alpha <- .05
 
-# Analysis Function ----
+voice_data_synthetic <- syn(voice_data_original, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+# General Utility ----
+
+voice_data_synthetic_first <- voice_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+# Combine the data frames
+voice_combined_data <- voice_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(voice_data_original)
+
+# Calculate utility with s_pMSE
+voice_utility_df <- utility.tables(
+  voice_data_synthetic_first,
+  voice_data_original,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+voice_s_pMSE_value <- voice_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Scatterplot
+voice_p1 <- voice_combined_data |> 
+  ggplot(aes(x = efn_sd_d_b, color = dataset_type, fill = dataset_type)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_x_continuous(limits = c(-1, 17)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Variability of Nasality",
+       y = "Density",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  facet_wrap(~median_of_raters_cat, nrow = 3, scales = "free_x")
+
+# Add title
+voice_title <- ggdraw() +
+  draw_label_theme("D: Voice (Novotny et al., 2016)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+voice_final_plot <- cowplot::plot_grid(
+  voice_title,
+  voice_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Specific Utility ----
 # Examine correlation between overall perceptual rating and acoustic EFn SD parameter
 voice_analyze_data <- function(data) {
   # Creating the model
@@ -916,12 +1016,6 @@ voice_results_original <- voice_analyze_data(voice_data_original) |>
   )
 
 # Create synthetic data ----
-voice_data_synthetic <- syn(voice_data_original, 
-                                   # method = "ctree", 
-                                   m = 100,
-                                   seed = 2024)
-
-
 # Perform analysis on each synthetic dataset
 voice_results_synthetic <- voice_data_synthetic$syn |>
   purrr::map_df(~ voice_analyze_data(.x), .id = "dataset") |>
@@ -1000,7 +1094,10 @@ base::saveRDS(object = voice,
               file = here::here("Data","04_Voice_Resonance","analysisData.RDS"))
 ```
 
-```{r hearing, echo = FALSE}
+Novotny et al. (2016) examined the relationship between acoustic measures of nasality variability and overall perceptual ratings in a heterogenous cohort of individuals with Parkinson's disease, Huntington's disease, and neurotypical adults. Results indicated a statistically significant relationship (*r* = 0.51, *p* \< .001) between perceptual ratings and acoustic nasality variability. Compared to original data, the synthetic data demonstrated similar values for nasality variability within perceptual ratings of 'Normal' and 'Mild', though values for 'Moderate' perceptual ratings showed larger variance likely due to its low occurrence in the dataset (Figure 1D). General utility was high for both nasality variability (*S_pMSE* = `r round(voice_s_pMSE_value$S_pMSE[1], digits = 2)`) and perceptual rating (*S_pMSE* = `r round(voice_s_pMSE_value$S_pMSE[2], digits = 2)`). The statistical model with the synthetic data maintained the direction of statistical significance (*p* `r fmt_p_value(voice_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(voice_results_synthetic[1,]$effect_size, digits = 2)`), indicating adequate specific utility.
+
+### Hearing
+```{r echo = FALSE}
 # Load packages
 library(nlme) # linear mixed models
 
@@ -1059,7 +1156,8 @@ vertical.thre.out <- subset(plane.thre.out,planes=='ver')
 
 # re-label dataset as 'original_data'
 hearing_data_original <- plane.thre.out |> 
-  dplyr::select(c(thre, planes, group, head, subj))
+  dplyr::select(c(thre, planes, group, head, subj)) |> 
+  add_column(dataset_type = "Original")
 
 # Removing unneeded items
 rm(plane.thre.out, hor.thre.back, hor.thre.front, horizontal.thre.out, vertical.thre.out)
@@ -1167,6 +1265,89 @@ hearing_results_summary <- data_frame(
   absDiff_effectSize_sd = sd(hearing_results_synthetic$diff_effectSize),
 )
 
+# General Utility ----
+hearing_data_synthetic_first <- hearing_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+# Combine the data frames
+hearing_combined_data <- hearing_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(hearing_data_original)
+
+# Calculate utility with s_pMSE
+hearing_utility_df <- utility.tables(
+  hearing_data_synthetic_first,
+  hearing_data_original,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+hearing_s_pMSE_value <- hearing_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Scatterplot
+hearing_p1 <- 
+  hearing_combined_data |> 
+  ggplot(aes(x = thre, y = subj, color = dataset_type, fill = dataset_type)) +
+  geom_point(alpha = 0.80, size = 2.5) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Auditory Localization",
+       y = "Subject ID",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8)))
+
+hearing_p2 <- 
+  hearing_combined_data |> 
+  mutate(group = case_when(group == "CB" ~ "Congentially Blind",
+                           group == "SC" ~ "Sighted Controls")) |> 
+  ggplot(aes(x = thre, color = dataset_type, fill = dataset_type)) +
+  geom_density(alpha = 0.8) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Auditory Localization",
+       y = "Density",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  facet_wrap(~group) +
+  scale_y_continuous(expand = c(0, 0))
+
+# # Combine plots without legends
+# hearing_combined_plots <- cowplot::plot_grid(hearing_p1, 
+#                                              hearing_p2, rel_widths = c(1, 0.7))
+
+# Add title
+hearing_title <- ggdraw() +
+  draw_label_theme("E: Hearing (Battal et al., 2019)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+hearing_final_plot <- cowplot::plot_grid(
+  hearing_title,
+  hearing_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+hearing_final_plot2 <- cowplot::plot_grid(
+  hearing_title,
+  hearing_p2,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
 # Tidying the R project environment ----
 ## Throwing the relevant environment objects into a list for this study.
 hearing <- list(
@@ -1193,8 +1374,10 @@ base::saveRDS(object = hearing,
               file = here::here("Data","05_Hearing","analysisData.RDS"))
 ```
 
-```{r comm_modalities, echo = FALSE}
+Battal et al. (2019) compared auditory localization abilities between 17 congenitally blind and 17 sighted individuals. A linear mixed effects model indicated that congenitally blind individuals had enhanced spatial hearing abilities (*OR* = 1.56, *p* = .016). Compared to original data, the synthetic data showed similar distributions for auditory localization in both sighted and congentially blind individuals, as well as similar auditory localization at the subject-level (Figure 1E). General utility was high for subject (*S_pMSE* = `r round(hearing_s_pMSE_value$S_pMSE[3], digits = 2)`) and group (*S_pMSE* = `r round(hearing_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. Specific utility was high as the statistical model with the synthetic data maintained the direction of statistical significance (*p* `r fmt_p_value(hearing_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(hearing_results_synthetic[1,]$effect_size, digits = 2)`).
 
+### Communication Modalities
+```{r echo = FALSE}
 # Import original data ----
 ## Function to load in AAC data from the author's code
 qualtrics_csv = function(file){
@@ -1340,6 +1523,67 @@ aac_results_summary <- data_frame(
   absDiff_effectSize_sd = sd(aac_results_synthetic$diff_effectSize),
 )
 
+# General Utility ----
+aac_data_synthetic_first <- aac_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+aac_data_original2 <- aac_data_original |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Combine the data frames
+aac_combined_data <- aac_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(aac_data_original2)
+
+# Calculate utility with s_pMSE
+aac_utility_df <- utility.tables(
+  aac_data_synthetic_first,
+  aac_data_original,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+aac_s_pMSE_value <- aac_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Scatterplot
+aac_p1 <- 
+  aac_combined_data |> 
+  ggplot(aes(x = value, color = dataset_type, fill = dataset_type)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Lack of/limited internet",
+       y = "Frequency",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8)),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()) +
+  facet_wrap(~var, nrow = 1) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 245))
+
+# Add title
+aac_title <- ggdraw() +
+  draw_label_theme("F: Communication Modalities (King et al., 2022)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+aac_final_plot <- cowplot::plot_grid(
+  aac_title,
+  aac_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
 # Tidying the R project environment ----
 ## Throwing the relevant environment objects into a list for this study.
 aac <- list(
@@ -1366,7 +1610,11 @@ base::saveRDS(object = aac,
               file = here::here("Data","06_AAC","analysisData.RDS"))
 ```
 
-```{r recep_language_1, echo = FALSE}
+King et al. (2022) collected survey responses from speech-language pathologists to assess the impact of the COVID-19 pandemic on service provision for emergent bilinguals who use augmentative and alternative communication. Results indicated that speech-language pathologists reporting that a lack of or limited access to internet increased during the initial phase of the pandemic (Cohen's 𝜔 = 34.60, *p* < .001). Compared to original data, the synthetic data showed similar frequencies of responses for the barrier of 'lack of/limited internet' (Figure 1F). General utility was high for assessment type (*S_pMSE* = `r round(aac_s_pMSE_value$S_pMSE[1], digits = 2)`) and time point (*S_pMSE* = `r round(hearing_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. The statistical model with the synthetic data maintained the direction of statistical significance (*p* `r fmt_p_value(aac_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(aac_results_synthetic[1,]$effect_size, digits = 2)`), indicating high specific utility.
+
+### Receptive and Expressive Language
+```{r echo = FALSE}
+# KEARNEY
 library(DescTools) # install.packages("DescTools")
 
 # Import original data ----
@@ -1484,142 +1732,107 @@ language <- list(
   alpha = language_alpha
 )
 
-## Cleaning up the environment
-rm(
+# General Utility ----
+language_data_synthetic_first <- language_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+language_data_original2 <- language_data_original |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Combine the data frames
+language_combined_data <- language_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(language_data_original2)
+
+# Calculate utility with s_pMSE
+language_utility_df <- utility.tables(
+  language_data_synthetic_first,
   language_data_original,
-  language_data_synthetic,
-  language_results_original,
-  language_results_synthetic,
-  language_results_summary,
-  language_alpha
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
 )
+    
+# Extract s_pMSE value
+language_s_pMSE_value <- language_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Data Viz
+language_p1 <- 
+  language_combined_data |> 
+  ggplot(aes(x = edu, y = tpost_cat_read_total, color = dataset_type, fill = dataset_type)) +
+  geom_jitter(alpha = 0.80, size = 2.5, width = 0.15, height = 0.02) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Years of Education",
+       y = "Reading Score",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8)))
+
+# Add title
+language_title <- ggdraw() +
+  draw_label_theme("A: Language (Kearney et al., 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+language_final_plot <- cowplot::plot_grid(
+  language_title,
+  language_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# ## Cleaning up the environment
+# rm(
+#   language_data_original,
+#   language_data_synthetic,
+#   language_results_original,
+#   language_results_synthetic,
+#   language_results_summary,
+#   language_alpha
+# )
 
 # Saving the data and results for easy importing later.
 base::saveRDS(object = language,
               file = here::here("Data","07_Language", "Kearney", "analysisData.RDS"))
 ```
 
-```{r recep_language_2, echo = FALSE}
-# Import original data ----
-language_data_original2 <-
-  tdcs_data <- read_csv(here::here("Data", "07_Language", "Aydin", "raw_data", "data_singlecol.csv")) |> 
-  # select only relevant variables
-  dplyr::select(c(item, time, scores))
+Two studies were included in the domain of Receptive and Expressive Language [@kearney_etal23; @robinaugh_etal24a].
 
-# Establish p_value for study
-language_alpha2 <- .05
+Kearney et al. (2023) examined the relationship between years of education and reading performance among 36 individuals following left-hemisphere tumor resection. Results indicated a large relationship between these variables (*r* = 0.59, *p* < .001). Compared to original data, the synthetic data showed maintained a similar visual relationship between years of education and reading scores (Figure 2A). General utility was high for both years of education (*S_pMSE* = `r round(language_s_pMSE_value$S_pMSE[1], digits = 2)`) and reading scores (*S_pMSE* = `r round(language_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. The statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(language_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(language_results_synthetic[1,]$effect_size, digits = 2)`), indicating high specific utility.
 
-# Analysis Function ----
-# Examine correlation between education (years) and reading t-scores
-language_analyze_data2 <- function(data) {
-  
-  #Friedman test on overall language scores at 5 time points
-  model <- friedman.test(y=data$scores, groups=data$time, blocks=data$item)
-  
-  list(
-    p_value = model$p.value, # Extracting p-values
-    effect_size = model$statistic, # Extracting effect size
-    conf_int_lower = NA,
-    conf_int_upper = NA
-  )
-}
+```{r echo = FALSE}
 
-# Reproduce original results ----
-language_results_original2 <- language_analyze_data2(language_data_original2) |>
-  as.data.frame(row.names = NULL) |>
-  mutate(
-    dataset = "original",
-    sig = case_when(
-      p_value < language_alpha ~ "sig",
-      p_value >= language_alpha ~ "non-sig"
-    ),
-    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
-                               abs(effect_size) >= 0.3 ~ "Medium",
-                               abs(effect_size) >= 0.1 ~ "Small",
-                               TRUE ~ "Negligible")
-  )
+```
 
-# Create synthetic data ----
-language_data_synthetic2 <- syn(language_data_original2, m = 100, seed = 2024)
+Robinaugh et al., (2024) examined ...
 
-### STUCK HERE - Need to loop through each synthetic dataset and run the friedman's test but keep getting an error
 
-# Perform analysis on each synthetic dataset
-language_results_synthetic2 <- language_data_synthetic2$syn |>
-  purrr::map_df(~ language_analyze_data2(.x), .id = "dataset") |>
-  dplyr::mutate(
-    sig = case_when(
-      p_value < language_alpha ~ "sig",
-      p_value >= language_alpha ~ "non-sig"
-    ),
-    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
-                               abs(effect_size) >= 0.3 ~ "Medium",
-                               abs(effect_size) >= 0.1 ~ "Small",
-                               TRUE ~ "Negligible"),
-    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
-    diff_pvalue = abs(p_value - language_results_original2$p_value),
-    diff_effectSize = abs(effect_size - language_results_original2$effect_size)
-  ) |> 
-  add_column(domain = "Receptive and expressive language")
+### Cognitive Aspects of Communication
+```{r echo = FALSE}
 
-# Compile results ----
-language_results_summary <- data_frame(
-  Domain = "Language",
-  Study = "Kearney et al. (2023)",
-  
-  # Pulling sample size, p value, and effect sizes from the original results
-  N = nrow(language_data_original),
-  p_value = ifelse(
-    language_results_original$p_value < .001, "<.001",
-    sprintf("%0.3f", language_results_original$p_value)),
-  effect_size_measure = "Correlation coefficient",
-  effect_size = round(language_results_original$effect_size, digits = 2),
-  
-  # Creating the % Agreement for p values between the original and the synthetic datasets
-  synAgreement_pvalue = language_results_synthetic |>
-    count(sig) |>
-    dplyr::mutate(percent = n / NROW(language_results_synthetic) * 100,
-                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
-    dplyr::filter(sig == language_results_original$sig) |>
-    dplyr::pull(percent),
-  absDiff_pvalue_mean = mean(language_results_synthetic$diff_pvalue),
-  absDiff_pvalue_sd = sd(language_results_synthetic$diff_pvalue),
-  
-  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
-  synAgreement_effectSize = language_results_synthetic |>
-    count(categorization) |>
-    dplyr::mutate(percent = n / nrow(language_results_synthetic) * 100,
-                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
-    dplyr::filter(categorization == language_results_original$categorization) |>
-    dplyr::pull(percent),
-  absDiff_effectSize_mean = mean(language_results_synthetic$diff_effectSize),
-  absDiff_effectSize_sd = sd(language_results_synthetic$diff_effectSize),
-)
+```
 
-# Tidying the R project environment ----
-## Throwing the relevant environment objects into a list for this study.
-language <- list(
-  data_original = language_data_original,
-  data_synthetic = language_data_synthetic,
-  results_original = language_results_original,
-  results_synthetic = language_results_synthetic,
-  results_summary = language_results_summary,
-  alpha = language_alpha
-)
 
-## Cleaning up the environment
-rm(
-  language_data_original,
-  language_data_synthetic,
-  language_results_original,
-  language_results_synthetic,
-  language_results_summary,
-  language_alpha
-)
+### Social Aspects of Communication
+```{r echo = FALSE}
 
-# Saving the data and results for easy importing later.
-base::saveRDS(object = language,
-              file = here::here("Data","07_Language", "Kearney", "analysisData.RDS"))
+```
+
+
+
+
+### Results for Studies 3 - 9
+
+```{r recep_language_1, echo = FALSE}
+
 
 ```
 
@@ -2613,6 +2826,14 @@ This study assessed the utility of the *synthpop* package in R for generating sy
 # Acknowledgements
 
 We would like to thank the authors of the studies included in this manuscript for making their data publicly available.
+
+<br>
+
+**Funding**: None.
+
+<br>
+
+**Study Preregistration and Data Availability**: The study preregistration (https://osf.io/vhgq2) and associated data and analysis scripts (https://osf.io/yhkqf/) are publicly available on the Open Science Framework.
 
 \newpage
 
