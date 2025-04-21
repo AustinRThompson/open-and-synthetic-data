@@ -85,6 +85,7 @@ library(insight) # create tables
 library(cowplot) # figures
 library(printy) # printing pretty p-values [remotes::install_github("tjmahr/printy")]
 library(brms)
+library(rstan)
 
 # Function to add title to plots
 draw_label_theme <- function(label, theme = NULL, element = "text", ...) {
@@ -2905,7 +2906,7 @@ ggsave(
 
 ##### Table 4 here.
 
-```{r table 4, echo = FALSE}
+```{r table 4, echo = FALSE, eval = FALSE}
 
 # This code reads in a template, generates table 3, 
 # and then saves it as word doc in the appropriate folder
