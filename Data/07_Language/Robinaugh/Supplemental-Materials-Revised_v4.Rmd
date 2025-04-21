@@ -30,8 +30,8 @@ library(lme4)
 ```
 
 ```{r reading in data, include=F}
-df <- read_csv('SDTBI001_Data.csv') %>%
-  clean_names() %>%
+df <- read.csv(here::here("Data", "07_Language", "Robinaugh", 'SDTBI001_Data.csv')) %>%
+  janitor::clean_names() %>%
   mutate(condition = ifelse(condition == 0, 'untreated', 'treated'),
          phase = as.factor(phase)) %>%
   mutate_if(is.character, as.factor) 

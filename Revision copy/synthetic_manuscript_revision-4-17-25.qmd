@@ -84,6 +84,7 @@ library(officer) # create tables
 library(insight) # create tables
 library(cowplot) # figures
 library(printy) # printing pretty p-values [remotes::install_github("tjmahr/printy")]
+library(brms)
 
 # Function to add title to plots
 draw_label_theme <- function(label, theme = NULL, element = "text", ...) {
@@ -1376,6 +1377,8 @@ base::saveRDS(object = hearing,
 
 Battal et al. (2019) compared auditory localization abilities between 17 congenitally blind and 17 sighted individuals. A linear mixed effects model indicated that congenitally blind individuals had enhanced spatial hearing abilities (*OR* = 1.56, *p* = .016). Compared to original data, the synthetic data showed similar distributions for auditory localization in both sighted and congentially blind individuals, as well as similar auditory localization at the subject-level (Figure 1E). General utility was high for subject (*S_pMSE* = `r round(hearing_s_pMSE_value$S_pMSE[3], digits = 2)`) and group (*S_pMSE* = `r round(hearing_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. Specific utility was high as the statistical model with the synthetic data maintained the direction of statistical significance (*p* `r fmt_p_value(hearing_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(hearing_results_synthetic[1,]$effect_size, digits = 2)`).
 
+**ADD RANDOM EFFECTS STABILITY HERE**
+
 ### Communication Modalities
 ```{r echo = FALSE}
 # Import original data ----
@@ -1809,85 +1812,211 @@ Two studies were included in the domain of Receptive and Expressive Language [@k
 Kearney et al. (2023) examined the relationship between years of education and reading performance among 36 individuals following left-hemisphere tumor resection. Results indicated a large relationship between these variables (*r* = 0.59, *p* < .001). Compared to original data, the synthetic data showed maintained a similar visual relationship between years of education and reading scores (Figure 2A). General utility was high for both years of education (*S_pMSE* = `r round(language_s_pMSE_value$S_pMSE[1], digits = 2)`) and reading scores (*S_pMSE* = `r round(language_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. The statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(language_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(language_results_synthetic[1,]$effect_size, digits = 2)`), indicating high specific utility.
 
 ```{r echo = FALSE}
+library(kableExtra)
+library(tidybayes)
 
+# Import data
+df <- read.csv(here::here("Data", "07_Language", "Robinaugh", 'SDTBI001_Data.csv')) %>%
+  janitor::clean_names() %>%
+  mutate(condition = ifelse(condition == 0, 'untreated', 'treated'),
+         phase = as.factor(phase)) %>%
+  mutate_if(is.character, as.factor) 
+
+# Model Setup
+df_coded2 <- df %>%
+  filter(session < 13) %>%
+  group_by(id) %>%
+  mutate(phase = ifelse(phase == 'Pre', 0, 1),
+         num_baselines = sum(phase == 0),
+         # slope change is calculated by (T-(n1 + 1))D
+         slope_change = (session - (num_baselines+1))*phase
+         ) %>%
+  select(id, set, condition, response, session, phase, slope_change) %>%
+  mutate(phase = ifelse(condition == "untreated", 0, phase),
+         slope_change = ifelse(condition == "untreated", 0, slope_change))
+
+# Model Fitting
+m.1b <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
+             (session + phase + slope_change | set/id), # 
+           family = bernoulli(),  #binomial in lme4
+           data = df_coded2, # both trained and untrained sets
+           iter = 4000, # number of total samples per chain
+           warmup = 1000, # number of samples tossed out per chain
+           inits = 'random', # each chain takes random starting values
+           chains = 4, # 4 total chains
+           cores = 4, # use 4 computer cores to run chains simultaneously
+           control = list(adapt_delta = .97), # to aid model convergence
+           prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
+                     prior(normal(0, 2), class = b), # prior distributions
+                     prior(normal(0, 2), class = sd),
+                     prior(lkj(2), class = cor)),
+           backend = 'cmdstan',
+           seed = 42,
+           refresh = 0, #for the markdown document 
+           file = here::here("Data", "07_Language", "Robinaugh", "new_approach"),
+           file_refit = "on_change"
+)
+
+pred_d <- m.1b$data %>%
+  select(-response, -Intercept) %>% 
+  group_by(id) %>% # for each word
+  mutate(num_baselines = ifelse(set != 7, sum(phase == 0), 4)) %>% 
+  #Untrained Set 7 set to give posterior distributions at session 4 
+  #(last baseline without any tx) and session 12 (the last tx phase probe)
+  filter(session == num_baselines | session == max(session))
+
+es <- add_epred_draws(m.1b, newdata = pred_d |> filter(set != 7), 
+                      pred = 'value', seed = 42) %>% 
+  ungroup() %>% #
+  mutate(time_point = ifelse(slope_change == 0, 'entry', 'exit')) %>% #
+  select(time_point, id, value = .epred, draw = .draw) %>% #
+  group_by(draw, time_point) %>% #
+  summarize(num_corr = sum(value)) %>% #
+  pivot_wider(names_from = time_point, values_from = num_corr) %>% # 
+  mutate(effect_size = exit - entry) %>% #
+  ungroup() %>%  # 
+  select(effect_size)
+
+es %>% # only need one variable
+  tidybayes::median_qi(effect_size)
+
+# Create synthetic data ----
+robinaugh_data_synthetic <- syn(df_coded2, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+# General Utility ----
+robinaugh_data_synthetic_first <- robinaugh_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+robinaugh_data_original <- df_coded2 |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Combine the data frames
+robinaugh_combined_data <- robinaugh_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(robinaugh_data_original)
+
+# Calculate utility with s_pMSE
+robinaugh_utility_df <- utility.tables(
+  robinaugh_data_synthetic_first,
+  robinaugh_combined_data,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+robinaugh_s_pMSE_value <- robinaugh_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Data Viz
+robinaugh_p1 <- 
+  robinaugh_combined_data |> 
+  ggplot(aes(x = factor(session), color = dataset_type, fill = dataset_type)) +
+  geom_bar(stat = "count", position = "dodge") +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Session",
+       y = "Frequency",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  scale_y_continuous(expand=c(0,0))
+
+robinaugh_p2 <- 
+  robinaugh_combined_data |> 
+  ggplot(aes(x = factor(response), color = dataset_type, fill = dataset_type)) +
+  geom_bar(stat = "count", position = "dodge") +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Response",
+       y = "Frequency",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  scale_y_continuous(expand=c(0,0))
+
+# Combine plots
+robinaugh_combined <- cowplot::plot_grid(robinaugh_p1,
+                                         robinaugh_p2,
+                                         ncol = 1,
+                                         rel_heights = c(0.5, 0.5))
+
+# Add title
+robinaugh_title <- ggdraw() +
+  draw_label_theme("B: Language (Robinaugh et al., 2024)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+robinaugh_final_plot <- cowplot::plot_grid(
+  robinaugh_title,
+  robinaugh_combined,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Specific Utility ----
+# Model Fitting
+synthetic_model <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
+             (session + phase + slope_change | set/id), # 
+           family = bernoulli(),  #binomial in lme4
+           data = robinaugh_data_synthetic_first, # both trained and untrained sets
+           iter = 4000, # number of total samples per chain
+           warmup = 1000, # number of samples tossed out per chain
+           inits = 'random', # each chain takes random starting values
+           chains = 4, # 4 total chains
+           cores = 4, # use 4 computer cores to run chains simultaneously
+           control = list(adapt_delta = .97), # to aid model convergence
+           prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
+                     prior(normal(0, 2), class = b), # prior distributions
+                     prior(normal(0, 2), class = sd),
+                     prior(lkj(2), class = cor)),
+           backend = 'cmdstan',
+           seed = 42,
+           refresh = 0, #for the markdown document 
+           file = here::here("Data", "07_Language", "Robinaugh", "synthetic_model"),
+           file_refit = "on_change"
+)
+
+synthetic_pred_d <- synthetic_model$data %>%
+  select(-response, -Intercept) %>% 
+  group_by(id) %>% # for each word
+  mutate(num_baselines = ifelse(set != 7, sum(phase == 0), 4)) %>% 
+  #Untrained Set 7 set to give posterior distributions at session 4 
+  #(last baseline without any tx) and session 12 (the last tx phase probe)
+  filter(session == num_baselines | session == max(session))
+
+synthetic_es <- add_epred_draws(m.1b, newdata = synthetic_pred_d |> filter(set != 7), 
+                      pred = 'value', seed = 42) %>% 
+  ungroup() %>% #
+  mutate(time_point = ifelse(slope_change == 0, 'entry', 'exit')) %>% #
+  select(time_point, id, value = .epred, draw = .draw) %>% #
+  group_by(draw, time_point) %>% #
+  summarize(num_corr = sum(value)) %>% #
+  pivot_wider(names_from = time_point, values_from = num_corr) %>% # 
+  mutate(effect_size = exit - entry) %>% #
+  ungroup() %>%  # 
+  select(effect_size)
+
+synthetic_es_summarized <- synthetic_es %>% # only need one variable
+  tidybayes::median_qi(effect_size)
 ```
 
-Robinaugh et al., (2024) examined ...
-
+Robinaugh et al., (2024) examined the effectiveness of a naming treatment in a single-case experimental design for an individual presenting with semantic variant primary progressive aphasia and a history of traumatic brain injury. An item-level Bayesian generalized mixed-effects model revealed that the treatment resulted in a gain of 35 out of 60 trained words (β = 35.3; 90% CI: 30.6, 39.5). Compared to original data, the synthetic data showed similar frequencies of responses, but not sessions (Figure 2B). General utility was high for id (*S_pMSE* = `r round(robinaugh_s_pMSE_value$S_pMSE[1], digits = 2)`), set (*S_pMSE* = `r round(robinaugh_s_pMSE_value$S_pMSE[2], digits = 2)`), session (*S_pMSE* = `r round(robinaugh_s_pMSE_value$S_pMSE[5], digits = 2)`), and phase (*S_pMSE* = `r round(robinaugh_s_pMSE_value$S_pMSE[6], digits = 2)`) variables. The statistical model with the synthetic data overestimated the effect size (β = `r round(synthetic_es_summarized$effect_size, digits = 2)`; 90% CI: `r round(synthetic_es_summarized$.lower, digits = 2)`, `r round(synthetic_es_summarized$.upper, digits = 2)`), indicating that specific utility was low.
 
 ### Cognitive Aspects of Communication
 ```{r echo = FALSE}
-
-```
-
-
-### Social Aspects of Communication
-```{r echo = FALSE}
-
-```
-
-
-
-
-### Results for Studies 3 - 9
-
-```{r recep_language_1, echo = FALSE}
-
-
-```
-
-```{r}
-# # Load data
-# cognition_original_data <-
-#   read.csv(here::here("Data/08_Cognition/emoji_affect_recognition_data.csv")) |>
-#   # select only relevant variables
-#   dplyr::select(c(SubjectID, Correct, Group, Condition, Sex)) |>
-#   # dummy-code Group (NC = 1, TBI = 0) and Sex (F = 1, M = 0)
-#   mutate(
-#     Group_NC = if_else(Group == "NC", 1, 0),
-#     Sex_F = if_else(Sex == "Female", 1, 0)) |>
-#   # treat categorical variables as factors and set reference levels
-#   mutate(
-#     SubjectID = as.factor(SubjectID),
-#     Correct = as.factor(Correct),
-#     Group_NC = relevel(as.factor(Group_NC), '1', '0'),
-#     Condition = relevel(as.factor(Condition), 'BasicFace', 'BasicEmoji', 'SocialEmoji'),
-#     Sex_F =  relevel(as.factor(Sex_F), '1', '0')
-#   ) |> 
-#   dplyr::select(-c(Group, Sex))
-# 
-# # Set up Helmert contrast coding for Condition
-# # https://marissabarlaz.github.io/portfolio/contrastcoding/
-# # Contrast 1: Basic Emotion Faces vs average of Basic Emotion Emoji and Social Emotion Emoji
-# # Contrast 2: Basic Emotion Emoji vs Social Emotion Emoji
-# helmert = matrix(c(2/3, -1/3, -1/3, 0, 1/2, -1/2), ncol = 2)
-# contrasts(cognition_original_data$Condition) = helmert
-# 
-# # Models: Effect of stimulus condition on emotion recognition accuracy
-# # Note: Model first failed to converge when using default control settings, so changed optimizer to bobyqa as suggested here: https://rstudio-pubs-static.s3.amazonaws.com/33653_57fc7b8e5d484c909b615d8633c01d51.html
-# m1 <- lme4::glmer(Correct ~ Group_NC + Condition + Sex_F + Group_NC*Condition*Sex_F + (1 |SubjectID), data = cognition_original_data, family = binomial(link = "logit"), control=lme4::glmerControl(optimizer="bobyqa",
-#                             optCtrl=list(maxfun=2e5)))
-# summary(m1)
-# 
-# # Set group reference level to TBI (0) and rerun model
-# cognition_original_data$Group_NC = relevel(cognition_original_data$Group_NC, '0', '1')
-# m2 <- lme4::glmer(Correct ~ Group_NC + Condition + Sex_F + Group_NC*Condition*Sex_F + (1 |SubjectID), data = cognition_original_data, family = binomial(link = "logit"), control=lme4::glmerControl(optimizer="bobyqa",
-#                             optCtrl=list(maxfun=2e5)))
-# summary(m2)
-# 
-# # Odds ratios and confidence intervals
-# tidy(m1,conf.int=TRUE,exponentiate=TRUE,effects="fixed") # Condition1 conf.high = 5.86, reported in paper as 5.87
-# tidy(m2,conf.int=TRUE,exponentiate=TRUE,effects="fixed")
-# 
-# # Examine p-value for Group X Condition Interaction
-# tidy(m1,conf.int=TRUE,exponentiate=TRUE,effects="fixed")[7,]$`p.value`
-# 
-# # Calculate standardized effect size from odds ratio for Group X Condition Interaction
-# ## this is a "medium" effect (>= 0.50 & < 0.80)
-# sqrt((3/pi))*tidy(m1,conf.int=TRUE,exponentiate=TRUE,effects="fixed")[7,]$estimate
-```
-
-```{r cognition, echo = FALSE}
 # Load packages
 library(lme4) # glmer
 library(lmerTest) # p-values for glmer
@@ -2046,6 +2175,73 @@ cognition_results_summary <- data_frame(
   absDiff_effectSize_sd = sd(cognition_results_synthetic$diff_effectSize),
 )
 
+# General Utility ----
+cognition_data_synthetic_first <- cognition_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+cognition_data_original <- cognition_data_original |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Combine the data frames
+cognition_combined_data <- cognition_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(cognition_data_original)
+
+# Calculate utility with s_pMSE
+cognition_utility_df <- utility.tables(
+  cognition_data_synthetic_first,
+  cognition_combined_data,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+cognition_s_pMSE_value <- cognition_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Data viz
+cognition_p1 <- 
+  cognition_combined_data |> 
+  mutate(Correct = as.numeric(as.character(Correct)),
+         Group_NC = case_when(Group_NC == "BasicFace" ~ "Basic Face",
+                              Group_NC == "BasicEmoji" ~ "Basic Emoji",
+                              Group_NC == "SocialEmoji" ~ "Social Emoji")) |> 
+  group_by(Group_NC, Condition, dataset_type) %>%
+  summarize(Proportion_Correct = mean(Correct),
+            Count = n(),
+            .groups = 'drop') |> 
+  ggplot(aes(x = dataset_type, y = Proportion_Correct, fill = as.factor(dataset_type))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ Condition) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "",
+       y = "Proportion Correct",
+       fill = "Group NC") +
+  cowplot::theme_cowplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_blank(),
+        legend.position = "none") +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1),
+                     labels = scales::percent)
+
+# Add title
+cognition_title <- ggdraw() +
+  draw_label_theme("C: Cognition (Clough  et al., 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+cognition_final_plot <- cowplot::plot_grid(
+  cognition_title,
+  cognition_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+
 # Tidying the R project environment ----
 ## Throwing the relevant environment objects into a list for this study.
 cognition <- list(
@@ -2073,7 +2269,14 @@ base::saveRDS(object = cognition,
               file = here::here("Data","08_Cognition","analysisData.RDS"))
 ```
 
-```{r social_comm, echo = FALSE}
+Clough et al. (2023) examined the interaction between group (traumatic brain injury or neurotypical) and condition (human faces or emojis) on the accuracy of emotion recognition. A generalized linear mixed effects model indicated... [**UPDATE**]... a large relationship between these variables (*r* = 0.59, *p* < .001). Compared to original data, the synthetic data showed maintained a similar visual relationship between years of education and reading scores (Figure 2A). General utility was high for both years of education (*S_pMSE* = `r round(language_s_pMSE_value$S_pMSE[1], digits = 2)`) and reading scores (*S_pMSE* = `r round(language_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. The statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(language_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(language_results_synthetic[1,]$effect_size, digits = 2)`), indicating high specific utility.
+
+UNCLEAR WHICH EFFECT SIZE WE'RE LOOKING AT IN THIS STUDY? CAN'T SEEM TO FIND IT IN THE ORIGINAL PAPER.
+
+**Also, ADD RANDOM EFFECTS STABILITY HERE**
+
+### Social Aspects of Communication
+```{r echo = FALSE}
 # Import original data ----
 social_data_original <-
   read.csv(here::here("Data/09_Social_Communication/Study1Comp.csv"),
@@ -2186,6 +2389,65 @@ social_results_summary <- data_frame(
   absDiff_effectSize_sd = sd(social_results_synthetic$diff_effectSize),
 )
 
+# General Utility ----
+social_data_synthetic_first <- social_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+social_data_original <- social_data_original |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Combine the data frames
+social_combined_data <- social_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(social_data_original)
+
+# Calculate utility with s_pMSE
+social_utility_df <- utility.tables(
+  social_data_synthetic_first,
+  social_combined_data,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+social_s_pMSE_value <- social_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Data viz
+social_p1 <- 
+  social_combined_data |> 
+  mutate(ParGroup = case_when(ParGroup == "ASD" ~ "Autism Spectrum Disorder",
+                              ParGroup == "TD" ~ "Neurotypical")) |> 
+  ggplot(aes(x = NVIQ, fill = as.factor(dataset_type))) +
+  geom_density(alpha = 0.80) +
+  facet_wrap(~ ParGroup, nrow = 2) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Non-Verbal IQ",
+       y = "Density",
+       fill = "Group NC") +
+  cowplot::theme_cowplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 0.04)) +
+  scale_x_continuous(limits = c(25, 200))
+
+# Add title
+social_title <- ggdraw() +
+  draw_label_theme("D: Social (Chanchaochai & Schwarz, 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+social_final_plot <- cowplot::plot_grid(
+  social_title,
+  social_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
 # Tidying the R project environment ----
 ## Throwing the relevant environment objects into a list for this study.
 social <- list(
@@ -2198,21 +2460,21 @@ social <- list(
 )
 
 ## Cleaning up the environment
-rm(
-  social_data_original,
-  social_data_synthetic,
-  social_results_original,
-  social_results_synthetic,
-  social_results_summary,
-  social_alpha
-)
+# rm(
+#   social_data_original,
+#   social_data_synthetic,
+#   social_results_original,
+#   social_results_synthetic,
+#   social_results_summary,
+#   social_alpha
+# )
 
 # Saving the data and results for easy importing later.
 base::saveRDS(object = social,
               file = here::here("Data","09_Social_Communication","analysisData.RDS"))
 ```
 
-Studies in the domains of fluency, voice and resonance, communication modalities, receptive and expressive language, and social aspects of communication demonstrated more than 95% *p*-value agreement between the original and synthetic datasets (Table 3). Among studies that demonstrated lower agreement, the absolute mean difference between the synthetic *p*-values and the original *p*-value was `r round(articulation$results_summary$absDiff_pvalue_mean, digits = 2)` (*SD* = `r round(articulation$results_summary$absDiff_pvalue_sd, digits = 2)`) for articulation, `r round(hearing$results_summary$absDiff_pvalue_mean, digits = 2)` (*SD* = `r round(hearing$results_summary$absDiff_pvalue_sd, digits = 2)`) for hearing, and `r round(cognition$results_summary$absDiff_pvalue_mean, digits = 2)` (*SD* = `r round(cognition$results_summary$absDiff_pvalue_sd, digits = 2)`) for cognitive aspects of communication (Figure 3). For effect size categorization agreement, studies in the domains of fluency, hearing, communication modalities, and cognitive aspects of communication maintained the effect size categorization of the original study. Among studies that demonstrated lower effect size cateogrization agreement, the absolute mean difference between the effect size from synthetic datasets and the original study's effect size was `r round(articulation$results_summary$absDiff_effectSize_mean, digits = 2)` (SD = `r round(articulation$results_summary$absDiff_effectSize_sd, digits = 2)`) for articulation, `r round(voice$results_summary$absDiff_effectSize_mean, digits = 2)` (*SD* = `r round(voice$results_summary$absDiff_effectSize_sd, digits = 2)`) for voice and resonance, `r round(language$results_summary$absDiff_effectSize_mean, digits = 2)` (*SD* = `r round(language$results_summary$absDiff_effectSize_sd, digits = 2)`) for receptive and expressive language, and `r round(social$results_summary$absDiff_effectSize_mean, digits = 2)` (*SD* = `r round(social$results_summary$absDiff_effectSize_sd, digits = 2)`) for social aspects of communication.
+Chanchaochai & Schwarz et al. (2023) compared non-verbal IQ between individuals with autism spectrum disorder and neurotypical peers. An analysis of variance indicated that neurotypical individuals demonstrated higher non-verbal IQ (*d* = -0.85, *p* < .001). Compared to original data, the synthetic data showed similar distributions of non-verbal IQ for both groups (Figure 2D). General utility was high for both group (*S_pMSE* = `r round(social_s_pMSE_value$S_pMSE[2], digits = 2)`) and non-verbal IQ (*S_pMSE* = `r round(social_s_pMSE_value$S_pMSE[1], digits = 2)`) variables. The statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(social_results_synthetic[1,]$p_value)`); however, the effect size magnitude (*r* = `r round(social_results_synthetic[1,]$effect_size, digits = 2)`) was lower, indicating a low level of specific utility.
 
 ```{r dispersion figures, echo = FALSE}
 # Visualize p-value distributions
