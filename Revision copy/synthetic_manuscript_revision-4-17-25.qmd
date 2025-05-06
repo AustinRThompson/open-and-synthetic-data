@@ -1184,12 +1184,18 @@ hearing_analyze_data <- function(data) {
   model_results <- anova(model_fit) |> 
     as.data.frame()
   
+  random_effects <- unlist(ranef(model))
+  
   list(
     p_value = model_results$`p-value`[3], # Extracting p-values
     # Extracting effect size - standardized effect size (Haddock et al., 1998; Hasselblad & Hedges, 1995)
     effect_size = (sqrt(3/pi))*exp(model_fit$coefficients$fixed[3]),
     conf_int_lower = intervals(model)[["fixed"]][3,][1], # Extracting lower CI bound
-    conf_int_upper = intervals(model)[["fixed"]][3,][3] # Extracting upper CI bound
+    conf_int_upper = intervals(model)[["fixed"]][3,][3], # Extracting upper CI bound
+    random_mean = mean(random_effects), # Extracting random effects mean
+    random_conf_int_lower = mean(random_effects) - 1.96 * (sd(random_effects) / length(random_effects)), # Extracting random effects 95% CI lower bound
+  random_conf_int_upper = mean(random_effects) + 1.96 * (sd(random_effects) / length(random_effects))
+    # Extracting random effects 95% CI upper bound
   )
 }
 
@@ -2021,7 +2027,6 @@ Robinaugh et al., (2024) examined the effectiveness of a naming treatment in a s
 # Load packages
 library(lme4) # glmer
 library(lmerTest) # p-values for glmer
-library(broom.mixed) # model summaries
 
 # Import original data ----
 cognition_data_original <-
@@ -2075,30 +2080,19 @@ cognition_analyze_data <- function(data) {
                              optCtrl = list(maxfun = 2e5))
     )
   
+  model_fit <- summary(m1)
+  
+  random_effects <- unlist(ranef(m1))
+  
   list(
-    # Extracting p-values
-    p_value = tidy(
-      m1,
-      conf.int = TRUE,
-      exponentiate = TRUE,
-      effects = "fixed")[7,]$`p.value`,
-    # Extract effect size from odds ratio for Group (NC0) X Condition (2) Interaction
-    effect_size = sqrt((3 / pi)) * tidy(m1,
-                        conf.int = TRUE,
-                        exponentiate = TRUE,
-                        effects = "fixed")[7, ]$estimate,
-    # Extracting lower CI bound
-    conf_int_lower = tidy(
-      m1,
-      conf.int = TRUE,
-      exponentiate = TRUE,
-      effects = "fixed")[7,]$conf.low,
-    # Extracting upper CI bound
-    conf_int_upper = tidy(
-      m1,
-      conf.int = TRUE,
-      exponentiate = TRUE,
-      effects = "fixed")[7,]$conf.high
+    p_value = model_fit$coefficients[7,4], # Extracting p-values
+    # Extracting effect size for Group (NC0) X Condition (2) Interaction - standardized effect size (Haddock et al., 1998; Hasselblad & Hedges, 1995)
+    effect_size = (sqrt(3/pi))*exp(model_fit$coefficients[7,1]),
+    conf_int_lower = confint(m1, method = "Wald", level = .95)[8,][1], # Extracting lower CI bound
+    conf_int_upper = confint(m1, method = "Wald", level = .95)[8,][2], # Extracting upper CI bound
+    random_mean = mean(random_effects), # Extracting random effects mean
+    random_conf_int_lower = mean(random_effects) - 1.96 * (sd(random_effects) / length(random_effects)), # Extracting         random effects 95% CI lower bound
+    random_conf_int_upper = mean(random_effects) + 1.96 * (sd(random_effects) / length(random_effects)) # Extracting          random effects 95% CI upper bound
   )
 }
 
