@@ -83,6 +83,7 @@ library(flextable) # create tables
 library(officer) # create tables
 library(insight) # create tables
 library(cowplot) # figures
+library(remotes)
 library(printy) # printing pretty p-values [remotes::install_github("tjmahr/printy")]
 library(brms)
 library(rstan)
@@ -1432,7 +1433,8 @@ aac_data_original <- qualtrics_csv(file = here::here("Data", "06_AAC", "data_Com
   var = factor(var, labels = c("Assessment", "Intervention"))) |>
   tidyr::drop_na(value) |> 
   dplyr::select(-question) |> 
-  filter(value == "Lack of/limited internet")
+  filter(value == "Lack of/limited internet") %>%
+  as.data.frame()
 
 # Establish p_value for study
 aac_alpha <- .05
@@ -1547,7 +1549,7 @@ aac_combined_data <- aac_data_synthetic_first |>
   rbind(aac_data_original2)
 
 # Calculate utility with s_pMSE
-aac_utility_df <- utility.tables(
+aac_utility_df <- synthpop::utility.tables(
   aac_data_synthetic_first,
   aac_data_original,
   tables = "oneway",
