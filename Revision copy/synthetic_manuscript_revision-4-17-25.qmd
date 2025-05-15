@@ -1191,8 +1191,8 @@ hearing_analyze_data <- function(data) {
     p_value = model_results$`p-value`[3], # Extracting p-values
     # Extracting effect size - standardized effect size (Haddock et al., 1998; Hasselblad & Hedges, 1995)
     effect_size = (sqrt(3/pi))*exp(model_fit$coefficients$fixed[3]),
-    conf_int_lower = intervals(model)[["fixed"]][3,][1], # Extracting lower CI bound
-    conf_int_upper = intervals(model)[["fixed"]][3,][3], # Extracting upper CI bound
+    conf_int_lower = exp(intervals(model)[["fixed"]][3,][1]), # Extracting lower CI bound
+    conf_int_upper = exp(intervals(model)[["fixed"]][3,][3]), # Extracting upper CI bound
     random_mean = mean(random_effects), # Extracting random effects mean
     random_conf_int_lower = mean(random_effects) - 1.96 * (sd(random_effects) / length(random_effects)), # Extracting random effects 95% CI lower bound
   random_conf_int_upper = mean(random_effects) + 1.96 * (sd(random_effects) / length(random_effects))
@@ -1383,9 +1383,7 @@ base::saveRDS(object = hearing,
               file = here::here("Data","05_Hearing","analysisData.RDS"))
 ```
 
-Battal et al. (2019) compared auditory localization abilities between 17 congenitally blind and 17 sighted individuals. A linear mixed effects model indicated that congenitally blind individuals had enhanced spatial hearing abilities (*OR* = 1.56, *p* = .016). Compared to original data, the synthetic data showed similar distributions for auditory localization in both sighted and congentially blind individuals, as well as similar auditory localization at the subject-level (Figure 1E). General utility was high for subject (*S_pMSE* = `r round(hearing_s_pMSE_value$S_pMSE[3], digits = 2)`) and group (*S_pMSE* = `r round(hearing_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. Specific utility was high as the statistical model with the synthetic data maintained the direction of statistical significance (*p* `r fmt_p_value(hearing_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(hearing_results_synthetic[1,]$effect_size, digits = 2)`).
-
-**ADD RANDOM EFFECTS STABILITY HERE**
+Battal et al. (2019) compared auditory localization abilities between 17 congenitally blind and 17 sighted individuals. A linear mixed effects model indicated that congenitally blind individuals had enhanced spatial hearing abilities (*OR* = 1.56, *p* = .016). Compared to original data, the synthetic data showed similar distributions for auditory localization in both sighted and congentially blind individuals, as well as similar auditory localization at the subject-level (Figure 1E). General utility was high for subject (*S_pMSE* = `r round(hearing_s_pMSE_value$S_pMSE[3], digits = 2)`) and group (*S_pMSE* = `r round(hearing_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. Specific utility was high as the statistical model with the synthetic data maintained the direction of statistical significance (*p* `r fmt_p_value(hearing_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(hearing_results_synthetic[1,]$effect_size, digits = 2)`). The random effect estimates were stable between the original (mean = `r round(hearing_results_original$random_mean, digits = 3)`, 95% CI: `r round(hearing_results_original$random_conf_int_lower, digits = 3)`, `r round(hearing_results_original$random_conf_int_upper, digits = 3)`) and synthetic (mean = `r round(hearing_results_synthetic$random_mean[1], digits = 3)`, 95% CI: `r round(hearing_results_synthetic$random_conf_int_lower[1], digits = 3)`, `r round(hearing_results_synthetic$random_conf_int_upper[1], digits = 3)`) datasets.
 
 ### Communication Modalities
 ```{r echo = FALSE}
@@ -2067,7 +2065,7 @@ cognition_analyze_data <- function(data) {
     lme4::glmer(Correct ~ Group_NC + Condition + Sex_F + Group_NC * Condition * Sex_F + (1 | SubjectID),
       data = data,
       family = binomial(link = "logit"),
-      control = glmerControl(optimizer = "bobyqa",
+      control = lme4::glmerControl(optimizer = "bobyqa",
                              optCtrl = list(maxfun = 2e5))
     )
   
@@ -2082,19 +2080,19 @@ cognition_analyze_data <- function(data) {
                              optCtrl = list(maxfun = 2e5))
     )
   
-  model_fit <- summary(m1)
+  model_fit <- summary(m2)
   
-  random_effects <- unlist(ranef(m1))
+  random_effects <- unlist(ranef(m2))
   
   list(
     p_value = model_fit$coefficients[7,4], # Extracting p-values
     # Extracting effect size for Group (NC0) X Condition (2) Interaction - standardized effect size (Haddock et al., 1998; Hasselblad & Hedges, 1995)
-    effect_size = (sqrt(3/pi))*exp(model_fit$coefficients[7,1]),
-    conf_int_lower = confint(m1, method = "Wald", level = .95)[8,][1], # Extracting lower CI bound
-    conf_int_upper = confint(m1, method = "Wald", level = .95)[8,][2], # Extracting upper CI bound
+    effect_size = (sqrt(3/pi))*exp(model_fit$coefficients[4,1]),
+    conf_int_lower = exp(confint(m2, method = "Wald", level = .95)[5,][1]), # Extracting lower CI bound
+    conf_int_upper = exp(confint(m2, method = "Wald", level = .95)[5,][2]), # Extracting upper CI bound
     random_mean = mean(random_effects), # Extracting random effects mean
-    random_conf_int_lower = mean(random_effects) - 1.96 * (sd(random_effects) / length(random_effects)), # Extracting         random effects 95% CI lower bound
-    random_conf_int_upper = mean(random_effects) + 1.96 * (sd(random_effects) / length(random_effects)) # Extracting          random effects 95% CI upper bound
+    random_conf_int_lower = mean(random_effects) - 1.96 * (sd(random_effects) / length(random_effects)), # Extracting random effects 95% CI lower bound
+    random_conf_int_upper = mean(random_effects) + 1.96 * (sd(random_effects) / length(random_effects)) # Extracting random effects 95% CI upper bound
   )
 }
 
@@ -2247,6 +2245,7 @@ cognition <- list(
   results_original = cognition_results_original,
   results_synthetic = cognition_results_synthetic,
   results_summary = cognition_results_summary,
+  s_pMSE_value = cognition_s_pMSE_value,
   alpha = cognition_alpha
 )
 
@@ -2257,6 +2256,7 @@ rm(
   cognition_results_original,
   cognition_results_synthetic,
   cognition_results_summary,
+  cognition_s_pMSE_value,
   cognition_alpha,
   helmert
 )
@@ -2266,11 +2266,7 @@ base::saveRDS(object = cognition,
               file = here::here("Data","08_Cognition","analysisData.RDS"))
 ```
 
-Clough et al. (2023) examined the interaction between group (traumatic brain injury or neurotypical) and condition (human faces or emojis) on the accuracy of emotion recognition. A generalized linear mixed effects model indicated... [**UPDATE**]... a large relationship between these variables (*r* = 0.59, *p* < .001). Compared to original data, the synthetic data showed maintained a similar visual relationship between years of education and reading scores (Figure 2A). General utility was high for both years of education (*S_pMSE* = `r round(language_s_pMSE_value$S_pMSE[1], digits = 2)`) and reading scores (*S_pMSE* = `r round(language_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. The statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(language_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(language_results_synthetic[1,]$effect_size, digits = 2)`), indicating high specific utility.
-
-UNCLEAR WHICH EFFECT SIZE WE'RE LOOKING AT IN THIS STUDY? CAN'T SEEM TO FIND IT IN THE ORIGINAL PAPER.
-
-**Also, ADD RANDOM EFFECTS STABILITY HERE**
+Clough et al. (2023) examined the interaction between group (traumatic brain injury (TBI) or neurotypical) and condition (basic emotion or social emotion emojis) on the accuracy of emotion recognition. A generalized linear mixed effects model indicated that participants with TBI were more likely to correctly identify basic emotions than social emotions when presented as emoji (*OR* = `r round(cognition$results_original$effect_size, digits = 2)`), *p* = `r round(cognition$results_original$p_value, digits = 3)`), whereas neurotypical participants did not differ in their ability to identify these emotions. Compared to original data, the synthetic data showed a similar distribution of responses for both basic and social emotions for the TBI group (Figure X). General utility was high for subject (*S_pMSE* = `r round(cognition$s_pMSE_value$S_pMSE[1], digits = 2)`) and condition (*S_pMSE* = `r round(cognition$s_pMSE_value$S_pMSE[3], digits = 2)`) variables. Specific utility was low as the statistical model with the synthetic data did not maintain the direction of statistical significance (*p* = `r round(cognition$results_synthetic$p_value[1], digits = 3)`)), even though the effect size magnitude was still considered large (*OR* = `r round(cognition$results_synthetic$effect_size[1], digits = 2)`). The random effect estimates were stable between the original (mean = `r round(cognition$results_original$random_mean, digits = 3)`, 95% CI: `r round(cognition$results_original$random_conf_int_lower, digits = 3)`, `r round(cognition$results_original$random_conf_int_upper, digits = 3)`) and synthetic (mean = `r round(cognition$results_synthetic$random_mean[1], digits = 3)`, 95% CI: `r round(cognition$results_synthetic$random_conf_int_lower[1], digits = 3)`, `r round(cognition$results_synthetic$random_conf_int_upper[1], digits = 3)`) datasets.
 
 ### Social Aspects of Communication
 ```{r echo = FALSE}
