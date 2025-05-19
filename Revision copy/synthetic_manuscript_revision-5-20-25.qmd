@@ -341,7 +341,8 @@ Synthetic data generation and statistical analyses were conducted in R version 4
 
 For example, consider a dataset containing three variables: participant ID, age, and weight. The process would begin by synthesizing participant ID through random sampling from its observed distribution. Age would then be synthesized conditionally based on the synthetic participant ID values, with synthetic values drawn from predictions informed by the original data. Finally, weight would be synthesized conditionally on both participant ID and age, with synthetic values similarly sampled from predictions.
 
-Synthpop inherently manages missing data and maintains relationships between missingness and other variables using a tree-based algorithm, specifically classification and regression trees (CART), for data synthesis [@nowok_etal16]. Alternatively, users can select other tree-based methods, such as random forests, or parametric models like linear or logistic regression. This process resembles multiple imputation by chained equations (MICE) for handling missing data [@vanbuuren_vanbuuren12] but with a key distinction: instead of imputing only missing values, synthpop generates entirely synthetic data [@raghunathan21], significantly reducing disclosure risk.
+Synthpop inherently manages missing data and maintains relationships between missingness and other variables using a tree-based algorithm, specifically classification and regression trees (CART), for data synthesis [@nowok_etal16]. Alternatively, users can select other tree-based methods, such as random forests, or parametric models like linear or logistic regression. This process resembles multiple imputation by chained equations (MICE) for handling missing data [@audigier_etal18] but with a key distinction: instead of imputing only missing values, synthpop generates entirely synthetic data [@raghunathan21a], significantly reducing disclosure risk.
+
 Nowok et al. (2016) provide an in-depth overview of the synthpop package’s features. Briefly, synthesis is largely automated using the syn() function. Users can customize various options, including the modeling approach, choice of predictors, order of synthesized variables, smoothing parameters for continuous variables to enhance privacy, and rules for maintaining logical relationships.
 
 ## Evaluation of General and Specific Utility
@@ -3641,13 +3642,11 @@ Table 3: Effect size measures and interpretation by statistical test.
 
 <br>
 
-Figure 1. Visualization of data distributions from synthetic and original data for Study #1 (Curtis et al., 2023). 
-
-*Caption*: Panel A displays the overall distribution of laryngeal vestibule residue. Panel B displays the frequency of values by bolus consistency.
+Figure 1. Visualization of original and synthetic data for swallowing, articulation, fluency, voice, hearing, and communication modality domains.
 
 <br>
 
-Figure 2. Visualization of data distributions from synthetic and original data for Study #2 (Thompson et al., 2023). 
+Figure 2. Visualization of original and synthetic data for language, cognition, and social communication domains. 
 
 *Caption*: Panel A displays the distribution of vowel space area and panel B displays the distribution of speech intelligibility.
 
