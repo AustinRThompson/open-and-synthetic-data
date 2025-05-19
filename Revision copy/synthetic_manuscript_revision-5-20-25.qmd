@@ -1,0 +1,3669 @@
+---
+title: "Using Synthetic Data in Communication Sciences and Disorders to Promote Transparency and Reproducibility"
+# Line break in title requires 2 spaces followed by \n
+author: |
+  James C. Borders^1^, Austin Thompson^2^, & Elaine Kearney^3,4^
+abstract: |
+  1.	Department of Speech, Language, and Hearing Sciences, Boston University
+  2.	Department of Communication Sciences and Disorders, University of Houston
+  3.	School of Health and Rehabilitation Sciences, University of Queensland, Brisbane, Australia
+  4.	Department of Speech Pathology, Princess Alexandra Hospital, Brisbane, Australia
+# specifies that the output will be a word document
+format:
+  docx:
+    # this holds the style template for the word document
+    reference-doc: "templates-data/custom-reference.docx"
+    # this holds the style template for the word document
+    pandoc_args: ["-Fpandoc-crossref"]
+# file with bibtex citations for the document. generated with the zotero plugin
+# or using the {rbbt} R package
+bibliography: "synthetic.bib"
+# this is the apa style for the document
+csl: apa.csl
+execute:
+  cache: false
+---
+
+<!-- <br> will create a blank line between text if needed.  -->
+
+<!-- A \ at the end of a line will cause a linebreak.  -->
+
+<!-- \newpage will create a page break to put the abstract on a new page -->
+
+::: {custom-style="noIndentParagraph"}
+<br>
+
+**Disclosures**:\
+The authors have no financial or non-financial disclosures.
+
+<br>
+
+**Corresponding Author**:\
+James C. Borders, PhD, CCC-SLP\
+
+<br>
+
+**Authorship Contributions** (CRediT taxonomy - https://casrai.org/credit/)\
+*Author Roles*: ^1^conceptualization, ^2^data curation, ^3^formal analysis, ^4^funding acquisition, ^5^investigation, ^6^methodology, ^7^project administration, ^8^resources, ^9^software, ^10^supervision, ^11^validation, ^12^visualization, ^13^writing -- original draft, ^14^writing -- reviewing & editing
+
+JCB: 1, 2, 3, 6, 9, 12, 13\
+AT: 1, 2, 3, 6, 9, 11, 12, 14\
+EK: 1, 2, 3, 6, 9, 11, 12, 14
+
+<br>
+
+**Ethical Approval**: This study was deemed exempt by the Human Research Ethics Committee at the University of Queensland (#2024/HE001484).
+
+<br>
+
+**Keywords**: Open data; Reproducibility; Meta-science; Communication sciences and disorders
+
+\newpage
+
+<!-- This code chunk is not shown. It allows you to set knitr options globally. -->
+
+```{r global options, include = FALSE, warning = FALSE, message = FALSE}
+# set global options
+knitr::opts_chunk$set(
+  include = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  cache = FALSE
+)
+
+# set seed for reproducibility
+set.seed(2024)
+
+# load packages
+library(tidyverse) # data wrangling
+library(here) # importing data
+library(synthpop) # synthetic data generation
+library(gamlss) # zero-inflated multilevel models
+library(flextable) # create tables
+library(officer) # create tables
+library(insight) # create tables
+library(cowplot) # figures
+library(remotes)
+library(printy) # printing pretty p-values [remotes::install_github("tjmahr/printy")]
+library(brms)
+library(rstan)
+
+# Function to add title to plots
+draw_label_theme <- function(label, theme = NULL, element = "text", ...) {
+  if (is.null(theme)) {
+    theme <- ggplot2::theme_get()
+  }
+  if (!element %in% names(theme)) {
+    stop("Element must be a valid ggplot theme element name")
+  }
+  
+  elements <- ggplot2::calc_element(element, theme)
+  
+  cowplot::draw_label(label, 
+                      fontfamily = elements$family,
+                      fontface = elements$face,
+                      colour = elements$color,
+                      size = elements$size,
+                      ...
+  )
+}
+```
+
+# Abstract {style="text-align: center;"}
+
+**Purpose**: Reproducibility is a core principle of science and access to a study’s data is essential to reproduce its findings. However, data sharing is uncommon in the field of Communication Sciences and Disorders (CSD), often due to concerns related to privacy and disclosure risks. Synthetic data offers a potential solution to this barrier by generating artificial datasets that do not represent real individuals yet retain statistical properties and relationships from the original data. This study aimed to explore the feasibility and preliminary utility of synthetic data promote transparency and reproducibility in the field of CSD.
+
+**Method**: Ten open datasets were obtained from previously published research within the American Speech-Language-Hearing Association ‘Big Nine’ domains (articulation, cognition, communication, fluency, hearing, language, social communication, voice and resonance, and swallowing) across a range of study outcomes and designs. Synthetic datasets were generated with the *synthpop* R package. General utility was assessed visually and with the standardized ratio of the propensity mean squared error (*S_pMSE*). Specific utility assessed whether inferential relationships from the original data were preserved in the synthetic dataset by comparing model fit indices, coefficients, and *p*-values.
+
+**Results**: All synthetic datasets showed strong general utility, maintaining univariate and bivariate distributions. Six of nine synthetic datasets that used inferential statistics showed strong specific utility, maintaining inferential relationships from the original analyses. Specific utility was low in three datasets with hierarchical structures.
+
+**Conclusion**: Findings suggest that synthetic data can effectively maintain statistical properties and relationships across a wide range of non-hierarchical data commonly seen in the field of CSD. Other approaches for hierarchical data need to be explored in future work. Researchers who use synthetic data should assess its utility in preserving their results for their own data and use-case.
+:::
+
+\newpage
+
+<!-- This is the title again using a first-level header -->
+
+# Introduction {style="text-align: center;"}
+
+Transparency and openness are fundamental tenets of science, with computational reproducibility playing a key role in maintaining these values. Computational reproducibility refers to the ability to recreate a study's results using the original data. Nowadays, the vast majority of scientific studies use some degree of computation in processing data, conducting descriptive or inferential statistics, and visualizing results. When these computations are reproducible, the transparency and confidence in findings are enhanced. Achieving computational reproducibility, however, requires authors to share their data. Both the National Institutes of Health and the National Science Foundation mandate data sharing and management plans to ensure that scientific data supporting a study is shared upon publication and aligns with FAIR (Findability, Accessibility, Interoperability, and Reuse) principles of digital assets [@wilkinson_etal16; @watson_etal23]. 
+
+Providing open, publicly available data benefits scientists, funding bodies, and society at large by enabling researchers to verify results, generate new knowledge (e.g., meta-analyses, secondary analyses), develop hypotheses, and minimize redundant data collection [@chow_etal23]. In this sense, sharing data promotes a cumulative and self-correcting science. Despite the clear benefits of open data and its growing adoption in other fields like psychology and the biobehavioral sciences [@quintana20], only 26% of a sample of researchers in the field of Communication Sciences and Disorders (CSD) reported sharing their data publicly at least once [@elamin_etal23]. 
+
+Understanding the nuances of data sharing requires a closer look at the different types of data generated throughout a research project’s life cycle. These include raw collected data, processed intermediate data, and final analysis data (Table 1). However, a common misconception is that open data refers solely to sharing raw data (e.g., audio recordings, videos, MRI data) [@pfeiffer_etal24]. In reality, sharing intermediate or analysis data can also support reproducibility while reducing privacy and confidentiality concerns associated with sharing raw data. However, these different types of data offer varying levels of utility: sharing raw data enables maximum reproducibility and secondary research opportunities, while analysis data (although easier to share) primarily supports computational reproducibility.
+
+##### Table 1 here.
+
+```{r table 1, echo = FALSE, include = TRUE}
+# This code reads in a template, generates table 2, 
+# and then saves it as word doc in the appropriate folder
+
+cols2 <- tibble(
+  ` ` = c(
+    "Description",
+    "Examples",
+    "Acoustic Data (Thompson et al., 2023)",
+    "Swallowing Data (Curtis et al., 2023)",
+    "Eye Tracking Data (Baron et al., 2023)",
+    "Focus Group or Interview Data (Pfeiffer et al., 2024)",
+    "Survey Data (Riccardi, 2024)",
+    "Assessment Tool Data (Pfeiffer & Landa, 2024)"
+  ),
+  `Raw Data` = c(
+    "Original, unmodified data collected from studies.\n\nAlso known as primary data, microdata, individual-level data.",
+    "",
+    "Raw audio recordings.",
+    "Video files from flexible endoscopic evaluations of swallowing.",
+    "Eye movement recordings (gaze, saccades, fixations).",
+    "Audio recordings and transcripts.",
+    "Raw survey responses.",
+    "Raw, unscored assessment protocols."
+  ),
+  `Intermediate Data` = c(
+    "Cleaned, de-identified, and processed data, used for creating the analysis data.\n\nAlso known as cleaned data, transactional data, processed data.",
+    "",
+    "Extracted formant data.",
+    "Not applicable.",
+    "Cleaned data with merged fixations and removed artifacts.",
+    "De-identified transcripts.",
+    "Cleaned and coded responses.",
+    "Scored protocols with calculated totals and subscales."
+  ),
+  `Analysis Data` = c(
+    "Final dataset containing variables used in statistical analyses.\n\nAlso known as derived data, result data, aggregate data.",
+    "",
+    "Dataset containing average vowel space area per speaker.",
+    "Dataset containing ratings of swallowing safety and efficiency.",
+    "Dataset containing summary of fixation durations, reading times, and target proportions.",
+    "Dataset containing coded categories and themes from qualitative analysis.",
+    "Dataset containing summary scores and frequencies of survey responses.",
+    "Dataset containing standard scores, confidence intervals, percentile ranks."
+  )
+)
+
+set_flextable_defaults(font.family = "Times New Roman")
+
+t2 <- flextable(cols2) |>
+  set_caption("Table 1: Description of types of data.") |> 
+  set_table_properties(layout = "autofit", width = 1) |>
+  bg(i = 2, bg = "#D3D3D3") # Change second row background to light grey
+
+doc <- read_docx(here("manuscript", "templates-data", "template.docx"))
+doc <- body_add_flextable(doc, value = t2)
+fileout <- here("manuscript", "tables-figures", "table1.docx") # uncomment to write in your working directory
+print(doc, target = fileout)
+```
+
+Both individual and system-level barriers hinder data sharing, including a lack of time, knowledge, support from colleagues, and perceived incentives [@pfeiffer_etal24]. Furthermore, each type of data comes with unique challenges regarding data sharing. For raw data, it is common that researchers often do not obtain consent to share data or cannot contact participants after data collection. Additionally, sharing de-identified raw or intermediate data may require additional approval from the institutional review board. Even when de-identification is possible, anonymized intermediate or analysis datasets can still carry re-identification risks, especially in small samples or vulnerable populations where indirect identifiers (e.g., gender, age, or race) may compromise participant confidentiality [@rocher_etal19]. Therefore, although sharing de-identified analysis data is the minimum requirement for ensuring computational reproducibility and promoting cumulative science, concerns about privacy must be addressed when sharing sensitive data.
+
+## Synthetic Data as an Approach to Promote Transparency and Reproducibility
+
+Synthetic data generation offers a promising solution to safeguarding participants’ privacy and confidentiality in publicly available datasets [@rubin93; @drechsler_haensch24]. This approach can be applied to a wide variety of data types (e.g., demographic information, outcome measures) and involves creating artificial datasets that do not represent real individuals, thereby significantly reducing the risk of disclosure. Importantly, synthetic data retains the statistical properties and relationships of the original data, enabling readers to evaluate key aspects of the study’s analysis workflow (e.g., data pre-processing, statistical modeling), reproduce study findings, explore datasets, and develop new questions or hypotheses. Synthetic data generation is widely used across medical research, industry, and government agencies, most notably by the United States Census Bureau [@jarmin_etal14a]. Although the concept of synthetic data methods was first proposed more than 30 years ago [@rubin93], recent analytic and software developments have streamlined the process, making it easier and more efficient to generate high-quality synthetic data [@nowok_etal16].
+
+Synthetic data are, however, not without limitations; the extent to which statistical properties of the original data are retained varies based on the dataset and the model used to synthesize the data [@matthews_harel11; @latner_etal24]. The intended use of synthetic data influences the level of rigor and scrutiny required. For example, synthetic data can serve as a pedagogical tool to teach data analysis skills or novel statistical methods [@shepherd_etal17]. In such cases, preserving general statistical properties is sufficient, even if precise relationships between variables are not fully maintained. Similarly, synthetic data accompanying publications can facilitate reproducible workflows to illustrate data pre-processing steps or statistical models without reproducing exact study results. However, higher standards are required when synthetic data is used for hypothesis testing, meta-analyses, or methodological development [@raab_etal17]. In these scenarios, synthetic datasets must accurately preserve multivariable relationships to ensure their validity and utility.
+
+Two main approaches are used to assess the utility of synthetic datasets: general and specific [@snoke_etal18]. General utility evaluates whether the synthetic dataset maintains the overall statistical properties of the original dataset. This includes visual comparisons of univariate (e.g., bar charts, histograms) and bivariate joint distributions (e.g., scatterplots), as well as metrics to determine to what degree synthetic data is distinguishable from the original data (e.g., standardized propensity mean squared error; *S_pMSE*). Specific utility assesses whether inferential relationships from the original dataset are preserved in the synthetic dataset by comparing model fit indices and coefficients.
+
+## Application of Synthetic Data in Communication Sciences and Disorders
+
+Despite its potential to enhance data sharing in the field of CSD, synthetic data is not widely known or adopted in the field. Data commonly collected in CSD research poses unique challenges, including smaller sample sizes than are typically recommended for synthetic data generation and a wide range of study designs, outcomes, and analyses [@borders_etal22a; @gaeta_brydges20]. Moreover, reproducible workflows that detail important steps for data wrangling or statistical modeling are rarely provided in publications, further hindering transparency and reproducibility.
+
+To address this gap, the present study aimed to explore the feasibility and preliminary utility of synthetic data generation in CSD. We applied synthetic data methods to open datasets from the ‘Big Nine’ American Speech-Language-Hearing Association (ASHA) domains and hypothesized that synthetic datasets would preserve both the statistical properties (general utility) and the inferential results (specific utility) of the original data. It’s important to recognize that synthetic data must be evaluated on a case-by-case basis and that the utility of the datasets included in this manuscript may not apply to one’s own dataset. To this end, the broad goal of the current investigation was to provide a proof-of-concept to the interested reader.
+
+# Method
+
+## Description of Original Datasets from ASHA 'Big Nine' Domains
+
+A convenience sampling approach was used to identify publicly available datasets from previously published research articles related to the ‘Big Nine’ ASHA domains: swallowing [@curtis_etal23a], articulation [@thompson_etal23], fluency [@elsherif_etal21], voice and resonance [@novotny_etal16], hearing [@battal_etal19], communication modalities [@king_etal22], receptive and expressive language [@kearney_etal23; @robinaugh_etal24a], cognitive aspects of communication [@clough_etal23], and social aspects of communication [@chanchaochai_schwarz23]. The datasets were identified through searching keywords related to the ASHA domains on the Open Science Framework and other data aggregator sites (e.g., UK Data Service), as well as through the authors’ prior research. Given the prevalence of single subject experimental designs in the field of CSD, an additional study was included to ensure adequate representation [@robinaugh_etal24a], resulting in ten studies. These studies were classified by their study design, population, and statistical analysis (Table 2).
+
+It is important to note that not *all* research designs are represented due to the limited availability of public data in the field of CSD and the inherent challenge of including every possible study design. Instead, this approach was chosen to prioritize representation across all subfields to illustrate the application of synthetic data methods in CSD. To demonstrate the feasibility and preliminary utility of synthetic data, an analysis was chosen from each study and synthetic data was generated for those variables, as described below.
+
+##### Table 2 here.
+
+```{r table 2, echo = FALSE, include = TRUE}
+# This code reads in a template, generates table 2, 
+# and then saves it as word doc in the appropriate folder
+
+cols2 <- tibble(
+  `Study` = c(
+    "Curtis et al. (2023)",
+    "Thompson et al. (2023)",
+    "Elsherif et al. (2021)",
+    "Novotný et al. (2016)",
+    "Battal et al. (2019)",
+    "King et al. (2022)",
+    "Kearney et al. (2023)",
+    "Robinaugh et al. (2024)",
+    "Clough et al. (2023)",
+    "Chanchaochai & Schwarz (2023)"
+  ),
+    `Domain` = c(
+    "Swallowing",
+    "Articulation",
+    "Fluency",
+    "Voice and resonance",
+    "Hearing",
+    "Communication modalities",
+    "Receptive and expressive language",
+    "Receptive and expressive language",
+    "Cognitive aspects of communication",
+    "Social aspects of communication"
+  ),
+  `Study Design` = c(
+    "Descriptive, observational, cohort study",
+    "Analytical, observational, between-subject, cross-sectional study",
+    "Analytical, observational, between-subject, cross-sectional study",
+    "Analytical, observational, between-subject, cross-sectional study",
+    "Analytical, experimental, between- and within-subject, cross-sectional study",
+    "Analytical, observational, between-subject, cross-sectional study",
+    "Analytical, observational, between- and within-subject, cross-sectional study",
+    "Analytical, experimental, within-subject, single-case study",
+    "Analytical, experimental, between- and within-subject, cross-sectional study",
+    "Analytical, observational, between-sujbect, cross-sectional study"
+  ),
+  `Sample Size` = c(
+    "39",
+    "40",
+    "164",
+    "111",
+    "34",
+    "160",
+    "34",
+    "1",
+    "102",
+    "96"
+  ),
+  `Population(s)` = c(
+    "Neurotypical",
+    "Parkinson’s disease, amyotrophic lateral sclerosis, Huntington’s disease, cerebellar ataxia",
+    "Dyslexia, stuttering, neurotypical",
+    "Parkinson’s disease, Huntington’s disease, neurotypical",
+    "Congenitally blind, sighted",
+    "Speech-language pathologists",
+    "Brain tumor",
+    "Primary progressive aphasia with a history of traumatic brain injury",
+    "Traumatic brain injury, neurotypical",
+    "Autism spectrum disorder, neurotypical"
+  ),
+  `Analysis of Interest` = c(
+    "Distribution of laryngeal vestibule residue ratings",
+    "Relationship between vowel space area and intelligibility",
+    "Group difference in nonword repetition",
+    "Relationship between overall perceptual rating and variability of nasality",
+    "Group difference in auditory localization",
+    "Timepoint difference in lack of/limited internet and technology barriers",
+    "Relationship between years of education and reading score",
+    "Treatment gains for trained words",
+    "Group by condition interaction in emotion recognition accuracy",
+    "Group difference in non-verbal IQ"
+  ),
+  `Outcome Type(s)` = c(
+    "Continuous",
+    "Continuous",
+    "Continuous",
+    "Continuous",
+    "Continuous",
+    "Ordinal",
+    "Continuous",
+    "Binary",
+    "Binary",
+    "Continuous"
+  ),
+  `Statistics` = c(
+    "Descriptive",
+    "Hierarchical linear regression",
+    "Independent t-test",
+    "Pearson correlation",
+    "Linear mixed-effects model with 3-way interaction",
+    "Chi-square",
+    "Spearman’s rank correlation coefficient",
+    "Bayesian generalized mixed effects model",
+    "Generalized linear mixed-effects model with 3-way interaction",
+    "Analysis of Variance"
+  )
+)
+
+set_flextable_defaults(font.family = "Times New Roman")
+
+t2 <- flextable(cols2) |>
+  set_caption("Table 2: Characteristics of included studies by ASHA domain.") |> 
+  set_table_properties(layout = "autofit", width = 1)
+
+doc <- read_docx(here("manuscript", "templates-data", "template.docx"))
+doc <- body_add_flextable(doc, value = t2)
+fileout <- here("manuscript", "tables-figures", "table2.docx") # uncomment to write in your working directory
+print(doc, target = fileout)
+```
+
+## Generation of Synthetic Datasets and Comparison with Original Dataset
+
+Synthetic data generation and statistical analyses were conducted in R version 4.2.1 [@rcoreteam22]. The *synthpop* R package (version 1.8.0) [@nowok_etal16] was used to generate synthetic data via complete conditional specification [@drechsler_haensch24]. This method synthesizes one variable at a time: the first variable is generated by random sampling from the original dataset, and subsequent variables are synthesized conditionally based on previously synthesized variables. This stepwise approach captures relationships between variables incrementally rather than attempting to synthesize all relationships simultaneously. 
+
+For example, consider a dataset containing three variables: participant ID, age, and weight. The process would begin by synthesizing participant ID through random sampling from its observed distribution. Age would then be synthesized conditionally based on the synthetic participant ID values, with synthetic values drawn from predictions informed by the original data. Finally, weight would be synthesized conditionally on both participant ID and age, with synthetic values similarly sampled from predictions.
+
+Synthpop inherently manages missing data and maintains relationships between missingness and other variables using a tree-based algorithm, specifically classification and regression trees (CART), for data synthesis [@nowok_etal16]. Alternatively, users can select other tree-based methods, such as random forests, or parametric models like linear or logistic regression. This process resembles multiple imputation by chained equations (MICE) for handling missing data [@vanbuuren_vanbuuren12] but with a key distinction: instead of imputing only missing values, synthpop generates entirely synthetic data [@raghunathan21], significantly reducing disclosure risk.
+Nowok et al. (2016) provide an in-depth overview of the synthpop package’s features. Briefly, synthesis is largely automated using the syn() function. Users can customize various options, including the modeling approach, choice of predictors, order of synthesized variables, smoothing parameters for continuous variables to enhance privacy, and rules for maintaining logical relationships.
+
+## Evaluation of General and Specific Utility
+
+In the present study, we aimed to explore the feasibility and preliminary utility of synthetic data to promote transparency and reproducibility in CSD. Utility was operationalized as general (does the synthetic data resemble the original data in its statistical properties and distribution?) and specific (is the inferential relationship between variables maintained?). To evaluate general utility, we visually compared univariate (e.g.., bar charts, histograms) and bivariate joint distributions (e.g., scatterplots) between the original and synthetic dataset, and evaluated the predicted probability that a record comes from the synthetic versus original data, known as the standardized propensity mean squared error (*S_pMSE*). Standardized propensity scores closer to zero indicate greater general utility (typically with a standard deviation of one), where a value of zero indicates that the original and synthetic data are identical [@snoke_etal18]. Notably, a value of zero is highly unlikely since synthetic data generation aims to achieve distributional similarity.
+
+To assess specific utility, a statistical analysis was selected from each study and performed separately with the original and the synthetic data. Greater overlap in effect size or coefficient confidence intervals and similar p-value inferences (i.e., significant or non-significant) indicated greater specific utility. Since Curtis et al. (2023) examined median and interquartile ranges (IQR) instead of inferential statistical models, only general utility was examined. The pre-registered analysis plan and corresponding deviations are publicly available on the Open Science Framework (https://osf.io/vhgq2).
+
+
+##### Table 3 here.
+
+```{r table 3, echo = FALSE, include = TRUE}
+cols3 <- tibble(
+    `Statistical Test` = c(
+    "Hierarchical linear regression",
+    "Independent t-test",
+    "Correlation (Pearson’s, Spearman’s)",
+    "Chi-square",
+    "Generalized linear model"
+  ),
+  `Effect Size Measure` = c(
+    "Cohen’s f\n(Cohen, 1988)",
+    "Cohen’s d (Cohen, 1988) &\nGlass' Δ (Hedges & Olkin, 1985)",
+    "Correlation coefficient\n(Cohen, 1988)",
+    "Cohen's 𝜔\n(Cohen, 1988)",
+    "√(3/𝜋) x odds ratio\n(Haddock et al., 1998; Hasselblad & Hedges, 1995)"
+  ),
+  `Small` = c(
+    "0.1",
+    "0.2",
+    "0.1",
+    "0.1",
+    "0.2"
+  ),
+  `Medium` = c(
+    "0.25",
+    "0.5",
+    "0.3",
+    "0.3",
+    "0.5"
+  ),
+  `Large` = c(
+    "0.4",
+    "0.8",
+    "0.5",
+    "0.5",
+    "0.8"
+  )
+)
+
+set_flextable_defaults(font.family = "Times New Roman")
+
+t3 <- flextable(cols3) |>
+  set_caption("Table 3: Effect size measures and interpretation by statistical test.") |> 
+  set_table_properties(layout = "autofit", width = 1)
+
+doc <- read_docx(here("manuscript", "templates-data", "template.docx"))
+doc <- body_add_flextable(doc, value = t3)
+fileout <- here("manuscript", "tables-figures", "table3.docx")
+print(doc, target = fileout)
+```
+
+# Results
+
+### Swallowing
+```{r}
+# Import original data ----
+swallowing_data_original <-
+  read.csv(here::here("Data/01_Swallowing/norms_ratings.csv")) |>
+  # clean variable names
+  janitor::clean_names() |>
+  # select only relevant variables
+  dplyr::select(c(study_id, bolus_consistency, laryngeal_vestibule_severity_rating)) |> 
+  mutate(bolus_consistency = as.factor(bolus_consistency),
+         study_id = as.factor(study_id),
+         # express laryngeal_vestibule_severity_rating as a percentage
+         laryngeal_vestibule_severity_rating = laryngeal_vestibule_severity_rating/100,
+         dataset_type = "Original",
+         dataset_number = 0)
+
+# Create synthetic datasets ----
+swallowing_data_synthetic <- syn(swallowing_data_original, 
+             method = "ctree", 
+             m = 100,
+             seed = 2024)
+
+swallowing_data_synthetic_first <- swallowing_data_synthetic$syn[[1]]
+
+# General Utility ----
+
+# Combine the data frames
+swallowing_combined_data <- swallowing_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(swallowing_data_original)
+
+# Calculate utility with s_pMSE
+utility_df <- utility.tables(
+  swallowing_data_synthetic_first,
+  swallowing_data_original,
+  vars = "laryngeal_vestibule_severity_rating",
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+swallowing_s_pMSE_value <- utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname") |>
+  dplyr::pull(S_pMSE)
+
+# Create a new categorical variable
+swallowing_combined_data <- swallowing_combined_data |> 
+  mutate(severity_category = ifelse(laryngeal_vestibule_severity_rating == 0, "0%", "> 0"))
+
+# Bar plot for frequency of 0's
+p1 <- swallowing_combined_data |> 
+  filter(severity_category == "0%") |> 
+  ggplot(aes(x = severity_category, fill = dataset_type)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "",
+       y = "Frequency") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        # axis.title.x = element_blank(),
+        axis.title.y = element_text(margin = margin(r = 8))) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 470))
+
+# Density plot for values > 0
+p2 <- swallowing_combined_data |> 
+  filter(severity_category == "> 0") |> 
+  ggplot(aes(x = laryngeal_vestibule_severity_rating, color = dataset_type, fill = dataset_type)) +
+  geom_density(alpha = 0.80) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  # scale_x_continuous(limits = c(1, 50)) +
+  labs(x = "",
+       y = "Density",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(labels = scales::percent, limits = c(0.01, 0.45),
+                     breaks = c(0.01, 0.1, 0.2, 0.3, 0.4)) +
+  theme(legend.position = "top",
+        legend.title = element_blank(),
+        legend.direction = "horizontal",
+        legend.justification = "center",
+        axis.title.y = element_text(margin = margin(r = 8)))
+
+# Extract the legend from p2
+legend_components <-  cowplot::get_plot_component(p2, 'guide-box-top', return_all = TRUE)
+legend <- cowplot::ggdraw(legend_components)
+
+# Add title
+title <- ggdraw() +
+  draw_label_theme("A: Swallowing (Curtis et al., 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plots without legends
+combined_plots <- cowplot::plot_grid(p1, p2 + theme(legend.position = "none"), rel_widths = c(0.40, 1))
+
+# Arrange the plots and legend
+final_plot <- cowplot::plot_grid(
+  title,
+  combined_plots,
+  ncol = 1,
+  rel_heights = c(
+    0.2, 
+    3)
+)
+
+# Add a shared x-axis label
+swallowing_general_utility_plot <- cowplot::ggdraw(final_plot) +
+  cowplot::draw_label("Laryngeal Vestibule Residue Rating", x = 0.5, y = 0.02, 
+                      vjust = 0, hjust = 0.5, size = 15)
+```
+
+Curtis et al. (2023) provided normative reference values for swallowing outcomes during flexible endoscopic evaluations of swallowing in a sample of 39 community-dwelling adults without dysphagia. In this observational cohort study, each participant completed 15 swallowing trials that varied by bolus size, consistency, contrast agent, and swallowing instructions. Several swallowing outcomes were measured, including the amount of laryngeal vestibule residue, which was rated using the Visual Analysis of Swallowing Efficiency and Safety. No inferential statistics were conducted; instead, the distribution of laryngeal vestibule residue ratings was summarized using median and interquartile ranges.
+
+In the synthetic dataset, the primary outcome (laryngeal vestibule residue ratings) closely mirrored the original data (Figure 1A). The frequency of zero values was nearly identical and the distribution of values greater than zero was also similar, with only minor deviations at higher residue ratings. The *S_pMSE* value was `r round(swallowing_s_pMSE_value, digits = 2)`, indicating strong overall similarity and general utility between the synthetic and original data.
+
+##### Figure 1 here.
+
+### Articulation
+
+```{r echo = FALSE}
+# Import original data ----
+articulation_data_original <- rio::import(
+  file = here::here("Data", "02_Articulation", "data_Acoustic Measures.csv")
+) |>
+  
+  # Remove the reliability trials that have "_rel" in the SpeakerID variable
+  dplyr::filter(!str_detect(SpeakerID, "_rel")) |>
+  
+  # Selecting just the variables we need
+  dplyr::select(
+    VSA_b, # VSA in Bark
+    Int = Int_OT # intelligibility (orthographic transcriptions)
+  )
+
+# Create synthetic datasets ----
+articulation_data_synthetic <- syn(articulation_data_original, 
+             method = "ctree", 
+             m = 100,
+             seed = 2024)
+
+articulation_data_synthetic_first <- articulation_data_synthetic$syn[[1]]
+
+# General Utility ----
+
+# Calculate utility with s_pMSE
+articulation_utility_df <- utility.tables(
+  articulation_data_synthetic_first,
+  articulation_data_original,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+articulation_s_pMSE_value <- articulation_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Extract the data frames
+articulation_data_original <- articulation_data_original |> 
+  mutate(dataset_type = "Original")
+
+# Combine the data frames
+articulation_combined_data <- articulation_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(articulation_data_original)
+
+# Scatterplot
+articulation_p1 <- 
+  articulation_combined_data |> 
+  ggplot(aes(x = VSA_b, y = Int, color = dataset_type, fill = dataset_type)) +
+  geom_point(alpha = 0.80, size = 2.5) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_x_continuous(breaks = c(1, 3, 6, 9, 12)) +
+  scale_y_continuous(limits = c(0, 100), breaks = c(0, 25, 50, 75, 100)) +
+  labs(x = "Vowel Space Area",
+       y = "Intelligibility",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8)))
+
+# Add title
+articulation_title <- ggdraw() +
+  draw_label_theme("B: Articulation (Thompson et al., 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+articulation_final_plot <- cowplot::plot_grid(
+  articulation_title,
+  articulation_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Specific Utility ----
+
+articulation_alpha = .05
+
+## Perform regression between Intelligibility and VSA (bark)
+articulation_analyze_data <- function(data) {
+  model <- lm(Int ~ VSA_b, data = data) # Creating the model
+  model_fit <- summary(model, save=TRUE) # Saving the model
+  
+  list(
+    p_value = model_fit$coefficients[8], # Extracting p-values
+    effect_size = effectsize::cohens_f(model, partial = F)$Cohens_f, # Extracting effect size
+    conf_int_lower = confint(model)[2, ][1], # Extracting lower CI bound
+    conf_int_upper = confint(model)[2, ][2] # Extracting upper CI bound
+    )
+}
+
+# Reproduce original results ----
+articulation_results_original <- (articulation_analyze_data(articulation_data_original)) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < articulation_alpha ~ "sig",
+      p_value >= articulation_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.40 ~ "Large",
+                               abs(effect_size) >= 0.25 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
+
+
+## Perform analysis on each synthetic dataset
+articulation_results_synthetic <- articulation_data_synthetic$syn |>
+  purrr::map_df(~ articulation_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(p_value < articulation_alpha ~ "sig",
+                    p_value >= articulation_alpha ~ "non-sig"),
+    categorization = case_when(
+      abs(effect_size) >= 0.40 ~ "Large",
+      abs(effect_size) >= 0.25 ~ "Medium",
+      abs(effect_size) >= 0.1 ~ "Small",
+      TRUE ~ "Negligible"
+    ),
+     # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - articulation_results_original$p_value),
+    diff_effectSize = abs(effect_size - articulation_results_original$effect_size)
+  ) |> 
+  add_column(domain = "Articulation")
+
+# Compile results ----
+articulation_results_summary <- data_frame(
+  Domain = "Articulation",
+  Study = "Thompson et al. (2023)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(articulation_data_original),
+  p_value = ifelse(
+    articulation_results_original$p_value < .001,"<.001",
+    sprintf("%0.3f", articulation_results_original$p_value)),
+  effect_size_measure = "Cohen’s f",
+  effect_size = round(articulation_results_original$effect_size, digits = 2), 
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = articulation_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(articulation_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == articulation_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(articulation_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(articulation_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = articulation_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(articulation_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == articulation_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(articulation_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(articulation_results_synthetic$diff_effectSize),
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+articulation <- list(
+  data_original = articulation_data_original,
+  data_synthetic = articulation_data_synthetic,
+  results_original = articulation_results_original,
+  results_synthetic = articulation_results_synthetic,
+  results_summary = articulation_results_summary,
+  alpha = articulation_alpha
+)
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = articulation,
+              file = here::here("Data","02_Articulation","analysisData.RDS"))
+```
+
+Thompson et al. (2023) examined the relationship between vowel space area and speech intelligibility among 40 speakers with dysarthria of varying etiologies (e.g., Parkinson's disease, amyotrophic lateral sclerosis, Huntington's disease, and ataxia). A linear regression model revealed a statistically significant relationship between vowel space area and intelligibility (*p* \< .001) with a Cohen's *f* of 0.59, corresponding to a conventionally "large" effect size (Table 3).
+
+Compared to original data, the synthetic data demonstrated a similar distribution (Figure 1B). General utility was high for both variables of vowel space area (*S_pMSE* = `r round(articulation_s_pMSE_value$S_pMSE[1], digits = 2)`) and intelligibility (*S_pMSE* = `r round(articulation_s_pMSE_value$S_pMSE[2], digits = 2)`). Specific utility was high as the statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(articulation_results_synthetic[1,]$p_value)`) and effect size magnitude (*f* = `r round(articulation_results_synthetic[1,]$effect_size, digits = 2)`).
+
+### Fluency
+```{r echo = FALSE}
+# Import original data ----
+fluency_data_original <- rio::import(file = here::here("Data", 
+                                                       "03_Fluency", 
+                                                       "data_Dyslexia Stutter Master.csv")) |>
+  dplyr::filter(Rejection == 0) |>
+  dplyr::filter(Group != "AWD") |>
+  # Selecting just the variables that we need
+  dplyr::select(Subject, Group, Nonwordrepetition)
+
+# Establish p_value for study
+fluency_alpha <- .05
+
+# Create synthetic datasets ----
+fluency_data_synthetic <- syn(fluency_data_original, 
+             method = "ctree", 
+             m = 100,
+             seed = 2024)
+
+fluency_data_synthetic_first <- fluency_data_synthetic$syn[[1]]
+
+# General Utility ----
+
+# Calculate utility with s_pMSE
+fluency_utility_df <- utility.tables(
+  fluency_data_synthetic_first,
+  fluency_data_original,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+fluency_s_pMSE_value <- fluency_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Extract the data frames
+fluency_data_original <- fluency_data_original |> 
+  mutate(dataset_type = "Original")
+
+# Combine the data frames
+fluency_combined_data <- fluency_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(fluency_data_original)
+
+# Data viz
+fluency_p1 <- 
+  fluency_combined_data |> 
+  mutate(Group = case_when(Group == "AWS" ~ "Adults Who Stutter",
+                           Group == "NT" ~ "Neurotypical Adults")) |> 
+  ggplot(aes(x = Nonwordrepetition, 
+             color = dataset_type, fill = dataset_type)) +
+  geom_density(alpha = 0.80) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_x_continuous(breaks = c(0, 5, 10, 15, 20),
+                     limits = c(0, 22)) +
+  labs(x = "Non-word Repetition",
+       y = "Density",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  facet_wrap(~Group, nrow = 2)
+
+# Add title
+fluency_title <- ggdraw() +
+  draw_label_theme("C: Fluency (Elsherifa et al., 2021)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+fluency_final_plot <- cowplot::plot_grid(
+  fluency_title,
+  fluency_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Specific Utility ----
+# Examine the difference between neurotypical and stuttering in non-word repetition
+fluency_analyze_data <- function(data) {
+  t_test <- stats::t.test(
+    Nonwordrepetition ~ Group,
+    data = data,
+    paired = FALSE,
+    var.equal = FALSE
+  )
+
+  list(
+    p_value = t_test$p.value,# Extracting p-values
+    effect_size = effectsize::glass_delta(Nonwordrepetition ~ Group,
+                                 data = data,
+                                 correction = FALSE,
+                                 ci = 0.95)$Glass_delta, # Extracting effect size
+    conf_int_lower = t_test$conf.int[1],# Extracting lower CI bound
+    conf_int_upper = t_test$conf.int[2] # Extracting upper CI bound
+  )
+}
+
+# Reproduce original results ----
+fluency_results_original <- (fluency_analyze_data(fluency_data_original)) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(p_value < fluency_alpha ~ "sig",
+                    p_value >= fluency_alpha ~ "non-sig"),
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
+
+# Perform analysis on synthetic dataset
+fluency_results_synthetic <- fluency_data_synthetic$syn |>
+  purrr::map_df(~ fluency_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(p_value < fluency_alpha ~ "sig",
+                    p_value >= fluency_alpha ~ "non-sig"),
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - fluency_results_original$p_value),
+    diff_effectSize = abs(effect_size - fluency_results_original$effect_size)
+  ) |> 
+  add_column(domain = "Fluency")
+
+# Compile results ----
+fluency_results_summary <- data_frame(
+  Domain = "Fluency",
+  Study = "Elsherif et al. (2021)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(fluency_data_original),
+  p_value = ifelse(
+    fluency_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", fluency_results_original$p_value)),
+  effect_size_measure = "Glass' Δ",
+  effect_size = round(fluency_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = fluency_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(fluency_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == fluency_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(fluency_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(fluency_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = fluency_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(fluency_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == fluency_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(fluency_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(fluency_results_synthetic$diff_effectSize),
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+fluency <- list(
+  data_original = fluency_data_original,
+  data_synthetic = fluency_data_synthetic,
+  results_original = fluency_results_original,
+  results_synthetic = fluency_results_synthetic,
+  results_summary = fluency_results_summary,
+  alpha = fluency_alpha
+)
+
+## Cleaning up the environment
+# rm(
+#   fluency_data_original,
+#   fluency_data_synthetic,
+#   fluency_results_original,
+#   fluency_results_synthetic,
+#   fluency_results_summary,
+#   fluency_alpha
+# )
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = fluency,
+              file = here::here("Data","03_Fluency","analysisData.RDS"))
+```
+
+Elsherif et al. (2021) compared non-word repetitions between 80 neurotypical adults and 34 adults who stutter. An independent samples t-test demonstrated a statistically significant difference in non-word repetitions between these groups (*p* \< .001) with a large effect size (Δ = 1.26).
+
+Compared to original data, the synthetic data similar distributions (Figure 1C). General utility was high for the outcome of non-word repetitions (*S_pMSE* = `r round(fluency_s_pMSE_value$S_pMSE[3], digits = 2)`) and the statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(fluency_results_synthetic[1,]$p_value)`) and effect size magnitude (*f* = `r abs(round(fluency_results_synthetic[1,]$effect_size, digits = 2))`).
+
+### Voice and Resonance
+```{r echo = FALSE}
+# Load data ----
+voice_data_original <-
+  readxl::read_excel(here::here("Data/04_Voice_Resonance/RawData.xlsx"), 
+                     range = "B3:Z114") |>
+  # clean variable names
+  janitor::clean_names() |>
+  # select only relevant variables
+  dplyr::select(c(efn_sd_d_b, median_of_raters)) |> 
+  mutate(median_of_raters_cat = case_when(median_of_raters == 0 ~ "Normal",
+                                      median_of_raters == 1 ~ "Mild",
+                                      median_of_raters == 2 ~ "Moderate",
+                                      median_of_raters == 3 ~ "Severe"),
+         median_of_raters_cat = factor(median_of_raters_cat,
+                                   levels = c("Normal", "Mild", "Moderate"))) |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Establish p_value for study
+voice_alpha <- .05
+
+voice_data_synthetic <- syn(voice_data_original, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+# General Utility ----
+
+voice_data_synthetic_first <- voice_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+# Combine the data frames
+voice_combined_data <- voice_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(voice_data_original)
+
+# Calculate utility with s_pMSE
+voice_utility_df <- utility.tables(
+  voice_data_synthetic_first,
+  voice_data_original,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+voice_s_pMSE_value <- voice_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Scatterplot
+voice_p1 <- voice_combined_data |> 
+  ggplot(aes(x = efn_sd_d_b, color = dataset_type, fill = dataset_type)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_x_continuous(limits = c(-1, 17)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Variability of Nasality",
+       y = "Density",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  facet_wrap(~median_of_raters_cat, nrow = 3, scales = "free_x")
+
+# Add title
+voice_title <- ggdraw() +
+  draw_label_theme("D: Voice (Novotny et al., 2016)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+voice_final_plot <- cowplot::plot_grid(
+  voice_title,
+  voice_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Specific Utility ----
+# Examine correlation between overall perceptual rating and acoustic EFn SD parameter
+voice_analyze_data <- function(data) {
+  # Creating the model
+  model <- cor.test(data$median_of_raters,
+                    data$efn_sd_d_b,
+                    method = "pearson")
+  
+  list(
+    p_value = model$p.value, # Extracting p-values
+    effect_size = model$estimate, # Extracting effect size
+    conf_int_lower = model[["conf.int"]][1], # Extracting lower CI bound
+    conf_int_upper = model[["conf.int"]][2] # Extracting upper CI bound
+  )
+}
+
+# Reproduce original results ----
+voice_results_original <- voice_analyze_data(voice_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < voice_alpha ~ "sig",
+      p_value >= voice_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
+
+# Create synthetic data ----
+# Perform analysis on each synthetic dataset
+voice_results_synthetic <- voice_data_synthetic$syn |>
+  purrr::map_df(~ voice_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(
+      p_value < voice_alpha ~ "sig",
+      p_value >= voice_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - voice_results_original$p_value),
+    diff_effectSize = abs(effect_size - voice_results_original$effect_size)
+  ) |> 
+  add_column(domain = "Voice and resonance")
+
+# Compile results ----
+voice_results_summary <- data_frame(
+  Domain = "Voice",
+  Study = "Novotný et al. (2016)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(voice_data_original),
+  p_value = ifelse(
+    voice_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", voice_results_original$p_value)),
+  effect_size_measure = "Correlation coefficient",
+  effect_size = round(voice_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = voice_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(voice_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == voice_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(voice_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(voice_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = voice_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(voice_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == voice_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(voice_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(voice_results_synthetic$diff_effectSize),
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+voice <- list(
+  data_original = voice_data_original,
+  data_synthetic = voice_data_synthetic,
+  results_original = voice_results_original,
+  results_synthetic = voice_results_synthetic,
+  results_summary = voice_results_summary,
+  alpha = voice_alpha
+)
+
+## Cleaning up the environment
+# rm(
+#   voice_data_original,
+#   voice_data_synthetic,
+#   voice_results_original,
+#   voice_results_synthetic,
+#   voice_results_summary,
+#   voice_alpha
+# )
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = voice,
+              file = here::here("Data","04_Voice_Resonance","analysisData.RDS"))
+```
+
+Novotny et al. (2016) examined the relationship between acoustic measures of nasality variability and overall perceptual ratings in a heterogenous cohort of individuals with Parkinson's disease, Huntington's disease, and neurotypical adults. Results indicated a statistically significant relationship (*r* = 0.51, *p* \< .001) between perceptual ratings and acoustic nasality variability. Compared to original data, the synthetic data demonstrated similar values for nasality variability within perceptual ratings of 'Normal' and 'Mild', though values for 'Moderate' perceptual ratings showed larger variance likely due to its low occurrence in the dataset (Figure 1D). General utility was high for both nasality variability (*S_pMSE* = `r round(voice_s_pMSE_value$S_pMSE[1], digits = 2)`) and perceptual rating (*S_pMSE* = `r round(voice_s_pMSE_value$S_pMSE[2], digits = 2)`). The statistical model with the synthetic data maintained the direction of statistical significance (*p* `r fmt_p_value(voice_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(voice_results_synthetic[1,]$effect_size, digits = 2)`), indicating adequate specific utility.
+
+### Hearing
+```{r echo = FALSE}
+# Load packages
+library(nlme) # linear mixed models
+
+# Import original data ----
+plane.thre.out <- read.table(here::here("Data/05_Hearing/All_Thresholds_outliersmarked-500B.txt"), 
+                             sep=",", header=T)
+
+## data wrangling from author's code
+# Convert variables to factors
+names(plane.thre.out)[4]<-c('head')
+plane.thre.out$arm <- factor(plane.thre.out$arm)
+plane.thre.out$subj <- factor(plane.thre.out$subj)
+plane.thre.out$head <- factor(plane.thre.out$head)
+plane.thre.out$planes <- factor(plane.thre.out$planes)
+plane.thre.out$group <- ifelse(plane.thre.out$group=='EB', c('CB'), c('SC'))
+plane.thre.out$group <-factor(plane.thre.out$group)
+
+#omit all +-3SD outliers 
+plane.thre.out<- subset(plane.thre.out, outlier==0)
+plane.thre.out[which(plane.thre.out$thre >12),]
+
+#divide back
+horizontal.thre.out <- subset(plane.thre.out,planes=='hor')
+vertical.thre.out <- subset(plane.thre.out,planes=='ver')
+
+rownames(horizontal.thre.out) <-c(1:nrow(horizontal.thre.out)) #correct the row numbers
+horizontal.thre.out[which(horizontal.thre.out$thre >10),] # we know from glmm there's one outlier
+horizontal.thre.out <-horizontal.thre.out[-c(188),] 
+
+rownames(vertical.thre.out) <-c(1:nrow(vertical.thre.out))
+vertical.thre.out[which(vertical.thre.out$thre >12),] # we know from glmm there's one outlier
+vertical.thre.out <-vertical.thre.out[-c(144),] 
+
+# in the horizontal back condition left arm is right area // right arm is left area of the subject
+hor.thre.front <- subset(horizontal.thre.out, head ==1)
+hor.thre.back <- subset(horizontal.thre.out, head ==2)
+
+hor.thre.back$arm <-as.character(hor.thre.back$arm)
+hor.thre.back <- within(hor.thre.back, arm[arm=="left"] <-("Alien"))#just to assign into a temp
+hor.thre.back <- within(hor.thre.back, arm[arm=='right'] <- 'left')
+hor.thre.back <- within(hor.thre.back, arm[arm=='Alien'] <- 'right')
+
+horizontal.thre.out <-rbind(hor.thre.front,hor.thre.back)
+
+# combine them back
+plane.thre.out <- rbind(horizontal.thre.out,vertical.thre.out)
+plane.thre.out$arm <- factor(plane.thre.out$arm)
+plane.thre.out$subj <- factor(plane.thre.out$subj)
+plane.thre.out$head <- factor(plane.thre.out$head)
+plane.thre.out$planes <- factor(plane.thre.out$planes)
+plane.thre.out$group <-factor(plane.thre.out$group)
+
+#divide back
+horizontal.thre.out <- subset(plane.thre.out,planes=='hor')
+vertical.thre.out <- subset(plane.thre.out,planes=='ver')
+
+# re-label dataset as 'original_data'
+hearing_data_original <- plane.thre.out |> 
+  dplyr::select(c(thre, planes, group, head, subj)) |> 
+  add_column(dataset_type = "Original")
+
+# Removing unneeded items
+rm(plane.thre.out, hor.thre.back, hor.thre.front, horizontal.thre.out, vertical.thre.out)
+
+# Establish p_value for study
+hearing_alpha <- .05
+
+# Analysis Function ----
+# LMM on planes: Auditory localization performance by plane, group and position (head)
+hearing_analyze_data <- function(data) {
+  # Creating the model
+  model <-
+    nlme::lme(
+      thre ~ 1 + planes * group * head,
+      random = ~ 1 | subj,
+      weights = varIdent(form = ~ 1 | planes),
+      data = data
+    )
+  # Saving the model
+  model_fit <- summary(model, save=TRUE)
+  
+  model_results <- anova(model_fit) |> 
+    as.data.frame()
+  
+  random_effects <- unlist(ranef(model))
+  
+  list(
+    p_value = model_results$`p-value`[3], # Extracting p-values
+    # Extracting effect size - standardized effect size (Haddock et al., 1998; Hasselblad & Hedges, 1995)
+    effect_size = (sqrt(3/pi))*exp(model_fit$coefficients$fixed[3]),
+    conf_int_lower = exp(intervals(model)[["fixed"]][3,][1]), # Extracting lower CI bound
+    conf_int_upper = exp(intervals(model)[["fixed"]][3,][3]), # Extracting upper CI bound
+    random_mean = mean(random_effects), # Extracting random effects mean
+    random_conf_int_lower = mean(random_effects) - 1.96 * (sd(random_effects) / length(random_effects)), # Extracting random effects 95% CI lower bound
+  random_conf_int_upper = mean(random_effects) + 1.96 * (sd(random_effects) / length(random_effects))
+    # Extracting random effects 95% CI upper bound
+  )
+}
+
+
+# Reproduce original results ----
+hearing_results_original <- hearing_analyze_data(hearing_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < hearing_alpha ~ "sig",
+      p_value >= hearing_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
+
+
+
+# Create synthetic data ----
+hearing_data_synthetic <- syn(hearing_data_original, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+# Perform analysis on each synthetic dataset
+hearing_results_synthetic <- hearing_data_synthetic$syn |>
+  purrr::map_df(~ hearing_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(p_value < hearing_alpha ~ "sig",
+                    p_value >= hearing_alpha ~ "non-sig"),
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - hearing_results_original$p_value),
+    diff_effectSize = abs(effect_size - hearing_results_original$effect_size)
+  ) |> 
+  add_column(domain = "Hearing")
+
+# Compile results ----
+hearing_results_summary <- data_frame(
+  Domain = "Hearing",
+  Study = "Battal et al. (2019)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(hearing_data_original),
+  p_value = ifelse(
+    hearing_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", hearing_results_original$p_value)),
+  effect_size_measure = "√(3/𝜋) x odds ratio",
+  effect_size = round(hearing_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = hearing_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(hearing_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == hearing_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(hearing_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(hearing_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = hearing_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(hearing_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == hearing_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(hearing_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(hearing_results_synthetic$diff_effectSize),
+)
+
+# General Utility ----
+hearing_data_synthetic_first <- hearing_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+# Combine the data frames
+hearing_combined_data <- hearing_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(hearing_data_original)
+
+# Calculate utility with s_pMSE
+hearing_utility_df <- utility.tables(
+  hearing_data_synthetic_first,
+  hearing_data_original,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+hearing_s_pMSE_value <- hearing_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Scatterplot
+hearing_p1 <- 
+  hearing_combined_data |> 
+  ggplot(aes(x = thre, y = subj, color = dataset_type, fill = dataset_type)) +
+  geom_point(alpha = 0.80, size = 2.5) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Auditory Localization",
+       y = "Subject ID",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8)))
+
+hearing_p2 <- 
+  hearing_combined_data |> 
+  mutate(group = case_when(group == "CB" ~ "Congentially Blind",
+                           group == "SC" ~ "Sighted Controls")) |> 
+  ggplot(aes(x = thre, color = dataset_type, fill = dataset_type)) +
+  geom_density(alpha = 0.8) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Auditory Localization",
+       y = "Density",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  facet_wrap(~group) +
+  scale_y_continuous(expand = c(0, 0))
+
+# # Combine plots without legends
+# hearing_combined_plots <- cowplot::plot_grid(hearing_p1, 
+#                                              hearing_p2, rel_widths = c(1, 0.7))
+
+# Add title
+hearing_title <- ggdraw() +
+  draw_label_theme("E: Hearing (Battal et al., 2019)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+hearing_final_plot <- cowplot::plot_grid(
+  hearing_title,
+  hearing_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+hearing_final_plot2 <- cowplot::plot_grid(
+  hearing_title,
+  hearing_p2,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+hearing <- list(
+  data_original = hearing_data_original,
+  data_synthetic = hearing_data_synthetic,
+  results_original = hearing_results_original,
+  results_synthetic = hearing_results_synthetic,
+  results_summary = hearing_results_summary,
+  alpha = hearing_alpha
+)
+
+## Cleaning up the environment
+# rm(
+#   hearing_data_original,
+#   hearing_data_synthetic,
+#   hearing_results_original,
+#   hearing_results_synthetic,
+#   hearing_results_summary,
+#   hearing_alpha
+# )
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = hearing,
+              file = here::here("Data","05_Hearing","analysisData.RDS"))
+```
+
+Battal et al. (2019) compared auditory localization abilities between 17 congenitally blind and 17 sighted individuals. A linear mixed effects model indicated that congenitally blind individuals had enhanced spatial hearing abilities (*OR* = 1.56, *p* = .016). Compared to original data, the synthetic data showed similar distributions for auditory localization in both sighted and congenitally blind individuals, as well as similar auditory localization at the subject-level (Figure 1E). General utility was high for subject (*S_pMSE* = `r round(hearing_s_pMSE_value$S_pMSE[3], digits = 2)`) and group (*S_pMSE* = `r round(hearing_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. Specific utility was high as the statistical model with the synthetic data maintained the direction of statistical significance (*p* `r fmt_p_value(hearing_results_synthetic[1,]$p_value)`) and effect size magnitude (*OR* = `r round(hearing_results_synthetic[1,]$effect_size, digits = 2)`). The random effect estimates were stable between the original (mean = `r round(hearing_results_original$random_mean, digits = 3)`, 95% CI: `r round(hearing_results_original$random_conf_int_lower, digits = 3)`, `r round(hearing_results_original$random_conf_int_upper, digits = 3)`) and synthetic (mean = `r round(hearing_results_synthetic$random_mean[1], digits = 3)`, 95% CI: `r round(hearing_results_synthetic$random_conf_int_lower[1], digits = 3)`, `r round(hearing_results_synthetic$random_conf_int_upper[1], digits = 3)`) datasets.
+
+### Communication Modalities
+```{r echo = FALSE}
+# Import original data ----
+## Function to load in AAC data from the author's code
+qualtrics_csv = function(file){
+  data = read_csv(file, col_names = FALSE, skip = 3)
+  names = read_lines(file, n_max = 1) |> 
+    str_split(pattern = ",") |> 
+    unlist()
+  names(data) = names
+  labels = read_csv(file, col_names = FALSE, skip = 1, n_max = 1)
+  labels = t(labels)
+  labels = labels[,1]
+  labels = setNames(as.list(labels), names)
+  data = labelled::set_variable_labels(data, .labels = labels, .strict = FALSE)
+  data = janitor::clean_names(data)
+  data
+}
+
+# Load original data
+aac_data_original <- qualtrics_csv(file = here::here("Data", "06_AAC", "data_Combined CSV data.csv")) |> 
+  janitor::remove_empty("cols") |> 
+  janitor::remove_empty("rows") |> 
+  filter(progress > 98) |> 
+  dplyr::select(start_date, participant_id, q2:x2f) |> 
+  dplyr::select(q87_1_1, q87_1_2, q87_1_3, q87_1_5, q87_1_6, q87_1_7,
+         q87_2_1, q87_2_2, q87_2_3, q87_2_5, q87_2_6, q87_2_7,
+         q87_3_1, q87_3_2, q87_3_3, q87_3_5, q87_3_6, q87_3_7,
+         q89_1_1, q89_1_2, q89_1_3, q89_1_5, q89_1_6, q89_1_7,
+         q89_2_1, q89_2_2, q89_2_3, q89_2_5, q89_2_6, q89_2_7,
+         q89_3_1, q89_3_2, q89_3_3, q89_3_5, q89_3_6, q89_3_7) |> 
+  tidyr::pivot_longer(everything()) |>
+  tidyr::separate(name,
+           into = c("var", "time", "question"),
+           sep = "_") |>
+  dplyr::mutate(time = factor(
+    time,
+    labels = c(
+      "Prior to\nMarch 2020",
+      "March to\nJuly 2020",
+      "August 2020 to\nSpring 2021"
+    )
+  ),
+  var = factor(var, labels = c("Assessment", "Intervention"))) |>
+  tidyr::drop_na(value) |> 
+  dplyr::select(-question) |> 
+  filter(value == "Lack of/limited internet") %>%
+  as.data.frame()
+
+# Establish p_value for study
+aac_alpha <- .05
+
+# Analysis Function ----
+# Examine the chi-square difference in lack of/limited Internet and technology barriers by timepoint
+aac_analyze_data <- function(data) {
+  chi_squared <- data |>
+    dplyr::group_by(var, value) |>
+    dplyr::summarize(prop = list(chisq.test(table(time))),
+                     .groups = "drop_last") |>
+    dplyr::mutate(
+      chi = map_dbl(prop, ~ .x$statistic),
+      df = map_dbl(prop, ~ .x$parameter),
+      p = map_dbl(prop, ~ .x$p.value)
+    ) |>
+    dplyr::filter(var == "Intervention") |>
+    dplyr::filter(value == "Lack of/limited internet")
+  
+  list(
+    p_value = chi_squared$p,
+    # Extracting p-values
+    effect_size = chi_squared$chi,
+    # There are no confidence intervals for chi-squared tests
+    conf_int_lower = NA,
+    conf_int_upper = NA 
+  )
+}
+
+# Reproduce original results ----
+aac_results_original <- aac_analyze_data(aac_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < aac_alpha ~ "sig",
+      p_value >= aac_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
+
+# Create synthetic data ----
+aac_data_synthetic <- syn(aac_data_original, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+# Perform analysis on each synthetic dataset
+aac_results_synthetic <- aac_data_synthetic$syn |>
+  purrr::map_df(~ aac_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(p_value < aac_alpha ~ "sig",
+                    p_value >= aac_alpha ~ "non-sig"),
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - aac_results_original$p_value),
+    diff_effectSize = abs(effect_size - aac_results_original$effect_size)
+  ) |> 
+  add_column(domain = "Communication modalities")
+
+# Compile results ----
+aac_results_summary <- data_frame(
+  Domain = "Communication modalities",
+  Study = "King et al. (2022)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(aac_data_original),
+  p_value = ifelse(
+    aac_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", aac_results_original$p_value)),
+  effect_size_measure = "Cohen's 𝜔",
+  effect_size = round(aac_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = aac_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(aac_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == aac_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(aac_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(aac_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = aac_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(aac_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == aac_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(aac_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(aac_results_synthetic$diff_effectSize),
+)
+
+# General Utility ----
+aac_data_synthetic_first <- aac_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+aac_data_original2 <- aac_data_original |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Combine the data frames
+aac_combined_data <- aac_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(aac_data_original2)
+
+# Calculate utility with s_pMSE
+aac_utility_df <- synthpop::utility.tables(
+  aac_data_synthetic_first,
+  aac_data_original,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+aac_s_pMSE_value <- aac_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Scatterplot
+aac_p1 <- 
+  aac_combined_data |> 
+  ggplot(aes(x = value, color = dataset_type, fill = dataset_type)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Lack of/limited internet",
+       y = "Frequency",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8)),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()) +
+  facet_wrap(~var, nrow = 1) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 245))
+
+# Add title
+aac_title <- ggdraw() +
+  draw_label_theme("F: Communication Modalities (King et al., 2022)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+aac_final_plot <- cowplot::plot_grid(
+  aac_title,
+  aac_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+aac <- list(
+  data_original = aac_data_original,
+  data_synthetic = aac_data_synthetic,
+  results_original = aac_results_original,
+  results_synthetic = aac_results_synthetic,
+  results_summary = aac_results_summary,
+  alpha = aac_alpha
+)
+
+## Cleaning up the environment
+# rm(
+#   aac_data_original,
+#   aac_data_synthetic,
+#   aac_results_original,
+#   aac_results_synthetic,
+#   aac_results_summary,
+#   aac_alpha
+# )
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = aac,
+              file = here::here("Data","06_AAC","analysisData.RDS"))
+```
+
+King et al. (2022) collected survey responses from speech-language pathologists to assess the impact of the COVID-19 pandemic on service provision for emergent bilinguals who use augmentative and alternative communication. Results indicated that speech-language pathologists reporting that a lack of or limited access to internet increased during the initial phase of the pandemic (Cohen's 𝜔 = 34.60, *p* < .001). Compared to original data, the synthetic data showed similar frequencies of responses for the barrier of 'lack of/limited internet' (Figure 1F). General utility was high for assessment type (*S_pMSE* = `r round(aac_s_pMSE_value$S_pMSE[1], digits = 2)`) and time point (*S_pMSE* = `r round(hearing_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. The statistical model with the synthetic data maintained the direction of statistical significance (*p* `r fmt_p_value(aac_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(aac_results_synthetic[1,]$effect_size, digits = 2)`), indicating high specific utility.
+
+### Receptive and Expressive Language
+```{r echo = FALSE}
+# KEARNEY
+library(DescTools) # install.packages("DescTools")
+
+# Import original data ----
+language_data_original <-
+  read.csv(here::here("Data/07_Language/Kearney/demographics_CAT_reading.csv")) |>
+  # select only relevant variables
+  dplyr::select(c(edu, tpost_cat_read_total))
+
+# Establish p_value for study
+language_alpha <- .05
+
+# Analysis Function ----
+# Examine correlation between education (years) and reading t-scores
+language_analyze_data <- function(data) {
+  model <- cor.test(data$edu,
+                    data$tpost_cat_read_total,
+                    exact = F,
+                    method = "spearman") # Creating the model
+  
+  # Obtaining CI's for SpearmansRho using a bootstrapping method
+  model_CI <- DescTools::SpearmanRho(data$edu,
+                                     data$tpost_cat_read_total,
+                                     conf.level = .95)
+  
+  list(
+    p_value = model$p.value, # Extracting p-values
+    effect_size = model$estimate, # Extracting effect size
+    # CI for S
+    conf_int_lower = model_CI[2],
+    conf_int_upper = model_CI[3]
+  )
+}
+
+# Reproduce original results ----
+language_results_original <- language_analyze_data(language_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < language_alpha ~ "sig",
+      p_value >= language_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
+
+# Create synthetic data ----
+language_data_synthetic <- syn(language_data_original, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+# Perform analysis on each synthetic dataset
+language_results_synthetic <- language_data_synthetic$syn |>
+  purrr::map_df(~ language_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(
+      p_value < language_alpha ~ "sig",
+      p_value >= language_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.5 ~ "Large",
+                               abs(effect_size) >= 0.3 ~ "Medium",
+                               abs(effect_size) >= 0.1 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - language_results_original$p_value),
+    diff_effectSize = abs(effect_size - language_results_original$effect_size)
+  ) |> 
+  add_column(domain = "Receptive and expressive language")
+
+# Compile results ----
+language_results_summary <- data_frame(
+  Domain = "Language",
+  Study = "Kearney et al. (2023)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(language_data_original),
+  p_value = ifelse(
+    language_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", language_results_original$p_value)),
+  effect_size_measure = "Correlation coefficient",
+  effect_size = round(language_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = language_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(language_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == language_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(language_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(language_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = language_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(language_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == language_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(language_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(language_results_synthetic$diff_effectSize),
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+language <- list(
+  data_original = language_data_original,
+  data_synthetic = language_data_synthetic,
+  results_original = language_results_original,
+  results_synthetic = language_results_synthetic,
+  results_summary = language_results_summary,
+  alpha = language_alpha
+)
+
+# General Utility ----
+language_data_synthetic_first <- language_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+language_data_original2 <- language_data_original |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Combine the data frames
+language_combined_data <- language_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(language_data_original2)
+
+# Calculate utility with s_pMSE
+language_utility_df <- utility.tables(
+  language_data_synthetic_first,
+  language_data_original,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+language_s_pMSE_value <- language_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Data Viz
+language_p1 <- 
+  language_combined_data |> 
+  ggplot(aes(x = edu, y = tpost_cat_read_total, color = dataset_type, fill = dataset_type)) +
+  geom_jitter(alpha = 0.80, size = 2.5, width = 0.15, height = 0.02) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Years of Education",
+       y = "Reading Score",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8)))
+
+# Add title
+language_title <- ggdraw() +
+  draw_label_theme("A: Language (Kearney et al., 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+language_final_plot <- cowplot::plot_grid(
+  language_title,
+  language_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# ## Cleaning up the environment
+# rm(
+#   language_data_original,
+#   language_data_synthetic,
+#   language_results_original,
+#   language_results_synthetic,
+#   language_results_summary,
+#   language_alpha
+# )
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = language,
+              file = here::here("Data","07_Language", "Kearney", "analysisData.RDS"))
+```
+
+Two studies were included in the domain of Receptive and Expressive Language [@kearney_etal23; @robinaugh_etal24a].
+
+Kearney et al. (2023) examined the relationship between years of education and reading performance among 36 individuals following left-hemisphere tumor resection. Results indicated a large relationship between these variables (*r* = 0.59, *p* < .001). Compared to original data, the synthetic data showed maintained a similar visual relationship between years of education and reading scores (Figure 2A). General utility was high for both years of education (*S_pMSE* = `r round(language_s_pMSE_value$S_pMSE[1], digits = 2)`) and reading scores (*S_pMSE* = `r round(language_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. The statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(language_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(language_results_synthetic[1,]$effect_size, digits = 2)`), indicating high specific utility.
+
+```{r echo = FALSE}
+library(kableExtra)
+library(tidybayes)
+
+# Import data
+df <- read.csv(here::here("Data", "07_Language", "Robinaugh", 'SDTBI001_Data.csv')) %>%
+  janitor::clean_names() %>%
+  mutate(condition = ifelse(condition == 0, 'untreated', 'treated'),
+         phase = as.factor(phase)) %>%
+  mutate_if(is.character, as.factor) 
+
+# Model Setup
+df_coded2 <- df %>%
+  filter(session < 13) %>%
+  group_by(id) %>%
+  mutate(phase = ifelse(phase == 'Pre', 0, 1),
+         num_baselines = sum(phase == 0),
+         # slope change is calculated by (T-(n1 + 1))D
+         slope_change = (session - (num_baselines+1))*phase
+         ) %>%
+  select(id, set, condition, response, session, phase, slope_change) %>%
+  mutate(phase = ifelse(condition == "untreated", 0, phase),
+         slope_change = ifelse(condition == "untreated", 0, slope_change))
+
+# Model Fitting
+m.1b <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
+             (session + phase + slope_change | set/id), # 
+           family = bernoulli(),  #binomial in lme4
+           data = df_coded2, # both trained and untrained sets
+           iter = 4000, # number of total samples per chain
+           warmup = 1000, # number of samples tossed out per chain
+           inits = 'random', # each chain takes random starting values
+           chains = 4, # 4 total chains
+           cores = 4, # use 4 computer cores to run chains simultaneously
+           control = list(adapt_delta = .97), # to aid model convergence
+           prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
+                     prior(normal(0, 2), class = b), # prior distributions
+                     prior(normal(0, 2), class = sd),
+                     prior(lkj(2), class = cor)),
+           backend = 'cmdstan',
+           seed = 42,
+           refresh = 0, #for the markdown document 
+           file = here::here("Data", "07_Language", "Robinaugh", "new_approach"),
+           file_refit = "on_change"
+)
+
+pred_d <- m.1b$data %>%
+  select(-response, -Intercept) %>% 
+  group_by(id) %>% # for each word
+  mutate(num_baselines = ifelse(set != 7, sum(phase == 0), 4)) %>% 
+  #Untrained Set 7 set to give posterior distributions at session 4 
+  #(last baseline without any tx) and session 12 (the last tx phase probe)
+  filter(session == num_baselines | session == max(session))
+
+es <- add_epred_draws(m.1b, newdata = pred_d |> filter(set != 7), 
+                      pred = 'value', seed = 42) %>% 
+  ungroup() %>% #
+  mutate(time_point = ifelse(slope_change == 0, 'entry', 'exit')) %>% #
+  select(time_point, id, value = .epred, draw = .draw) %>% #
+  group_by(draw, time_point) %>% #
+  summarize(num_corr = sum(value)) %>% #
+  pivot_wider(names_from = time_point, values_from = num_corr) %>% # 
+  mutate(effect_size = exit - entry) %>% #
+  ungroup() %>%  # 
+  select(effect_size)
+
+es %>% # only need one variable
+  tidybayes::median_qi(effect_size)
+
+# Create synthetic data ----
+robinaugh_data_synthetic <- syn(df_coded2, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+# General Utility ----
+robinaugh_data_synthetic_first <- robinaugh_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+robinaugh_data_original <- df_coded2 |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Combine the data frames
+robinaugh_combined_data <- robinaugh_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(robinaugh_data_original)
+
+# Calculate utility with s_pMSE
+robinaugh_utility_df <- utility.tables(
+  robinaugh_data_synthetic_first,
+  robinaugh_combined_data,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+robinaugh_s_pMSE_value <- robinaugh_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Specific Utility ----
+# Model Fitting
+synthetic_model <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
+             (session + phase + slope_change | set/id), # 
+           family = bernoulli(),  #binomial in lme4
+           data = robinaugh_data_synthetic_first, # both trained and untrained sets
+           iter = 4000, # number of total samples per chain
+           warmup = 1000, # number of samples tossed out per chain
+           inits = 'random', # each chain takes random starting values
+           chains = 4, # 4 total chains
+           cores = 4, # use 4 computer cores to run chains simultaneously
+           control = list(adapt_delta = .97), # to aid model convergence
+           prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
+                     prior(normal(0, 2), class = b), # prior distributions
+                     prior(normal(0, 2), class = sd),
+                     prior(lkj(2), class = cor)),
+           backend = 'cmdstan',
+           seed = 42,
+           refresh = 0, #for the markdown document 
+           file = here::here("Data", "07_Language", "Robinaugh", "synthetic_model"),
+           file_refit = "on_change"
+)
+
+synthetic_pred_d <- synthetic_model$data %>%
+  select(-response, -Intercept) %>% 
+  group_by(id) %>% # for each word
+  mutate(num_baselines = ifelse(set != 7, sum(phase == 0), 4)) %>% 
+  #Untrained Set 7 set to give posterior distributions at session 4 
+  #(last baseline without any tx) and session 12 (the last tx phase probe)
+  filter(session == num_baselines | session == max(session))
+
+synthetic_es <- add_epred_draws(m.1b, newdata = synthetic_pred_d |> filter(set != 7), 
+                      pred = 'value', seed = 42) %>% 
+  ungroup() %>% #
+  mutate(time_point = ifelse(slope_change == 0, 'entry', 'exit')) %>% #
+  select(time_point, id, value = .epred, draw = .draw) %>% #
+  group_by(draw, time_point) %>% #
+  summarize(num_corr = sum(value)) %>% #
+  pivot_wider(names_from = time_point, values_from = num_corr) %>% # 
+  mutate(effect_size = exit - entry) %>% #
+  ungroup() %>%  # 
+  select(effect_size)
+
+synthetic_es_summarized <- synthetic_es %>% # only need one variable
+  tidybayes::median_qi(effect_size)
+```
+
+Robinaugh et al., (2024) examined the effectiveness of a naming treatment in a single-case experimental design for an individual presenting with semantic variant primary progressive aphasia and a history of traumatic brain injury. An item-level Bayesian generalized mixed-effects model revealed that the treatment resulted in a gain of 35 out of 60 trained words (β = 35.3; 90% CI: 30.6, 39.5). Compared to original data, the synthetic data showed similar frequencies of responses, but not sessions (Figure 2B). General utility was high for id (*S_pMSE* = `r round(robinaugh_s_pMSE_value$S_pMSE[1], digits = 2)`), set (*S_pMSE* = `r round(robinaugh_s_pMSE_value$S_pMSE[2], digits = 2)`), session (*S_pMSE* = `r round(robinaugh_s_pMSE_value$S_pMSE[5], digits = 2)`), and phase (*S_pMSE* = `r round(robinaugh_s_pMSE_value$S_pMSE[6], digits = 2)`) variables. The statistical model with the synthetic data overestimated the effect size (β = `r round(synthetic_es_summarized$effect_size, digits = 2)`; 90% CI: `r round(synthetic_es_summarized$.lower, digits = 2)`, `r round(synthetic_es_summarized$.upper, digits = 2)`), indicating that specific utility was low.
+
+### Cognitive Aspects of Communication
+```{r echo = FALSE}
+# Load packages
+library(lme4) # glmer
+library(lmerTest) # p-values for glmer
+
+# Import original data ----
+cognition_data_original <-
+  read.csv(here::here("Data/08_Cognition/emoji_affect_recognition_data.csv")) |>
+  # select only relevant variables
+  dplyr::select(c(SubjectID, Correct, Group, Condition, Sex)) |>
+  # dummy-code Group (NC = 1, TBI = 0) and Sex (F = 1, M = 0)
+  mutate(
+    Group_NC = if_else(Group == "NC", 1, 0),
+    Sex_F = if_else(Sex == "Female", 1, 0)) |>
+  # treat categorical variables as factors and set reference levels
+  mutate(
+    SubjectID = as.factor(SubjectID),
+    Correct = as.factor(Correct),
+    Group_NC = relevel(as.factor(Group_NC), '1', '0'),
+    Condition = relevel(as.factor(Condition), 'BasicFace', 'BasicEmoji', 'SocialEmoji'),
+    Sex_F =  relevel(as.factor(Sex_F), '1', '0')
+  ) |> 
+  dplyr::select(-c(Group, Sex))
+
+# Set up Helmert contrast coding for Condition
+# https://marissabarlaz.github.io/portfolio/contrastcoding/
+# Contrast 1: Basic Emotion Faces vs average of Basic Emotion Emoji and Social Emotion Emoji
+# Contrast 2: Basic Emotion Emoji vs Social Emotion Emoji
+helmert = matrix(c(2/3, -1/3, -1/3, 0, 1/2, -1/2), ncol = 2)
+contrasts(cognition_data_original$Condition) = helmert
+
+cognition_alpha <- .05
+
+# Analysis Function ----
+## Models: Effect of stimulus condition on emotion recognition accuracy
+## Note: Model first failed to converge when using default control settings, so changed optimizer to bobyqa as suggested here: https://rstudio-pubs-static.s3.amazonaws.com/33653_57fc7b8e5d484c909b615d8633c01d51.html
+cognition_analyze_data <- function(data) {
+  # Creating the model
+  m1 <-
+    lme4::glmer(Correct ~ Group_NC + Condition + Sex_F + Group_NC * Condition * Sex_F + (1 | SubjectID),
+      data = data,
+      family = binomial(link = "logit"),
+      control = lme4::glmerControl(optimizer = "bobyqa",
+                             optCtrl = list(maxfun = 2e5))
+    )
+  
+  # Set group reference level to TBI (0) and rerun model
+  data$Group_NC = relevel(data$Group_NC, '0', '1')
+  m2 <-
+    lme4::glmer(
+      Correct ~ Group_NC + Condition + Sex_F + Group_NC * Condition * Sex_F + (1 | SubjectID),
+      data = data,
+      family = binomial(link = "logit"),
+      control = lme4::glmerControl(optimizer = "bobyqa",
+                             optCtrl = list(maxfun = 2e5))
+    )
+  
+  model_fit <- summary(m2)
+  
+  random_effects <- unlist(ranef(m2))
+  
+  list(
+    p_value = model_fit$coefficients[7,4], # Extracting p-values
+    # Extracting effect size for Group (NC0) X Condition (2) Interaction - standardized effect size (Haddock et al., 1998; Hasselblad & Hedges, 1995)
+    OR = exp(model_fit$coefficients[4,1]),
+    effect_size = (sqrt(3/pi))*exp(model_fit$coefficients[4,1]),
+    conf_int_lower = exp(confint(m2, method = "Wald", level = .95)[5,][1]), # Extracting lower CI bound
+    conf_int_upper = exp(confint(m2, method = "Wald", level = .95)[5,][2]), # Extracting upper CI bound
+    random_mean = mean(random_effects), # Extracting random effects mean
+    random_conf_int_lower = mean(random_effects) - 1.96 * (sd(random_effects) / length(random_effects)), # Extracting random effects 95% CI lower bound
+    random_conf_int_upper = mean(random_effects) + 1.96 * (sd(random_effects) / length(random_effects)) # Extracting random effects 95% CI upper bound
+  )
+}
+
+# Reproduce original results ----
+cognition_results_original <- cognition_analyze_data(cognition_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < cognition_alpha ~ "sig",
+      p_value >= cognition_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
+
+
+# Create synthetic data ----
+cognition_data_synthetic <- syn(cognition_data_original, 
+                                   method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+# Perform analysis on each synthetic dataset
+cognition_results_synthetic <- cognition_data_synthetic$syn |>
+  purrr::map_df(~ cognition_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(
+      p_value < cognition_alpha ~ "sig",
+      p_value >= cognition_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - cognition_results_original$p_value),
+    diff_effectSize = abs(effect_size - cognition_results_original$effect_size)
+  ) |> 
+  add_column(domain = "Cognition")
+
+# Compile results ----
+cognition_results_summary <- data_frame(
+  Domain = "Cognition",
+  Study = "Clough et al. (2023))",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(cognition_data_original),
+  p_value = ifelse(
+    cognition_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", cognition_results_original$p_value)),
+  effect_size_measure = "√(3/𝜋) x odds ratio",
+  effect_size = round(cognition_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = cognition_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(cognition_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == cognition_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(cognition_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(cognition_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = cognition_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(cognition_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == cognition_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(cognition_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(cognition_results_synthetic$diff_effectSize),
+)
+
+# General Utility ----
+cognition_data_synthetic_first <- cognition_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+cognition_data_original <- cognition_data_original |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Combine the data frames
+cognition_combined_data <- cognition_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(cognition_data_original)
+
+# Calculate utility with s_pMSE
+cognition_utility_df <- utility.tables(
+  cognition_data_synthetic_first,
+  cognition_combined_data,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+cognition_s_pMSE_value <- cognition_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Data viz
+cognition_p1 <- 
+  cognition_combined_data |> 
+  mutate(Correct = as.numeric(as.character(Correct)),
+         Group_NC = case_when(Group_NC == "BasicFace" ~ "Basic Face",
+                              Group_NC == "BasicEmoji" ~ "Basic Emoji",
+                              Group_NC == "SocialEmoji" ~ "Social Emoji")) |> 
+  group_by(Group_NC, Condition, dataset_type) %>%
+  summarize(Proportion_Correct = mean(Correct),
+            Count = n(),
+            .groups = 'drop') |> 
+  ggplot(aes(x = dataset_type, y = Proportion_Correct, fill = as.factor(dataset_type))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ Condition) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "",
+       y = "Proportion Correct",
+       fill = "Group NC") +
+  cowplot::theme_cowplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_blank(),
+        legend.position = "none") +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1),
+                     labels = scales::percent)
+
+# Add title
+cognition_title <- ggdraw() +
+  draw_label_theme("C: Cognition (Clough  et al., 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+cognition_final_plot <- cowplot::plot_grid(
+  cognition_title,
+  cognition_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+cognition <- list(
+  data_original = cognition_data_original,
+  data_synthetic = cognition_data_synthetic,
+  results_original = cognition_results_original,
+  results_synthetic = cognition_results_synthetic,
+  results_summary = cognition_results_summary,
+  s_pMSE_value = cognition_s_pMSE_value,
+  alpha = cognition_alpha
+)
+
+## Cleaning up the environment
+# rm(
+#   cognition_data_original,
+#   cognition_data_synthetic,
+#   cognition_results_original,
+#   cognition_results_synthetic,
+#   cognition_results_summary,
+#   cognition_s_pMSE_value,
+#   cognition_alpha,
+#   helmert
+# )
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = cognition,
+              file = here::here("Data","08_Cognition","analysisData.RDS"))
+```
+
+Clough et al. (2023) examined the interaction between group (traumatic brain injury [TBI] or neurotypical) and condition (basic emotion or social emotion emojis) on the accuracy of emotion recognition. A generalized linear mixed effects model indicated that participants with TBI were more likely to correctly identify basic emotions than social emotions when presented as emoji (*OR* = `r round(cognition$results_original$OR, digits = 2)`), *p* = `r round(cognition$results_original$p_value, digits = 3)`), whereas neurotypical participants did not differ in their ability to identify these emotions. Compared to original data, the synthetic data showed a similar distribution of responses for both basic and social emotions for the TBI group (Figure 2C). General utility was high for subject (*S_pMSE* = `r round(cognition$s_pMSE_value$S_pMSE[1], digits = 2)`) and condition (*S_pMSE* = `r round(cognition$s_pMSE_value$S_pMSE[3], digits = 2)`) variables. Specific utility was low as the statistical model with the synthetic data did not maintain the direction of statistical significance (*p* = `r round(cognition$results_synthetic$p_value[1], digits = 3)`)), even though the effect size magnitude was still considered large (*OR* = `r round(cognition$results_synthetic$OR[1], digits = 2)`). The random effect estimates were stable between the original (mean = `r round(cognition$results_original$random_mean, digits = 3)`, 95% CI: `r round(cognition$results_original$random_conf_int_lower, digits = 3)`, `r round(cognition$results_original$random_conf_int_upper, digits = 3)`) and synthetic (mean = `r round(cognition$results_synthetic$random_mean[1], digits = 3)`, 95% CI: `r round(cognition$results_synthetic$random_conf_int_lower[1], digits = 3)`, `r round(cognition$results_synthetic$random_conf_int_upper[1], digits = 3)`) datasets.
+
+### Social Aspects of Communication
+```{r echo = FALSE}
+# Import original data ----
+social_data_original <-
+  read.csv(here::here("Data/09_Social_Communication/Study1Comp.csv"),
+           fileEncoding = 'UTF-8-BOM') |> 
+  plyr::ddply(
+    c("ParGroup", "Subj", "Gender"),
+    summarise,
+    N    = length(Accuracy),
+    acc  = sum(Accuracy),
+    pct = mean(Accuracy),
+    grade = mean(Grade),
+    age = mean(Months),
+    NVIQ = mean(SSIQ)
+  ) |> 
+  dplyr::select(c(NVIQ, ParGroup))
+
+# Establish p_value for study
+social_alpha <- .05
+
+# Analysis Function ----
+# Model: Non-verbal IQ by group (ASD, TD) two-tailed Fisher’s Exact Test
+social_analyze_data <- function(data) {
+  model <- aov(NVIQ ~ ParGroup,
+               data = data) # Creating the model
+  model_summary <- summary(model)
+  
+  list(
+    p_value = model_summary[[1]]$'Pr(>F)'[1],
+    # Extracting p-values
+    effect_size = effectsize::cohens_d(NVIQ ~ ParGroup,
+                     data = data,
+                     ci = 0.95)$Cohens_d,
+    # Extracting effect size
+    conf_int_lower = confint(model)[2, ][1],
+    # Extracting lower CI bound
+    conf_int_upper = confint(model)[2,][2] # Extracting upper CI bound
+  )
+}
+
+# Reproduce original results ----
+social_results_original <- social_analyze_data(social_data_original) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original",
+    sig = case_when(
+      p_value < social_alpha ~ "sig",
+      p_value >= social_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
+                               TRUE ~ "Negligible")
+  )
+
+# Create synthetic data ----
+social_data_synthetic <- syn(social_data_original, 
+                                   # method = "ctree", 
+                                   m = 100,
+                                   seed = 2024)
+
+# Perform analysis on each synthetic dataset
+social_results_synthetic <- social_data_synthetic$syn |>
+  purrr::map_df(~ social_analyze_data(.x), .id = "dataset") |>
+  dplyr::mutate(
+    sig = case_when(
+      p_value < social_alpha ~ "sig",
+      p_value >= social_alpha ~ "non-sig"
+    ),
+    categorization = case_when(abs(effect_size) >= 0.8 ~ "Large",
+                               abs(effect_size) >= 0.5 ~ "Medium",
+                               abs(effect_size) >= 0.2 ~ "Small",
+                               TRUE ~ "Negligible"),
+    # Calculate the difference between the original p-value/effect size and synthetic p-value/effect sizes.
+    diff_pvalue = abs(p_value - social_results_original$p_value),
+    diff_effectSize = abs(effect_size - social_results_original$effect_size)
+  ) |> 
+  add_column(domain = "Social aspects of communication")
+
+# Compile results ----
+social_results_summary <- data_frame(
+  Domain = "Social aspects of communication",
+  Study = "Chanchaochai & Schwarz (2023)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(social_data_original),
+  p_value = ifelse(
+    social_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", social_results_original$p_value)),
+  effect_size_measure = "Cohen’s d",
+  effect_size = round(social_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = social_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(social_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == social_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(social_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(social_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = social_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(social_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == social_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(social_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(social_results_synthetic$diff_effectSize),
+)
+
+# General Utility ----
+social_data_synthetic_first <- social_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+social_data_original <- social_data_original |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Combine the data frames
+social_combined_data <- social_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(social_data_original)
+
+# Calculate utility with s_pMSE
+social_utility_df <- utility.tables(
+  social_data_synthetic_first,
+  social_combined_data,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+social_s_pMSE_value <- social_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Data viz
+social_p1 <- 
+  social_combined_data |> 
+  mutate(ParGroup = case_when(ParGroup == "ASD" ~ "Autism Spectrum Disorder",
+                              ParGroup == "TD" ~ "Neurotypical")) |> 
+  ggplot(aes(x = NVIQ, fill = as.factor(dataset_type))) +
+  geom_density(alpha = 0.80) +
+  facet_wrap(~ ParGroup, nrow = 2) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Non-Verbal IQ",
+       y = "Density",
+       fill = "Group NC") +
+  cowplot::theme_cowplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 0.04)) +
+  scale_x_continuous(limits = c(25, 200))
+
+# Add title
+social_title <- ggdraw() +
+  draw_label_theme("D: Social (Chanchaochai & Schwarz, 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+social_final_plot <- cowplot::plot_grid(
+  social_title,
+  social_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+social <- list(
+  data_original = social_data_original,
+  data_synthetic = social_data_synthetic,
+  results_original = social_results_original,
+  results_synthetic = social_results_synthetic,
+  results_summary = social_results_summary,
+  alpha = social_alpha
+)
+
+## Cleaning up the environment
+# rm(
+#   social_data_original,
+#   social_data_synthetic,
+#   social_results_original,
+#   social_results_synthetic,
+#   social_results_summary,
+#   social_alpha
+# )
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = social,
+              file = here::here("Data","09_Social_Communication","analysisData.RDS"))
+```
+
+Chanchaochai & Schwarz et al. (2023) compared non-verbal IQ between individuals with autism spectrum disorder and neurotypical peers. An analysis of variance indicated that neurotypical individuals demonstrated higher non-verbal IQ (*d* = -0.85, *p* < .001). Compared to original data, the synthetic data showed similar distributions of non-verbal IQ for both groups (Figure 2D). General utility was high for both group (*S_pMSE* = `r round(social_s_pMSE_value$S_pMSE[2], digits = 2)`) and non-verbal IQ (*S_pMSE* = `r round(social_s_pMSE_value$S_pMSE[1], digits = 2)`) variables. The statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(social_results_synthetic[1,]$p_value)`); however, the effect size magnitude (*r* = `r round(social_results_synthetic[1,]$effect_size, digits = 2)`) was lower, indicating a low level of specific utility.
+
+```{r general utility figures, echo = FALSE}
+# General utility figures
+library(cowplot)
+
+# Function to add title to plots
+draw_label_theme <- function(label, theme = NULL, element = "text", ...) {
+  if (is.null(theme)) {
+    theme <- ggplot2::theme_get()
+  }
+  if (!element %in% names(theme)) {
+    stop("Element must be a valid ggplot theme element name")
+  }
+  
+  elements <- ggplot2::calc_element(element, theme)
+  
+  cowplot::draw_label(label, 
+                      fontfamily = elements$family,
+                      fontface = elements$face,
+                      colour = elements$color,
+                      size = elements$size,
+                      ...
+  )
+}
+
+# Swallowing --------------------------------------------------------------
+
+# Extract the data frames
+swallowing_data_original <- swallowing_data_original |> 
+  mutate(dataset_type = "Original")
+
+swallowing_data_synthetic_first <- swallowing_data_synthetic$syn[[1]]
+
+# Combine the data frames
+swallowing_combined_data <- swallowing_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(swallowing_data_original)
+
+# Create a new categorical variable
+swallowing_combined_data <- swallowing_combined_data %>%
+  mutate(severity_category = ifelse(laryngeal_vestibule_severity_rating == 0, "0%", "> 0"))
+
+# Bar plot for frequency of 0's
+p1 <- swallowing_combined_data |> 
+  filter(severity_category == "0%") |> 
+  ggplot(aes(x = severity_category, fill = dataset_type)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "",
+       y = "Frequency") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        # axis.title.x = element_blank(),
+        axis.title.y = element_text(margin = margin(r = 8))) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 470))
+
+# Density plot for values > 0
+p2 <- swallowing_combined_data |> 
+  filter(severity_category == "> 0") |> 
+  ggplot(aes(x = laryngeal_vestibule_severity_rating, color = dataset_type, fill = dataset_type)) +
+  geom_density(alpha = 0.80) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  # scale_x_continuous(limits = c(1, 50)) +
+  labs(x = "",
+       y = "Density",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(labels = scales::percent, limits = c(0.01, 0.45),
+                     breaks = c(0.01, 0.1, 0.2, 0.3, 0.4)) +
+  theme(legend.position = "top",
+        legend.title = element_blank(),
+        legend.direction = "horizontal",
+        legend.justification = "center",
+        axis.title.y = element_text(margin = margin(r = 8)))
+
+# Extract the legend from p2
+legend_components <-  cowplot::get_plot_component(p2, 'guide-box-top', return_all = TRUE)
+legend <- cowplot::ggdraw(legend_components)
+
+# Add title
+title <- ggdraw() +
+  draw_label_theme("A: Swallowing (Curtis et al., 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plots without legends
+combined_plots <- cowplot::plot_grid(p1, p2 + theme(legend.position = "none"), rel_widths = c(0.40, 1))
+
+# Arrange the plots and legend
+final_plot <- cowplot::plot_grid(
+  title,
+  combined_plots,
+  ncol = 1,
+  rel_heights = c(
+    0.2, 
+    3)
+)
+
+# Add a shared x-axis label
+swallowing_general_utility_plot <- cowplot::ggdraw(final_plot) +
+  cowplot::draw_label("Laryngeal Vestibule Residue Rating", x = 0.5, y = 0.02, 
+                      vjust = 0, hjust = 0.5, size = 15)
+
+# Articulation ------------------------------------------------------------
+
+# Extract the data frames
+articulation_data_original <- articulation_data_original |> 
+  mutate(dataset_type = "Original")
+
+articulation_data_synthetic_first <- articulation_data_synthetic$syn[[1]]
+
+# Combine the data frames
+articulation_combined_data <- articulation_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(articulation_data_original)
+
+# Scatterplot
+articulation_p1 <- 
+  articulation_combined_data |> 
+  ggplot(aes(x = VSA_b, y = Int, color = dataset_type, fill = dataset_type)) +
+  geom_point(alpha = 0.80, size = 2.5) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_x_continuous(breaks = c(1, 3, 6, 9, 12)) +
+  scale_y_continuous(limits = c(0, 100), breaks = c(0, 25, 50, 75, 100)) +
+  labs(x = "Vowel Space Area",
+       y = "Intelligibility",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8)))
+
+# Add title
+articulation_title <- ggdraw() +
+  draw_label_theme("B: Articulation (Thompson et al., 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+articulation_final_plot <- cowplot::plot_grid(
+  articulation_title,
+  articulation_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Fluency -----------------------------------------------------------------
+
+# Extract the data frames
+fluency_data_original <- fluency_data_original |> 
+  mutate(dataset_type = "Original")
+
+fluency_data_synthetic_first <- fluency_data_synthetic$syn[[1]]
+
+# Combine the data frames
+fluency_combined_data <- fluency_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(fluency_data_original)
+
+# Scatterplot
+fluency_p1 <- fluency_combined_data |> 
+  mutate(Group = case_when(Group == "AWS" ~ "Adults Who Stutter",
+                           Group == "NT" ~ "Neurotypical")) |> 
+  ggplot(aes(x = Nonwordrepetition, color = dataset_type, fill = dataset_type)) +
+  geom_density(alpha = 0.80) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_x_continuous(limits = c(-1, 17)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Non-word Repetition",
+       y = "Density",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  facet_wrap(~Group, nrow = 1, scales = "free_x")
+
+# Add title
+fluency_title <- ggdraw() +
+  draw_label_theme("C: Fluency (Elsherifa et al., 2021)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+fluency_final_plot <- cowplot::plot_grid(
+  fluency_title,
+  fluency_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Voice -------------------------------------------------------------------
+
+# Extract the data frames
+voice_data_original <- voice_data_original |> 
+  mutate(dataset_type = "Original")
+
+voice_data_synthetic_first <- voice_data_synthetic$syn[[1]]
+
+# Combine the data frames
+voice_combined_data <- voice_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(voice_data_original)
+
+# Scatterplot
+voice_p1 <- voice_combined_data |> 
+  mutate(median_of_raters = case_when(median_of_raters == 0 ~ "No",
+                                      median_of_raters == 1 ~ "Mild",
+                                      median_of_raters == 2 ~ "Moderate"),
+         median_of_raters = factor(median_of_raters,
+                                   levels = c("No", "Mild", "Moderate"))) |> 
+  ggplot(aes(x = efn_sd_d_b, color = dataset_type, fill = dataset_type)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_x_continuous(limits = c(-1, 17)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Variability of Nasality",
+       y = "Density",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  facet_wrap(~median_of_raters, nrow = 1, scales = "free_x")
+
+# Add title
+voice_title <- ggdraw() +
+  draw_label_theme("D: Voice (Novotny et al., 2016)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+voice_final_plot <- cowplot::plot_grid(
+  voice_title,
+  voice_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Hearing -----------------------------------------------------------------
+
+# Extract the data frames
+hearing_data_original <- hearing_data_original |> 
+  mutate(dataset_type = "Original")
+
+hearing_data_synthetic_first <- hearing_data_synthetic$syn[[1]]
+
+# Combine the data frames
+hearing_combined_data <- hearing_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(hearing_data_original)
+
+# Scatterplot
+hearing_p1 <- 
+  hearing_combined_data |> 
+  mutate(group = case_when(group == "CB" ~ "Congentially Blind",
+                           group == "SC" ~ "Sighted Controls")) |> 
+  ggplot(aes(x = thre, color = dataset_type, fill = dataset_type)) +
+  geom_density(alpha = 0.8) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Auditory Localization",
+       y = "Density",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  facet_wrap(~group) +
+  scale_y_continuous(expand = c(0, 0))
+
+# Add title
+hearing_title <- ggdraw() +
+  draw_label_theme("E: Hearing (Battal et al., 2019)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+hearing_final_plot <- cowplot::plot_grid(
+  hearing_title,
+  hearing_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Communication Modalities ---------------------------------------------------------------------
+
+# Extract the data frames
+aac_data_original <- aac_data_original |> 
+  mutate(dataset_type = "Original")
+
+aac_data_synthetic_first <- aac_data_synthetic$syn[[1]]
+
+# Combine the data frames
+aac_combined_data <- aac_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(aac_data_original)
+
+# Scatterplot
+aac_p1 <- 
+  aac_combined_data |> 
+  ggplot(aes(x = value, color = dataset_type, fill = dataset_type)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Lack of/limited internet",
+       y = "Frequency",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8)),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank()) +
+  facet_wrap(~var, nrow = 1) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 245))
+
+# Add title
+aac_title <- ggdraw() +
+  draw_label_theme("F: Communication Modalities (King et al., 2022)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+aac_final_plot <- cowplot::plot_grid(
+  aac_title,
+  aac_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+## Put plots together ------------------------------------------------------
+
+# Add plot to the first plot above
+plot_a <- cowplot::plot_grid(
+  swallowing_general_utility_plot,
+  fluency_final_plot,
+  hearing_final_plot,
+  ncol = 1
+)
+
+# Add plots together
+plot_b <- cowplot::plot_grid(
+  articulation_final_plot,
+  voice_final_plot,
+  aac_final_plot,
+  ncol = 1
+)
+
+# Add all plots together
+combined_plots <- cowplot::plot_grid(
+  plot_a,
+  plot_b,
+  ncol = 2
+)
+
+# Add legend
+combined_plots2 <- cowplot::plot_grid(
+  legend,
+  combined_plots,
+  ncol = 1,
+  rel_heights = c(0.025, 1)
+)
+
+# save figure
+ggsave(
+  filename = here::here(
+    "Manuscript/tables-figures/figure_1.png"),
+    combined_plots2,
+    height = 15,
+    width = 13,
+    dpi = 300,
+    bg = "white"
+  )
+
+# Language - Kearney ------------------------------------------------------
+
+# Extract the data frames
+language_data_original <- language_data_original |> 
+  mutate(dataset_type = "Original")
+
+language_data_synthetic_first <- language_data_synthetic$syn[[1]]
+
+# Combine the data frames
+language_combined_data <- language_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(language_data_original)
+
+# Scatterplot
+language_p1 <- 
+  language_combined_data |> 
+  ggplot(aes(x = edu, y = tpost_cat_read_total, color = dataset_type, fill = dataset_type)) +
+  geom_point(alpha = 0.80, size = 2.5) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Education",
+       y = "Reading Score",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8)))
+
+# Add title
+language_title <- ggdraw() +
+  draw_label_theme("A: Language (Kearney et al., 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+language_final_plot <- cowplot::plot_grid(
+  language_title,
+  language_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Language - Single Subject -----------------------------------------------
+
+# Data Viz
+robinaugh_p1 <- 
+  robinaugh_combined_data |> 
+  ggplot(aes(x = factor(session), color = dataset_type, fill = dataset_type)) +
+  geom_bar(stat = "count", position = "dodge") +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Session",
+       y = "Frequency",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  scale_y_continuous(expand=c(0,0))
+
+robinaugh_p2 <- 
+  robinaugh_combined_data |> 
+  ggplot(aes(x = factor(response), color = dataset_type, fill = dataset_type)) +
+  geom_bar(stat = "count", position = "dodge") +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Response",
+       y = "Frequency",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8))) +
+  scale_y_continuous(expand=c(0,0))
+
+# Combine plots
+robinaugh_combined <- cowplot::plot_grid(robinaugh_p1,
+                                         robinaugh_p2,
+                                         ncol = 1,
+                                         rel_heights = c(0.5, 0.5))
+
+# Add title
+robinaugh_title <- ggdraw() +
+  draw_label_theme("B: Language (Robinaugh et al., 2024)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+robinaugh_final_plot <- cowplot::plot_grid(
+  robinaugh_title,
+  robinaugh_combined,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Cognition ---------------------------------------------------------------
+
+# Extract the data frames
+cognition_data_original <- cognition$data_original |> 
+  mutate(dataset_type = "Original")
+
+cognition_data_synthetic_first <- cognition_data_synthetic$syn[[1]]
+
+# Combine the data frames
+cognition_combined_data <- cognition_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(cognition_data_original)
+
+# Data viz
+cognition_p1 <- 
+  cognition_combined_data |> 
+  mutate(Correct = as.numeric(as.character(Correct)),
+         Group_NC = case_when(Group_NC == "BasicFace" ~ "Basic Face",
+                              Group_NC == "BasicEmoji" ~ "Basic Emoji",
+                              Group_NC == "SocialEmoji" ~ "Social Emoji")) |> 
+  group_by(Group_NC, Condition, dataset_type) %>%
+  summarize(Proportion_Correct = mean(Correct),
+            Count = n(),
+            .groups = 'drop') |> 
+  ggplot(aes(x = dataset_type, y = Proportion_Correct, fill = as.factor(dataset_type))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ Condition) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "",
+       y = "Proportion Correct",
+       fill = "Group NC") +
+  cowplot::theme_cowplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_blank(),
+        legend.position = "none") +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1),
+                     labels = scales::percent)
+
+# Add title
+cognition_title <- ggdraw() +
+  draw_label_theme("C: Cognition (Clough et al., 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+cognition_final_plot <- cowplot::plot_grid(
+  cognition_title,
+  cognition_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# Social Communication ----------------------------------------------------
+
+# Extract the data frames
+social_data_original <- social_data_original |> 
+  mutate(dataset_type = "Original")
+
+social_data_synthetic_first <- social_data_synthetic$syn[[1]]
+
+# Combine the data frames
+social_combined_data <- social_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(social_data_original)
+
+# Data viz
+social_p1 <- 
+  social_combined_data |> 
+  mutate(ParGroup = case_when(ParGroup == "ASD" ~ "Autism Spectrum Disorder",
+                              ParGroup == "TD" ~ "Neurotypical")) |> 
+  ggplot(aes(x = NVIQ, fill = as.factor(dataset_type))) +
+  geom_density(alpha = 0.80) +
+  facet_wrap(~ ParGroup) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Non-Verbal IQ",
+       y = "Density",
+       fill = "Group NC") +
+  cowplot::theme_cowplot() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 0.04))
+
+# Add title
+social_title <- ggdraw() +
+  draw_label_theme("D: Social (Chanchaochai & Schwarz, 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+social_final_plot <- cowplot::plot_grid(
+  social_title,
+  social_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+## Put plots together ------------------------------------------------------
+
+# Add plot to the first plot above
+plot_a1 <- cowplot::plot_grid(
+  language_final_plot,
+  cognition_final_plot,
+  ncol = 1
+)
+
+# Add plots together
+plot_b1 <- cowplot::plot_grid(
+  robinaugh_final_plot,
+  social_final_plot,
+  ncol = 1
+)
+
+# Add all plots together
+combined_plots1 <- cowplot::plot_grid(
+  plot_a1,
+  plot_b1,
+  ncol = 2
+)
+
+# Add legend
+combined_plots_2 <- cowplot::plot_grid(
+  NULL,
+  legend,
+  combined_plots1,
+  ncol = 1,
+  rel_heights = c(0.01, 0.025, 1)
+)
+
+# save figure
+ggsave(
+  filename = here::here(
+    "Manuscript/tables-figures/figure_2.png"),
+    combined_plots_2,
+    height = 10,
+    width = 10,
+    dpi = 300,
+    bg = "white"
+  )
+```
+
+```{r dispersion figures, echo = FALSE}
+# Visualize p-value distributions
+library(scales)
+
+articulation_pval_viz <- 
+  articulation$results_synthetic |> 
+  mutate(log_pvalue = log(p_value)) |> 
+  ggplot(aes(x = log_pvalue)) +
+  geom_density() +
+  geom_area(
+    aes(x = stage(log_pvalue, after_stat = oob_censor(x, c(-2000, log(articulation$results_original$p_value))))),
+    stat = "density",
+    color = "lightgreen",
+    fill = "lightgreen",
+    alpha = 0.5
+  ) +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(limits = c(-35, 0)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "log(p-value)",
+       y = "Density") +
+  ggtitle("A: Articulation",
+          subtitle = "Mean difference of 0.05 (SD = 0.10)") +
+  geom_vline(xintercept = log(articulation$results_original$p_value), color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+
+fluency_pval_viz <- 
+  fluency$results_synthetic |> 
+  mutate(log_pvalue = log(p_value)) |> 
+  ggplot(aes(x = log_pvalue)) +
+  geom_density() +
+  geom_area(
+    aes(x = stage(log_pvalue, after_stat = oob_censor(x, c(-2000, log(fluency$results_original$p_value))))),
+    stat = "density",
+    color = "lightgreen",
+    fill = "lightgreen",
+    alpha = 0.5
+  ) +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(limits = c(-35, 0)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "log(p-value)",
+       y = "Density") +
+  ggtitle("B: Fluency",
+          subtitle = "Mean difference of 0.0000007 (SD = 0.00003)") +
+  geom_vline(xintercept = log(fluency$results_original$p_value), color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+voice_pval_viz <- 
+  voice$results_synthetic |> 
+  mutate(log_pvalue = log(p_value)) |> 
+  ggplot(aes(x = log_pvalue)) +
+  geom_density() +
+  geom_area(
+    aes(x = stage(log_pvalue, after_stat = oob_censor(x, c(-2000, log(voice$results_original$p_value))))),
+    stat = "density",
+    color = "lightgreen",
+    fill = "lightgreen",
+    alpha = 0.5
+  ) +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(limits = c(-35, 0)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "log(p-value)",
+       y = "Density") +
+  ggtitle("C: Voice and resonance",
+          subtitle = "Mean difference of 0.005 (SD = 0.05)") +
+  geom_vline(xintercept = log(voice$results_original$p_value), color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+hearing_pval_viz <- 
+  hearing$results_synthetic |> 
+  mutate(log_pvalue = log(p_value)) |> 
+  ggplot(aes(x = log_pvalue)) +
+  geom_density() +
+  geom_area(
+    aes(x = stage(log_pvalue, after_stat = oob_censor(x, c(-2000, log(hearing$results_original$p_value))))),
+    stat = "density",
+    color = "lightgreen",
+    fill = "lightgreen",
+    alpha = 0.5
+  ) +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(limits = c(-35, 0)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "log(p-value)",
+       y = "Density") +
+  ggtitle("D: Hearing",
+          subtitle = "Mean difference of 0.03 (SD = 0.04)") +
+  geom_vline(xintercept = log(hearing$results_original$p_value), color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+language_pval_viz <- 
+  language$results_synthetic |> 
+  mutate(log_pvalue = log(p_value)) |> 
+  ggplot(aes(x = log_pvalue)) +
+  geom_density() +
+  geom_area(
+    aes(x = stage(log_pvalue, after_stat = oob_censor(x, c(-2000, log(language$results_original$p_value))))),
+    stat = "density",
+    color = "lightgreen",
+    fill = "lightgreen",
+    alpha = 0.5
+  ) +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(limits = c(-35, 0)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "log(p-value)",
+       y = "Density") +
+  ggtitle("E: Receptive and expressive language",
+          subtitle = "Mean difference of 0.0009 (SD = 0.002)") +
+  geom_vline(xintercept = log(language$results_original$p_value), color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+aac_pval_viz <- 
+  aac$results_synthetic |> 
+  mutate(log_pvalue = log(p_value)) |> 
+  ggplot(aes(x = log_pvalue)) +
+  geom_density() +
+  geom_area(
+    aes(x = stage(log_pvalue, after_stat = oob_censor(x, c(-2000, log(aac$results_original$p_value))))),
+    stat = "density",
+    color = "lightgreen",
+    fill = "lightgreen",
+    alpha = 0.5
+  ) +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(limits = c(-35, 0)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "log(p-value)",
+       y = "Density") +
+  ggtitle("F: Communication modalities",
+          subtitle = "Mean difference of 0.00004 (SD = 0.0002)") +
+  geom_vline(xintercept = log(aac$results_original$p_value), color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+cognition_pval_viz <- 
+  cognition$results_synthetic |> 
+  mutate(log_pvalue = log(p_value)) |> 
+  ggplot(aes(x = log_pvalue)) +
+  geom_density() +
+  geom_area(
+    aes(x = stage(log_pvalue, after_stat = oob_censor(x, c(-2000, log(cognition$results_original$p_value))))),
+    stat = "density",
+    color = "lightgreen",
+    fill = "lightgreen",
+    alpha = 0.5
+  ) +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(limits = c(-35, 0)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "log(p-value)",
+       y = "Density") +
+  ggtitle("G: Cognition",
+          subtitle = "Mean difference of 0.25 (SD = 0.28)") +
+  geom_vline(xintercept = log(cognition$results_original$p_value), color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+social_pval_viz <- 
+  social$results_synthetic |> 
+  mutate(log_pvalue = log(p_value)) |> 
+  ggplot(aes(x = log_pvalue)) +
+  geom_density() +
+  geom_area(
+    aes(x = stage(log_pvalue, after_stat = oob_censor(x, c(-2000, log(social$results_original$p_value))))),
+    stat = "density",
+    color = "lightgreen",
+    fill = "lightgreen",
+    alpha = 0.5
+  ) +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(limits = c(-35, 0)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "log(p-value)",
+       y = "Density") +
+  ggtitle("H: Social aspects of communication",
+          subtitle = "Mean difference of 0.01 (SD = 0.07)") +
+  geom_vline(xintercept = log(social$results_original$p_value), color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+
+# Combine p-value figures together
+pval_combined <- cowplot::plot_grid(articulation_pval_viz,
+                   fluency_pval_viz,
+                   voice_pval_viz,
+                   hearing_pval_viz,
+                   language_pval_viz,
+                   aac_pval_viz,
+                   cognition_pval_viz,
+                   social_pval_viz, 
+                   nrow = 4, 
+                   align = "hv"
+                   )
+
+# save figure
+ggsave(
+  filename = here::here(
+    "Manuscript/tables-figures/supplemental_figure_A.png"),
+    pval_combined,
+    height = 10,
+    width = 10,
+    dpi = 300,
+    bg = "white"
+  )
+
+# Visualize effect size distributions
+articulation_es_viz <- 
+  articulation$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=0.40, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(0, 0.2, 0.4, 0.59, 0.80), limits = c(0, 0.80)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "Cohen's f",
+       y = "Count") +
+  ggtitle("A: Articulation",
+          subtitle = "Mean difference of 0.19 (SD = 0.12)") +
+  geom_vline(xintercept = 0.59, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+
+fluency_es_viz <- 
+  fluency$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=Inf, xmax=-Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(-4, -3, -2.18, -1), limits = c(-4, -1)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "Glass' Δ",
+       y = "Count") +
+  ggtitle("B: Fluency",
+          subtitle = "Mean difference of 0.36 (SD = 0.28)") +
+  geom_vline(xintercept = -2.18, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+voice_es_viz <- 
+  voice$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=0.50, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(0, 0.20, 0.40, 0.51, 0.60, 0.80), limits = c(0, 0.80)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "Correlation coefficient",
+       y = "Count") +
+  ggtitle("C: Voice and resonance",
+          subtitle = "Mean difference of 0.09 (SD = 0.07)") +
+  geom_vline(xintercept = 0.51, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+hearing_es_viz <- 
+  hearing$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(1, 1.2, 1.4, 1.56, 1.8, 2, 2.2), limits = c(0.90, 2.20)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = expression(sqrt(3/pi) ~ "× odds ratio"),
+       y = "Count") +
+  ggtitle("D: Hearing",
+          subtitle = "Mean difference of 0.18 (SD = 0.14)") +
+  geom_vline(xintercept = 1.56, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+language_es_viz <- 
+  language$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=0.50, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(0.30, 0.4, 0.5, 0.59, 0.7, 0.8), 
+                     limits = c(0.30, 0.80)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "Correlation coefficient",
+       y = "Count") +
+  ggtitle("E: Receptive and expressive language",
+          subtitle = "Mean difference of 0.06 (SD = 0.05)") +
+  geom_vline(xintercept = 0.59, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+aac_es_viz <- 
+  aac$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(10, 20, 30, 34.6, 40, 50), limits = c(10, 50)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = expression("Cohen's" ~ omega),
+       y = "Count") +
+  ggtitle("F: Communication modalities",
+          subtitle = "Mean difference of 7.24 (SD = 5.08)") +
+  geom_vline(xintercept = 34.6, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+cognition_es_viz <- 
+  cognition$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=0.80, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(0.80, 1, 1.25, 1.53, 1.75, 2), limits = c(0.70, 2.1)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = expression(sqrt(3/pi) ~ "× odds ratio"),
+       y = "Count") +
+  ggtitle("G: Cognition",
+          subtitle = "Mean difference of 0.28 (SD = 0.19)") +
+  geom_vline(xintercept = 1.53, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+social_es_viz <- 
+  social$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=-0.80, xmax=-Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(-2, -1.5, -0.85, -0.5, 0), limits = c(-2, 0)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = expression(sqrt(3/pi) ~ "× odds ratio"),
+       y = "Count") +
+  ggtitle("H: Social aspects of communication",
+          subtitle = "Mean difference of 0.21 (SD = 0.20)") +
+  geom_vline(xintercept = -0.85, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+
+# Combine effect size figures together
+es_combined <- cowplot::plot_grid(articulation_es_viz,
+                   fluency_es_viz,
+                   voice_es_viz,
+                   hearing_es_viz,
+                   language_es_viz,
+                   aac_es_viz,
+                   cognition_es_viz,
+                   social_es_viz, 
+                   nrow = 4, 
+                   align = "hv"
+                   )
+
+# save figure
+ggsave(
+  filename = here::here(
+    "Manuscript/tables-figures/supplemental_figure_B.png"),
+    es_combined,
+    height = 10,
+    width = 10,
+    dpi = 300,
+    bg = "white"
+  )
+```
+
+```{r supplemental table 1, echo = FALSE, eval = FALSE}
+
+# This code reads in a template, generates table 3, 
+# and then saves it as word doc in the appropriate folder
+
+# Load in the data
+swallowing <- base::readRDS(file = here::here("Data","01_Swallowing","analysisData.RDS"))
+articulation <- base::readRDS(file = here::here("Data","02_Articulation","analysisData.RDS"))
+fluency <- base::readRDS(file = here::here("Data","03_Fluency","analysisData.RDS"))
+voice <- base::readRDS(file = here::here("Data","04_Voice_Resonance","analysisData.RDS"))
+hearing <- base::readRDS(file = here::here("Data","05_Hearing","analysisData.RDS"))
+aac <- base::readRDS(file = here::here("Data","06_AAC","analysisData.RDS"))
+language <- base::readRDS(file = here::here("Data","07_Language", "Kearney", "analysisData.RDS"))
+cognition <- base::readRDS(file = here::here("Data","08_Cognition","analysisData.RDS"))
+social <-base::readRDS(file = here::here("Data","09_Social_Communication","analysisData.RDS"))
+
+cols2 <- tibble(
+  `Domain` = c(
+    "Articulation",
+    "Fluency",
+    "Voice and resonance",
+    "Hearing",
+    "Communication modalities",
+    "Receptive and expressive language",
+    "Cognitive aspects of communication",
+    "Social aspects of communication"
+  ),
+  `Study` = c(
+    "Thompson et al. (2023)",
+    "Elsherif et al. (2021)",
+    "Novotný et al. (2016)",
+    "Battal et al. (2019)",
+    "King et al. (2022)",
+    "Kearney et al. (2023)",
+    "Clough et al. (2023)",
+    "Chanchaochai & Schwarz (2023)"
+  ),
+  `Sample Size` = c(
+    articulation$results_summary$N,
+    fluency$results_summary$N,
+    voice$results_summary$N,
+    hearing$results_summary$N,
+    aac$results_summary$N,
+    language$results_summary$N,
+    cognition$results_summary$N,
+    social$results_summary$N
+  ),
+  `P-value` = c(
+    articulation$results_summary$p_value,
+    fluency$results_summary$p_value,
+    voice$results_summary$p_value,
+    sub("^0", "", hearing$results_summary$p_value),
+    aac$results_summary$p_value,
+    language$results_summary$p_value,
+    sub("^0", "", cognition$results_summary$p_value),
+    social$results_summary$p_value
+  ),
+  `Effect Size Measure` = c(
+    articulation$results_summary$effect_size_measure,
+    fluency$results_summary$effect_size_measure,
+    voice$results_summary$effect_size_measure,
+    hearing$results_summary$effect_size_measure,
+    aac$results_summary$effect_size_measure,
+    language$results_summary$effect_size_measure,
+    cognition$results_summary$effect_size_measure,
+    social$results_summary$effect_size_measure
+  ),
+  `Effect Size` = c(
+    sub("^0", "", articulation$results_summary$effect_size),
+    sub("^0", "", fluency$results_summary$effect_size),
+    sub("^0", "", voice$results_summary$effect_size),
+    sub("^0", "", hearing$results_summary$effect_size),
+    sub("^0", "", aac$results_summary$effect_size),
+    sub("^0", "", language$results_summary$effect_size),
+    sub("^0", "", cognition$results_summary$effect_size),
+    sub("0.", ".", social$results_summary$effect_size)
+  ),
+  `P-value\nAgreement` = c(
+    articulation$results_summary$synAgreement_pvalue,
+    fluency$results_summary$synAgreement_pvalue,
+    voice$results_summary$synAgreement_pvalue,
+    hearing$results_summary$synAgreement_pvalue,
+    aac$results_summary$synAgreement_pvalue,
+    language$results_summary$synAgreement_pvalue,
+    cognition$results_summary$synAgreement_pvalue,
+    social$results_summary$synAgreement_pvalue
+  ),
+  `Effect Size Categorization\nAgreement` = c(
+    articulation$results_summary$synAgreement_effectSize,
+    fluency$results_summary$synAgreement_effectSize,
+    voice$results_summary$synAgreement_effectSize,
+    hearing$results_summary$synAgreement_effectSize,
+    aac$results_summary$synAgreement_effectSize,
+    language$results_summary$synAgreement_effectSize,
+    cognition$results_summary$synAgreement_effectSize,
+    social$results_summary$synAgreement_effectSize
+  )
+)
+
+set_flextable_defaults(font.family = "Times New Roman")
+
+t2 <- flextable(cols2) |>
+  set_caption("Supplemental Table 1: Stability of synthetic datasets across ASHA domains.") |> 
+  set_table_properties(layout = "autofit", width = 1)
+
+doc <- read_docx(here("manuscript", "templates-data", "template.docx"))
+doc <- body_add_flextable(doc, value = t2)
+fileout <- here("manuscript", "tables-figures", "supplemental_table_1.docx") # uncomment to write in your working directory
+print(doc, target = fileout)
+```
+
+# Discussion
+
+Although computational reproducibility is a core principle of science, data sharing is uncommon in CSD, partly due to concerns regarding disclosure risk [@pfeiffer_etal24]. This study demonstrates the utility of synthetic datasets to protect participant confidentiality while preserving the statistical properties and relationships of the original analysis data. The utility of synthetic data is further strengthened by the range of datasets included in the current study, which varied by domain (across nine ASHA domains), sample size (from 40 to >8,000 data points), statistical models (from simple correlations to multilevel model with 3-way interactions), and effect sizes (from conventionally "small" to "large"). These results suggest that synthetic datasets can be effectively used across a wide range of studies in the field of CSD to preserve participant confidentiality when sharing data.
+
+The current findings illustrate the feasibility of generating synthetic datasets across a range of studies in the field of CSD. Studies were conveniently selected based on domain and data availability, but varied in design, sample size, population, and statistics employed. While it was possible to synthesize a dataset for all included studies, it is important to consider the accuracy of the synthesis with regards to the purpose of data sharing. All synthetic datasets in the current study showed strong general utility, which means they would be suitable for sharing for educational purposes or to demonstrate computational reproducibility for published analyses, while mitigating confidentiality concerns. Six of the nine studies with inferential statistics also demonstrated strong specific utility. These datasets could form the basis for further hypothesis-testing or inclusion in meta-analyses, while those with low specific utility should be excluded from such analyses.
+
+One key finding is that low specific utility of synthetic datasets was not necessarily attributed to sample size, despite the *synthpop* package’s recommendation of a minimum of 130 observations for generating synthetic datasets [@nowok_etal16]. For example, specific utility was low for a synthetic dataset from the cognition domain with over 8,000 observations. Instead, low specific utility was primarily associated with datasets containing a hierarchical structure, such as repeated measure or nested designs, which are common in CSD. This suggests that current synthesis methods in synthpop may not adequately capture multilevel dependencies. Alternative approaches specifically designed to handle hierarchical data [@gauvin21] may offer a better solution and should be explored in future work.
+
+These findings highlight the importance of evaluating the accuracy of synthetic datasets. To ensure synthetic data quality, researchers should clearly define their intended purpose (e.g., educational, exploratory, inferential) and assess general and/or specific utility accordingly. If synthetic datasets fail to retain key relationships of the original data, they should not be used or shared. Comparisons between synthetic and original analyses should be made available, ideally in supplementary materials, to promote transparency. This information can also give the end-user researcher confidence in using a synthetic dataset for their own purposes; a limitation cited in the re-use of synthetic data [@matthews_harel11].
+
+## Limitations and future directions
+This study is not without limitations. First, studies were selected in the present study because they were openly available and represented different subfields within CSD. Therefore, selection bias is likely present, and these studies are certainly not representative of every research design or data parameter that a researcher may encounter. It is imperative that the user evaluate the utility of synthetic data in the context of their own goals (e.g., educational, workflow transparency, or meta-analysis/hypothesis generation purposes) before publicly sharing the dataset. 
+
+Second, it is important to recognize that synthetic data are inherently a proxy and cannot entirely preserve all statistical properties of the original dataset. Whenever ethically permissible, researchers should prioritize sharing de-identified or identifiable data. Moreover, open data alone does not ensure computational reproducibility. Instead, open data must be accompanied by reproducible code and analysis scripts. In fact, recent research showed that a high percentage of findings from registered reports that provided open data alone were unable to be reproduced [@obels_etal20a]. Reproducible workflows in languages like R have been proposed and warrant consideration [@peikert_etal21a].
+
+Moving forward, broader systemic changes will be necessary to normalize and encourage responsible data sharing. Doctoral programs should offer formal training on open science, data sharing, and analysis practices that promote reproducibility. Fortunately, a wealth of resources is available to support researchers in learning these practices (Lewis, 2024). Academic institutions must also recognize open science activities as meaningful scholarly contributions. While ASHA’s implementation of open science badges is a positive step, more systemic efforts will be required to shift the culture away from individualism and toward a more collaborative, pro-social scientific community.
+
+## Conclusions
+
+This study evaluated the feasibility and use of the synthpop package in R for generating synthetic data in the field of CSD, particularly when sharing original data presents confidentiality risks. Findings suggest that synthetic data can effectively reproduce distributional and inferential properties in datasets without hierarchical structures. However, for hierarchical datasets, synthetic data generated using synthpop may not maintain key inferential relationships, limiting its suitability for some research applications. Therefore, researchers should rigorously assess the utility of synthetic datasets before sharing and ensure their intended purpose aligns with the capabilities of the synthesis method used.
+
+\newpage
+
+# Acknowledgements
+
+We would like to thank the authors of the studies included in this manuscript for making their data publicly available.
+
+<br>
+
+**Funding**: None.
+
+<br>
+
+**Study Preregistration and Data Availability**: The study preregistration (https://osf.io/vhgq2) and associated data and analysis scripts (https://osf.io/yhkqf/) are publicly available on the Open Science Framework.
+
+\newpage
+
+# References
+
+::: {#refs}
+:::
+
+\newpage
+
+::: {custom-style="noIndentParagraph"}
+# Table and Figure Captions
+
+Table 1: Description of types of data.
+
+<br>
+
+Table 2: Characteristics of included studies by ASHA domain.
+
+<br>
+
+Table 3: Effect size measures and interpretation by statistical test.
+
+<br>
+
+Figure 1. Visualization of data distributions from synthetic and original data for Study #1 (Curtis et al., 2023). 
+
+*Caption*: Panel A displays the overall distribution of laryngeal vestibule residue. Panel B displays the frequency of values by bolus consistency.
+
+<br>
+
+Figure 2. Visualization of data distributions from synthetic and original data for Study #2 (Thompson et al., 2023). 
+
+*Caption*: Panel A displays the distribution of vowel space area and panel B displays the distribution of speech intelligibility.
+
+<br>
+
+Supplemental Table 1: Stability of synthetic datasets across ASHA domains.
+
+<br>
+
+Supplemental Figure A. Distribution of log-transformed *p*-values in synthetic datasets across ASHA domains.
+
+*Caption*: Each panel displays the distribution of log-transformed *p*-values across 100 synthetic datasets for a given ASHA domain. The dashed line indicates the threshold for statistical significance from the original study. Shaded green areas indicate synthetic *p*-values that maintained the statistical inferential result of the original study. The mean difference and standard deviation of raw *p*-values compared to the *p*-value reported in the original study is shown below each panel's title.
+
+<br>
+
+Supplemental Figure B. Distribution of effect sizes in synthetic datasets across ASHA domains.
+
+*Caption*: Each panel displays the distribution of effect sizes across 100 synthetic datasets for a given ASHA domain. The dashed line indicates the effect size reported in the original study and the light blue shaded area indicates the range of the effect size categorization. The mean difference and standard deviation of the effect size compared to the result reported in the original study is shown below each panel's title.
+:::
