@@ -349,7 +349,7 @@ Nowok et al. (2016) provide an in-depth overview of the synthpop package’s fea
 
 In the present study, we aimed to explore the feasibility and preliminary utility of synthetic data to promote transparency and reproducibility in CSD. Utility was operationalized as general (does the synthetic data resemble the original data in its statistical properties and distribution?) and specific (is the inferential relationship between variables maintained?). To evaluate general utility, we visually compared univariate (e.g.., bar charts, histograms) and bivariate joint distributions (e.g., scatterplots) between the original and synthetic dataset, and evaluated the predicted probability that a record comes from the synthetic versus original data, known as the standardized propensity mean squared error (*S_pMSE*). Standardized propensity scores closer to zero indicate greater general utility (typically with a standard deviation of one), where a value of zero indicates that the original and synthetic data are identical [@snoke_etal18]. Notably, a value of zero is highly unlikely since synthetic data generation aims to achieve distributional similarity.
 
-To assess specific utility, a statistical analysis was selected from each study and performed separately with the original and the synthetic data. Greater overlap in effect size or coefficient confidence intervals and similar p-value inferences (i.e., significant or non-significant) indicated greater specific utility. Since Curtis et al. (2023) examined median and interquartile ranges (IQR) instead of inferential statistical models, only general utility was examined. The pre-registered analysis plan and corresponding deviations are publicly available on the Open Science Framework (https://osf.io/vhgq2).
+To assess specific utility, a statistical analysis was selected from each study and performed separately with the original and the synthetic data. Greater overlap in effect size or coefficient confidence intervals and similar p-value inferences (i.e., significant or non-significant) indicated greater specific utility. Since Curtis et al. (2023) examined median and interquartile ranges (IQR) instead of inferential statistical models, only general utility was examined. The pre-registered analysis plan and corresponding deviations are publicly available on the Open Science Framework (https://osf.io/vhgq2). Additional analyses evaluating the distribution and stability of *p*-values and effect sizes across 100 synthetic datasets are included in the supplemental materials.
 
 
 ##### Table 3 here.
@@ -368,7 +368,7 @@ cols3 <- tibble(
     "Cohen’s d (Cohen, 1988) &\nGlass' Δ (Hedges & Olkin, 1985)",
     "Correlation coefficient\n(Cohen, 1988)",
     "Cohen's 𝜔\n(Cohen, 1988)",
-    "√(3/𝜋) x odds ratio\n(Haddock et al., 1998; Hasselblad & Hedges, 1995)"
+    "Odds ratio\n(Haddock et al., 1998)"
   ),
   `Small` = c(
     "0.1",
@@ -1199,7 +1199,7 @@ hearing_analyze_data <- function(data) {
   list(
     p_value = model_results$`p-value`[3], # Extracting p-values
     # Extracting effect size - standardized effect size (Haddock et al., 1998; Hasselblad & Hedges, 1995)
-    effect_size = (sqrt(3/pi))*exp(model_fit$coefficients$fixed[3]),
+    effect_size = exp(model_fit$coefficients$fixed[3]),
     conf_int_lower = exp(intervals(model)[["fixed"]][3,][1]), # Extracting lower CI bound
     conf_int_upper = exp(intervals(model)[["fixed"]][3,][3]), # Extracting upper CI bound
     random_mean = mean(random_effects), # Extracting random effects mean
@@ -2044,7 +2044,7 @@ cognition_analyze_data <- function(data) {
     p_value = model_fit$coefficients[7,4], # Extracting p-values
     # Extracting effect size for Group (NC0) X Condition (2) Interaction - standardized effect size (Haddock et al., 1998; Hasselblad & Hedges, 1995)
     OR = exp(model_fit$coefficients[4,1]),
-    effect_size = (sqrt(3/pi))*exp(model_fit$coefficients[4,1]),
+    effect_size = exp(model_fit$coefficients[4,1]),
     conf_int_lower = exp(confint(m2, method = "Wald", level = .95)[5,][1]), # Extracting lower CI bound
     conf_int_upper = exp(confint(m2, method = "Wald", level = .95)[5,][2]), # Extracting upper CI bound
     random_mean = mean(random_effects), # Extracting random effects mean
@@ -3359,7 +3359,7 @@ hearing_es_viz <-
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
         axis.title.y = element_text(margin = margin(r = 2))) +
-  labs(x = expression(sqrt(3/pi) ~ "× odds ratio"),
+  labs(x = "Odds ratio",
        y = "Count") +
   ggtitle("D: Hearing",
           subtitle = "Mean difference of 0.18 (SD = 0.14)") +
@@ -3420,7 +3420,7 @@ cognition_es_viz <-
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
         axis.title.y = element_text(margin = margin(r = 2))) +
-  labs(x = expression(sqrt(3/pi) ~ "× odds ratio"),
+  labs(x = "Odds ratio",
        y = "Count") +
   ggtitle("G: Cognition",
           subtitle = "Mean difference of 0.28 (SD = 0.19)") +
@@ -3440,7 +3440,7 @@ social_es_viz <-
         legend.justification="center",
         axis.title.x = element_text(margin = margin(t = 4)),
         axis.title.y = element_text(margin = margin(r = 2))) +
-  labs(x = expression(sqrt(3/pi) ~ "× odds ratio"),
+  labs(x = "Odds ratio",
        y = "Count") +
   ggtitle("H: Social aspects of communication",
           subtitle = "Mean difference of 0.21 (SD = 0.20)") +
