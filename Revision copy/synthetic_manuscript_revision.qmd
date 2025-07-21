@@ -1851,6 +1851,193 @@ df_coded2 <- df %>%
   mutate(phase = ifelse(condition == "untreated", 0, phase),
          slope_change = ifelse(condition == "untreated", 0, slope_change))
 
+# Analysis Function ----
+# Examine correlation between education (years) and reading t-scores
+language2_analyze_data <- function(data) {
+  model <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
+              (session + phase + slope_change | set/id), # 
+            family = bernoulli(),  #binomial in lme4
+            data = data, # both trained and untrained sets
+            iter = 4000, # number of total samples per chain
+            warmup = 1000, # number of samples tossed out per chain
+            inits = 'random', # each chain takes random starting values
+            chains = 4, # 4 total chains
+            cores = 4, # use 4 computer cores to run chains simultaneously
+            control = list(adapt_delta = .97), # to aid model convergence
+            prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
+                      prior(normal(0, 2), class = b), # prior distributions
+                      prior(normal(0, 2), class = sd),
+                      prior(lkj(2), class = cor)),
+            backend = 'cmdstan',
+            seed = 42,
+            refresh = 0, #for the markdown document 
+            file = here::here("Data", "07_Language", "Robinaugh", "new_approach"),
+            file_refit = "on_change"
+)
+  
+  pred_d <- model$data %>%
+  select(-response, -Intercept) %>% 
+  group_by(id) %>% # for each word
+  mutate(num_baselines = ifelse(set != 7, sum(phase == 0), 4)) %>% 
+  #Untrained Set 7 set to give posterior distributions at session 4 
+  #(last baseline without any tx) and session 12 (the last tx phase probe)
+  filter(session == num_baselines | session == max(session))
+  
+  es <- add_epred_draws(m.1b, newdata = pred_d |> filter(set != 7), 
+                      pred = 'value', seed = 42) %>% 
+  ungroup() %>% #
+  mutate(time_point = ifelse(slope_change == 0, 'entry', 'exit')) %>% #
+  select(time_point, id, value = .epred, draw = .draw) %>% #
+  group_by(draw, time_point) %>% #
+  summarize(num_corr = sum(value)) %>% #
+  pivot_wider(names_from = time_point, values_from = num_corr) %>% # 
+  mutate(effect_size = exit - entry) %>% #
+  ungroup() %>%  # 
+  select(effect_size)
+  
+  median_qi <- es %>% # only need one variable
+  tidybayes::median_qi(effect_size)
+  
+  list(
+    effect_size = median_qi$effect_size, # Extracting effect size
+    # CI
+    conf_int_lower = median_qi$.lower,
+    conf_int_upper = median_qi$.upper
+  )
+}
+
+# Reproduce original results ----
+language_results_original <- language2_analyze_data(df_coded2) |>
+  as.data.frame(row.names = NULL) |>
+  mutate(
+    dataset = "original"
+  )
+
+# Create synthetic data ----
+language2_data_synthetic <- syn(df_coded2, # method = "ctree",
+                                m = 100, seed = 2024)
+
+# Perform analysis on each synthetic dataset
+language2_results_synthetic <- language2_data_synthetic$syn |>
+  purrr::map_df(~ language2_analyze_data(.x), .id = "dataset") |>
+  add_column(domain = "Receptive and expressive language")
+
+# Compile results ----
+language_results_summary <- data_frame(
+  Domain = "Language",
+  Study = "Kearney et al. (2023)",
+  
+  # Pulling sample size, p value, and effect sizes from the original results
+  N = nrow(language_data_original),
+  p_value = ifelse(
+    language_results_original$p_value < .001, "<.001",
+    sprintf("%0.3f", language_results_original$p_value)),
+  effect_size_measure = "Correlation coefficient",
+  effect_size = round(language_results_original$effect_size, digits = 2),
+  
+  # Creating the % Agreement for p values between the original and the synthetic datasets
+  synAgreement_pvalue = language_results_synthetic |>
+    count(sig) |>
+    dplyr::mutate(percent = n / NROW(language_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(sig == language_results_original$sig) |>
+    dplyr::pull(percent),
+  absDiff_pvalue_mean = mean(language_results_synthetic$diff_pvalue),
+  absDiff_pvalue_sd = sd(language_results_synthetic$diff_pvalue),
+  
+  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
+  synAgreement_effectSize = language_results_synthetic |>
+    count(categorization) |>
+    dplyr::mutate(percent = n / nrow(language_results_synthetic) * 100,
+                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
+    dplyr::filter(categorization == language_results_original$categorization) |>
+    dplyr::pull(percent),
+  absDiff_effectSize_mean = mean(language_results_synthetic$diff_effectSize),
+  absDiff_effectSize_sd = sd(language_results_synthetic$diff_effectSize),
+)
+
+# Tidying the R project environment ----
+## Throwing the relevant environment objects into a list for this study.
+language <- list(
+  data_original = language_data_original,
+  data_synthetic = language_data_synthetic,
+  results_original = language_results_original,
+  results_synthetic = language_results_synthetic,
+  results_summary = language_results_summary,
+  alpha = language_alpha
+)
+
+# General Utility ----
+language_data_synthetic_first <- language_data_synthetic$syn[[1]] |> 
+  as.data.frame()
+
+language_data_original2 <- language_data_original |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Combine the data frames
+language_combined_data <- language_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(language_data_original2)
+
+# Calculate utility with s_pMSE
+language_utility_df <- utility.tables(
+  language_data_synthetic_first,
+  language_data_original,
+  tables = "oneway",
+  tab.stats = "S_pMSE",
+  print.tabs = FALSE
+)
+    
+# Extract s_pMSE value
+language_s_pMSE_value <- language_utility_df$tabs |>
+  as.data.frame() |>
+  rownames_to_column(var = "rowname")
+
+# Data Viz
+language_p1 <- 
+  language_combined_data |> 
+  ggplot(aes(x = edu, y = tpost_cat_read_total, color = dataset_type, fill = dataset_type)) +
+  geom_jitter(alpha = 0.80, size = 2.5, width = 0.15, height = 0.02) +
+  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
+  labs(x = "Years of Education",
+       y = "Reading Score",
+       color = "Dataset Type",
+       fill = "Dataset Type") +
+  cowplot::theme_cowplot() +
+  theme(legend.position = "none",
+        axis.title.x = element_text(margin = margin(r = 8)),
+        axis.title.y = element_text(margin = margin(t = 8)))
+
+# Add title
+language_title <- ggdraw() +
+  draw_label_theme("A: Language (Kearney et al., 2023)", 
+                   theme = theme_cowplot(), element = "plot.title",
+                   x = 0.075, hjust = 0, vjust = 1)
+
+# Combine plot with title
+language_final_plot <- cowplot::plot_grid(
+  language_title,
+  language_p1,
+  ncol = 1,
+  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
+)
+
+# ## Cleaning up the environment
+# rm(
+#   language_data_original,
+#   language_data_synthetic,
+#   language_results_original,
+#   language_results_synthetic,
+#   language_results_summary,
+#   language_alpha
+# )
+
+# Saving the data and results for easy importing later.
+base::saveRDS(object = language,
+              file = here::here("Data","07_Language", "Kearney", "analysisData.RDS"))
+
 # Model Fitting
 m.1b <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
              (session + phase + slope_change | set/id), # 
