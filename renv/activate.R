@@ -3,7 +3,7 @@ local({
 
   # the requested version of renv
   version <- "1.1.4.9000"
-  attr(version, "sha") <- NULL
+  attr(version, "sha") <- "5e6b469b72de178b2f2d847e614805efdb452e26"
 
   # the project directory
   project <- Sys.getenv("RENV_PROJECT")

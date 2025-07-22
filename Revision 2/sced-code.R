@@ -117,6 +117,7 @@ results_summary <- tibble(
   effect_size_original = original_estimate$y,
   CI_lower_original = original_estimate$ymin,
   CI_upper_original = original_estimate$ymax,
+  mean_synthetic_effect_size = mean(synthetic_results$synthetic_effect_size),
   mean_diff_effect_size = mean(synthetic_results$diff_effect_size),
   sd_diff_effect_size = sd(synthetic_results$diff_effect_size),
   mean_diff_CI_lower = mean(synthetic_results$diff_CI_lower),

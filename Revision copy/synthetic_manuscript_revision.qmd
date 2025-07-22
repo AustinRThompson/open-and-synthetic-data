@@ -1828,339 +1828,138 @@ Two studies were included in the domain of Receptive and Expressive Language [@k
 Kearney et al. (2023) examined the relationship between years of education and reading performance among 36 individuals following left-hemisphere tumor resection. Results indicated a large relationship between these variables (*r* = 0.59, *p* < .001). Compared to original data, the synthetic data showed maintained a similar visual relationship between years of education and reading scores (Figure 2A). General utility was high for both years of education (*S_pMSE* = `r round(language_s_pMSE_value$S_pMSE[1], digits = 2)`) and reading scores (*S_pMSE* = `r round(language_s_pMSE_value$S_pMSE[2], digits = 2)`) variables. The statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(language_results_synthetic[1,]$p_value)`) and effect size magnitude (*r* = `r round(language_results_synthetic[1,]$effect_size, digits = 2)`), indicating high specific utility.
 
 ```{r echo = FALSE}
+library(purrr)
 library(kableExtra)
 library(tidybayes)
+library(tidyverse)
+library(synthpop)
+library(brms)
 
-# Import data
+# Original Data Import & Preprocessing
 df <- read.csv(here::here("Data", "07_Language", "Robinaugh", 'SDTBI001_Data.csv')) %>%
   janitor::clean_names() %>%
   mutate(condition = ifelse(condition == 0, 'untreated', 'treated'),
          phase = as.factor(phase)) %>%
-  mutate_if(is.character, as.factor) 
+  mutate_if(is.character, as.factor)
 
-# Model Setup
+# Prepare original model data
 df_coded2 <- df %>%
   filter(session < 13) %>%
   group_by(id) %>%
   mutate(phase = ifelse(phase == 'Pre', 0, 1),
          num_baselines = sum(phase == 0),
-         # slope change is calculated by (T-(n1 + 1))D
-         slope_change = (session - (num_baselines+1))*phase
-         ) %>%
+         slope_change = (session - (num_baselines + 1)) * phase) %>%
   select(id, set, condition, response, session, phase, slope_change) %>%
   mutate(phase = ifelse(condition == "untreated", 0, phase),
          slope_change = ifelse(condition == "untreated", 0, slope_change))
 
-# Analysis Function ----
-# Run Bayesian model
-language2_analyze_data <- function(data) {
-  model <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
-              (session + phase + slope_change | set/id), # 
-            family = bernoulli(),  #binomial in lme4
-            data = data, # both trained and untrained sets
-            iter = 4000, # number of total samples per chain
-            warmup = 1000, # number of samples tossed out per chain
-            inits = 'random', # each chain takes random starting values
-            chains = 4, # 4 total chains
-            cores = 4, # use 4 computer cores to run chains simultaneously
-            control = list(adapt_delta = .97), # to aid model convergence
-            prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
-                      prior(normal(0, 2), class = b), # prior distributions
-                      prior(normal(0, 2), class = sd),
-                      prior(lkj(2), class = cor)),
-            backend = 'cmdstan',
-            seed = 42,
-            refresh = 0, #for the markdown document 
-            file = here::here("Data", "07_Language", "Robinaugh", "new_approach"),
-            file_refit = "on_change"
-)
-  
+# Analysis Function
+get_model_estimate <- function(model) {
   pred_d <- model$data %>%
-  select(-response, -Intercept) %>% 
-  group_by(id) %>% # for each word
-  mutate(num_baselines = ifelse(set != 7, sum(phase == 0), 4)) %>% 
-  #Untrained Set 7 set to give posterior distributions at session 4 
-  #(last baseline without any tx) and session 12 (the last tx phase probe)
-  filter(session == num_baselines | session == max(session))
+    select(-response, -Intercept) %>%
+    group_by(id) %>%
+    mutate(num_baselines = ifelse(set != 7, sum(phase == 0), 4)) %>%
+    filter(session == num_baselines | session == max(session))
   
-  es <- add_epred_draws(m.1b, newdata = pred_d |> filter(set != 7), 
-                      pred = 'value', seed = 42) %>% 
-  ungroup() %>% #
-  mutate(time_point = ifelse(slope_change == 0, 'entry', 'exit')) %>% #
-  select(time_point, id, value = .epred, draw = .draw) %>% #
-  group_by(draw, time_point) %>% #
-  summarize(num_corr = sum(value)) %>% #
-  pivot_wider(names_from = time_point, values_from = num_corr) %>% # 
-  mutate(effect_size = exit - entry) %>% #
-  ungroup() %>%  # 
-  select(effect_size)
+  es <- add_epred_draws(model, newdata = pred_d |> filter(set != 7), seed = 42) %>%
+    ungroup() %>%
+    mutate(time_point = ifelse(slope_change == 0, 'entry', 'exit')) %>%
+    select(time_point, id, value = .epred, draw = .draw) %>%
+    group_by(draw, time_point) %>%
+    summarize(num_corr = sum(value), .groups = "drop") %>%
+    pivot_wider(names_from = time_point, values_from = num_corr) %>%
+    mutate(effect_size = exit - entry) %>%
+    select(effect_size)
   
-  median_qi <- es %>% # only need one variable
-  tidybayes::median_qi(effect_size)
-  
-  list(
-    effect_size = median_qi$effect_size, # Extracting effect size
-    # CI
-    conf_int_lower = median_qi$.lower,
-    conf_int_upper = median_qi$.upper
-  )
+  median_qi(es$effect_size)
 }
 
-# Reproduce original results ----
-language_results_original <- language2_analyze_data(df_coded2) |>
-  as.data.frame(row.names = NULL) |>
+# Original model saving/loading
+original_model_path <- here::here("Data", "07_Language", "Robinaugh", "original_model.rds")
+
+if (file.exists(original_model_path)) {
+  original_model <- readRDS(original_model_path)
+} else {
+  original_model <- brm(response ~ 0 + Intercept + session + phase + slope_change +
+                          (session + phase + slope_change | set/id),
+                        family = bernoulli(),
+                        data = df_coded2,
+                        iter = 4000, warmup = 1000,
+                        chains = 4, cores = 4,
+                        control = list(adapt_delta = .97),
+                        prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
+                                  prior(normal(0, 2), class = b),
+                                  prior(normal(0, 2), class = sd),
+                                  prior(lkj(2), class = cor)),
+                        backend = 'cmdstan', seed = 42, refresh = 0)
+  saveRDS(original_model, original_model_path)
+}
+
+# Original estimate
+original_estimate <- get_model_estimate(original_model)
+
+# Generate synthetic data
+syn_data <- syn(df_coded2, m = 100, seed = 2024)
+
+# Analyze Synthetic Datasets
+synthetic_results <- syn_data$syn %>%
+  imap_dfr(~ {
+    synthetic_model_path <- here::here("Data", "07_Language", "Robinaugh", "synthetic_models", paste0("synthetic_model_", .y, ".rds"))
+    
+    if (file.exists(synthetic_model_path)) {
+      synthetic_model <- readRDS(synthetic_model_path)
+    } else {
+      synthetic_model <- brm(response ~ 0 + Intercept + session + phase + slope_change +
+                               (session + phase + slope_change | set/id),
+                             family = bernoulli(),
+                             data = .x,
+                             iter = 2000, warmup = 1000,
+                             chains = 4, cores = 4,
+                             control = list(adapt_delta = .97),
+                             prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
+                                       prior(normal(0, 2), class = b),
+                                       prior(normal(0, 2), class = sd),
+                                       prior(lkj(2), class = cor)),
+                             backend = 'cmdstan', seed = 42, refresh = 0)
+      dir.create(dirname(synthetic_model_path), recursive = TRUE, showWarnings = FALSE)
+      saveRDS(synthetic_model, synthetic_model_path)
+    }
+    
+    synthetic_estimate <- get_model_estimate(synthetic_model)
+    
+    tibble(
+      synthetic_effect_size = synthetic_estimate$y,
+      synthetic_lower = synthetic_estimate$ymin,
+      synthetic_upper = synthetic_estimate$ymax
+    )
+  }, .id = "dataset")
+
+# Calculate differences
+synthetic_results_language2 <- synthetic_results %>%
   mutate(
-    dataset = "original"
+    diff_effect_size = synthetic_effect_size - original_estimate$y,
+    diff_CI_lower = synthetic_lower - original_estimate$ymin,
+    diff_CI_upper = synthetic_upper - original_estimate$ymax
   )
 
-# Create synthetic data ----
-language2_data_synthetic <- syn(df_coded2, # method = "ctree",
-                                m = 100, seed = 2024)
-
-# Perform analysis on each synthetic dataset
-language2_results_synthetic <- language2_data_synthetic$syn |>
-  purrr::map_df(~ language2_analyze_data(.x), .id = "dataset") |>
-  add_column(domain = "Receptive and expressive language")
-
-# Compile results ----
-language_results_summary <- data_frame(
-  Domain = "Language",
-  Study = "Kearney et al. (2023)",
-  
-  # Pulling sample size, p value, and effect sizes from the original results
-  N = nrow(language_data_original),
-  p_value = ifelse(
-    language_results_original$p_value < .001, "<.001",
-    sprintf("%0.3f", language_results_original$p_value)),
-  effect_size_measure = "Correlation coefficient",
-  effect_size = round(language_results_original$effect_size, digits = 2),
-  
-  # Creating the % Agreement for p values between the original and the synthetic datasets
-  synAgreement_pvalue = language_results_synthetic |>
-    count(sig) |>
-    dplyr::mutate(percent = n / NROW(language_results_synthetic) * 100,
-                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
-    dplyr::filter(sig == language_results_original$sig) |>
-    dplyr::pull(percent),
-  absDiff_pvalue_mean = mean(language_results_synthetic$diff_pvalue),
-  absDiff_pvalue_sd = sd(language_results_synthetic$diff_pvalue),
-  
-  # Creating the % Agreement for effect sizes between the original and the synthetic datasets
-  synAgreement_effectSize = language_results_synthetic |>
-    count(categorization) |>
-    dplyr::mutate(percent = n / nrow(language_results_synthetic) * 100,
-                  percent = sprintf("%0.0f%%", percent)) |> # Formatting to be a %
-    dplyr::filter(categorization == language_results_original$categorization) |>
-    dplyr::pull(percent),
-  absDiff_effectSize_mean = mean(language_results_synthetic$diff_effectSize),
-  absDiff_effectSize_sd = sd(language_results_synthetic$diff_effectSize),
+# Summarize synthetic results
+results_summary <- tibble(
+  effect_size_original = original_estimate$y,
+  CI_lower_original = original_estimate$ymin,
+  CI_upper_original = original_estimate$ymax,
+  mean_synthetic_effect_size = mean(synthetic_results_language2$synthetic_effect_size),
+  mean_diff_effect_size = mean(synthetic_results_language2$diff_effect_size),
+  sd_diff_effect_size = sd(synthetic_results_language2$diff_effect_size),
+  mean_diff_CI_lower = mean(synthetic_results_language2$diff_CI_lower),
+  mean_diff_CI_upper = mean(synthetic_results_language2$diff_CI_upper)
 )
 
-# Tidying the R project environment ----
-## Throwing the relevant environment objects into a list for this study.
-language <- list(
-  data_original = language_data_original,
-  data_synthetic = language_data_synthetic,
-  results_original = language_results_original,
-  results_synthetic = language_results_synthetic,
-  results_summary = language_results_summary,
-  alpha = language_alpha
-)
-
-# General Utility ----
-language_data_synthetic_first <- language_data_synthetic$syn[[1]] |> 
-  as.data.frame()
-
-language_data_original2 <- language_data_original |> 
-  mutate(dataset_type = "Original") |> 
-  as.data.frame()
-
-# Combine the data frames
-language_combined_data <- language_data_synthetic_first |> 
-  mutate(dataset_type = "Synthetic") |> 
-  rbind(language_data_original2)
-
-# Calculate utility with s_pMSE
-language_utility_df <- utility.tables(
-  language_data_synthetic_first,
-  language_data_original,
-  tables = "oneway",
-  tab.stats = "S_pMSE",
-  print.tabs = FALSE
-)
-    
-# Extract s_pMSE value
-language_s_pMSE_value <- language_utility_df$tabs |>
-  as.data.frame() |>
-  rownames_to_column(var = "rowname")
-
-# Data Viz
-language_p1 <- 
-  language_combined_data |> 
-  ggplot(aes(x = edu, y = tpost_cat_read_total, color = dataset_type, fill = dataset_type)) +
-  geom_jitter(alpha = 0.80, size = 2.5, width = 0.15, height = 0.02) +
-  scale_fill_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
-  scale_color_manual(values = c("Synthetic" = "#184765", "Original" = "#5EC0D0")) +
-  labs(x = "Years of Education",
-       y = "Reading Score",
-       color = "Dataset Type",
-       fill = "Dataset Type") +
-  cowplot::theme_cowplot() +
-  theme(legend.position = "none",
-        axis.title.x = element_text(margin = margin(r = 8)),
-        axis.title.y = element_text(margin = margin(t = 8)))
-
-# Add title
-language_title <- ggdraw() +
-  draw_label_theme("A: Language (Kearney et al., 2023)", 
-                   theme = theme_cowplot(), element = "plot.title",
-                   x = 0.075, hjust = 0, vjust = 1)
-
-# Combine plot with title
-language_final_plot <- cowplot::plot_grid(
-  language_title,
-  language_p1,
-  ncol = 1,
-  rel_heights = c(0.2, 3) # Adjust the relative widths as needed
-)
-
-# ## Cleaning up the environment
-# rm(
-#   language_data_original,
-#   language_data_synthetic,
-#   language_results_original,
-#   language_results_synthetic,
-#   language_results_summary,
-#   language_alpha
-# )
-
-# Saving the data and results for easy importing later.
-base::saveRDS(object = language,
-              file = here::here("Data","07_Language", "Kearney", "analysisData.RDS"))
-
-# Model Fitting
-m.1b <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
-             (session + phase + slope_change | set/id), # 
-           family = bernoulli(),  #binomial in lme4
-           data = df_coded2, # both trained and untrained sets
-           iter = 4000, # number of total samples per chain
-           warmup = 1000, # number of samples tossed out per chain
-           inits = 'random', # each chain takes random starting values
-           chains = 4, # 4 total chains
-           cores = 4, # use 4 computer cores to run chains simultaneously
-           control = list(adapt_delta = .97), # to aid model convergence
-           prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
-                     prior(normal(0, 2), class = b), # prior distributions
-                     prior(normal(0, 2), class = sd),
-                     prior(lkj(2), class = cor)),
-           backend = 'cmdstan',
-           seed = 42,
-           refresh = 0, #for the markdown document 
-           file = here::here("Data", "07_Language", "Robinaugh", "new_approach"),
-           file_refit = "on_change"
-)
-
-pred_d <- m.1b$data %>%
-  select(-response, -Intercept) %>% 
-  group_by(id) %>% # for each word
-  mutate(num_baselines = ifelse(set != 7, sum(phase == 0), 4)) %>% 
-  #Untrained Set 7 set to give posterior distributions at session 4 
-  #(last baseline without any tx) and session 12 (the last tx phase probe)
-  filter(session == num_baselines | session == max(session))
-
-es <- add_epred_draws(m.1b, newdata = pred_d |> filter(set != 7), 
-                      pred = 'value', seed = 42) %>% 
-  ungroup() %>% #
-  mutate(time_point = ifelse(slope_change == 0, 'entry', 'exit')) %>% #
-  select(time_point, id, value = .epred, draw = .draw) %>% #
-  group_by(draw, time_point) %>% #
-  summarize(num_corr = sum(value)) %>% #
-  pivot_wider(names_from = time_point, values_from = num_corr) %>% # 
-  mutate(effect_size = exit - entry) %>% #
-  ungroup() %>%  # 
-  select(effect_size)
-
-es %>% # only need one variable
-  tidybayes::median_qi(effect_size)
-
-# Create synthetic data ----
-robinaugh_data_synthetic <- syn(df_coded2, 
-                                   # method = "ctree", 
-                                   m = 100,
-                                   seed = 2024)
-
-# General Utility ----
-robinaugh_data_synthetic_first <- robinaugh_data_synthetic$syn[[1]] |> 
-  as.data.frame()
-
-robinaugh_data_original <- df_coded2 |> 
-  mutate(dataset_type = "Original") |> 
-  as.data.frame()
-
-# Combine the data frames
-robinaugh_combined_data <- robinaugh_data_synthetic_first |> 
-  mutate(dataset_type = "Synthetic") |> 
-  rbind(robinaugh_data_original)
-
-# Calculate utility with s_pMSE
-robinaugh_utility_df <- utility.tables(
-  robinaugh_data_synthetic_first,
-  robinaugh_combined_data,
-  tables = "oneway",
-  tab.stats = "S_pMSE",
-  print.tabs = FALSE
-)
-    
-# Extract s_pMSE value
-robinaugh_s_pMSE_value <- robinaugh_utility_df$tabs |>
-  as.data.frame() |>
-  rownames_to_column(var = "rowname")
-
-# Specific Utility ----
-# Model Fitting
-synthetic_model <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
-             (session + phase + slope_change | set/id), # 
-           family = bernoulli(),  #binomial in lme4
-           data = robinaugh_data_synthetic_first, # both trained and untrained sets
-           iter = 4000, # number of total samples per chain
-           warmup = 1000, # number of samples tossed out per chain
-           inits = 'random', # each chain takes random starting values
-           chains = 4, # 4 total chains
-           cores = 4, # use 4 computer cores to run chains simultaneously
-           control = list(adapt_delta = .97), # to aid model convergence
-           prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
-                     prior(normal(0, 2), class = b), # prior distributions
-                     prior(normal(0, 2), class = sd),
-                     prior(lkj(2), class = cor)),
-           backend = 'cmdstan',
-           seed = 42,
-           refresh = 0, #for the markdown document 
-           file = here::here("Data", "07_Language", "Robinaugh", "synthetic_model"),
-           file_refit = "on_change"
-)
-
-synthetic_pred_d <- synthetic_model$data %>%
-  select(-response, -Intercept) %>% 
-  group_by(id) %>% # for each word
-  mutate(num_baselines = ifelse(set != 7, sum(phase == 0), 4)) %>% 
-  #Untrained Set 7 set to give posterior distributions at session 4 
-  #(last baseline without any tx) and session 12 (the last tx phase probe)
-  filter(session == num_baselines | session == max(session))
-
-synthetic_es <- add_epred_draws(m.1b, newdata = synthetic_pred_d |> filter(set != 7), 
-                      pred = 'value', seed = 42) %>% 
-  ungroup() %>% #
-  mutate(time_point = ifelse(slope_change == 0, 'entry', 'exit')) %>% #
-  select(time_point, id, value = .epred, draw = .draw) %>% #
-  group_by(draw, time_point) %>% #
-  summarize(num_corr = sum(value)) %>% #
-  pivot_wider(names_from = time_point, values_from = num_corr) %>% # 
-  mutate(effect_size = exit - entry) %>% #
-  ungroup() %>%  # 
-  select(effect_size)
-
-synthetic_es_summarized <- synthetic_es %>% # only need one variable
-  tidybayes::median_qi(effect_size)
+# Save results
+saveRDS(list(
+  original_model = original_model,
+  synthetic_results = synthetic_results,
+  summary = results_summary
+), here::here("Data", "07_Language", "Robinaugh", "analysisDataBayesian.RDS"))
 ```
 
 Robinaugh et al., (2024) examined the effectiveness of a naming treatment in a single-case experimental design for an individual presenting with semantic variant primary progressive aphasia and a history of traumatic brain injury. An item-level Bayesian generalized mixed-effects model revealed that the treatment resulted in a gain of 35 out of 60 trained words (β = 35.3; 90% CI: 30.6, 39.5). Compared to original data, the synthetic data showed similar frequencies of responses, but not sessions (Figure 2B). General utility was high for id (*S_pMSE* = `r round(robinaugh_s_pMSE_value$S_pMSE[1], digits = 2)`), set (*S_pMSE* = `r round(robinaugh_s_pMSE_value$S_pMSE[2], digits = 2)`), session (*S_pMSE* = `r round(robinaugh_s_pMSE_value$S_pMSE[5], digits = 2)`), and phase (*S_pMSE* = `r round(robinaugh_s_pMSE_value$S_pMSE[6], digits = 2)`) variables. The statistical model with the synthetic data overestimated the effect size (β = `r round(synthetic_es_summarized$effect_size, digits = 2)`; 90% CI: `r round(synthetic_es_summarized$.lower, digits = 2)`, `r round(synthetic_es_summarized$.upper, digits = 2)`), indicating that specific utility was low.
@@ -3769,6 +3568,216 @@ doc <- body_add_flextable(doc, value = t2)
 fileout <- here("manuscript", "tables-figures", "supplemental_table_1.docx") # uncomment to write in your working directory
 print(doc, target = fileout)
 ```
+
+```{r echo = FALSE}
+# Visualize effect size distributions
+articulation_es_viz <- 
+  articulation$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=0.40, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(0, 0.2, 0.4, 0.59, 0.80), limits = c(0, 0.80)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "Cohen's f",
+       y = "Count") +
+  ggtitle("A: Articulation",
+          subtitle = "Mean difference of 0.19 (SD = 0.12)") +
+  geom_vline(xintercept = 0.59, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+
+fluency_es_viz <- 
+  fluency$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=Inf, xmax=-Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(-4, -3, -2.18, -1), limits = c(-4, -1)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "Glass' Δ",
+       y = "Count") +
+  ggtitle("B: Fluency",
+          subtitle = "Mean difference of 0.36 (SD = 0.28)") +
+  geom_vline(xintercept = -2.18, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+voice_es_viz <- 
+  voice$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=0.50, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(0, 0.20, 0.40, 0.51, 0.60, 0.80), limits = c(0, 0.80)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "Correlation coefficient",
+       y = "Count") +
+  ggtitle("C: Voice and resonance",
+          subtitle = "Mean difference of 0.09 (SD = 0.07)") +
+  geom_vline(xintercept = 0.51, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+hearing_es_viz <- 
+  hearing$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(1, 1.2, 1.4, 1.56, 1.8, 2, 2.2), limits = c(0.90, 2.20)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "√(3/𝜋) x odds ratio",
+       y = "Count") +
+  ggtitle("D: Hearing",
+          subtitle = "Mean difference of 0.18 (SD = 0.14)") +
+  geom_vline(xintercept = 1.56, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+language_es_viz <- 
+  language$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=0.50, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(0.30, 0.4, 0.5, 0.59, 0.7, 0.8), 
+                     limits = c(0.30, 0.80)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "Correlation coefficient",
+       y = "Count") +
+  ggtitle("E: Receptive and expressive language\n(Kearney et al., 2023)",
+          subtitle = "Mean difference of 0.06 (SD = 0.05)") +
+  geom_vline(xintercept = 0.59, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+
+language_es_viz2 <- 
+  synthetic_results_language2 |> 
+  ggplot(aes(x = diff_effect_size)) +
+  # geom_rect(aes(xmin=0.50, xmax=Inf, ymin=0, ymax=Inf),
+  #           color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(10, 20, 30, 40, 50, 60), 
+                     limits = c(10, 60)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "Difference in Model Estimate",
+       y = "Count") +
+  ggtitle("E: Receptive and expressive language\n(Robinaugh et al., 2024)",
+          subtitle = "Mean difference of 34 words (SD = 8.98)")
+  # geom_vline(xintercept = 0.59, color = "black", 
+  #            size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+aac_es_viz <- 
+  aac$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=-Inf, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(10, 20, 30, 34.6, 40, 50), limits = c(10, 50)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "Cohen's 𝜔",
+       y = "Count") +
+  ggtitle("F: Communication modalities",
+          subtitle = "Mean difference of 7.24 (SD = 5.08)") +
+  geom_vline(xintercept = 34.6, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+cognition_es_viz <- 
+  cognition$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=0.80, xmax=Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(0.80, 1, 1.25, 1.53, 1.75, 2), limits = c(0.70, 2.1)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "√(3/𝜋) x odds ratio",
+       y = "Count") +
+  ggtitle("G: Cognition",
+          subtitle = "Mean difference of 0.28 (SD = 0.19)") +
+  geom_vline(xintercept = 1.53, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+  
+social_es_viz <- 
+  social$results_synthetic |> 
+  ggplot(aes(x = effect_size)) +
+  geom_rect(aes(xmin=-0.80, xmax=-Inf, ymin=0, ymax=Inf),
+            color = "#e5f5f9", fill = "#e5f5f9") +
+  geom_histogram(bins = 50, color = "#66c2a4", fill = "#66c2a4") +
+  cowplot::theme_cowplot() +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_x_continuous(breaks = c(-2, -1.5, -0.85, -0.5, 0), limits = c(-2, 0)) +
+  theme(legend.position = "top",
+        legend.justification="center",
+        axis.title.x = element_text(margin = margin(t = 4)),
+        axis.title.y = element_text(margin = margin(r = 2))) +
+  labs(x = "√(3/𝜋) x odds ratio",
+       y = "Count") +
+  ggtitle("H: Social aspects of communication",
+          subtitle = "Mean difference of 0.21 (SD = 0.20)") +
+  geom_vline(xintercept = -0.85, color = "black", 
+             size = 0.75, linetype = "dashed", alpha = 0.75)
+
+# Combine effect size figures together
+es_combined <- cowplot::plot_grid(articulation_es_viz,
+                   fluency_es_viz,
+                   voice_es_viz,
+                   hearing_es_viz,
+                   language_es_viz,
+                   aac_es_viz,
+                   cognition_es_viz,
+                   social_es_viz, 
+                   nrow = 4, 
+                   align = "hv"
+                   )
+
+# save figure
+ggsave(
+  filename = here::here(
+    "Manuscript/tables-figures/figure_4.png"),
+    es_combined,
+    height = 10,
+    width = 10,
+    dpi = 300,
+    bg = "white"
+  )
+```
+
 
 # Discussion
 
