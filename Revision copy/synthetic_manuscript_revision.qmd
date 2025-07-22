@@ -1852,7 +1852,7 @@ df_coded2 <- df %>%
          slope_change = ifelse(condition == "untreated", 0, slope_change))
 
 # Analysis Function ----
-# Examine correlation between education (years) and reading t-scores
+# Run Bayesian model
 language2_analyze_data <- function(data) {
   model <- brm(response ~ 0 + Intercept + session + phase + slope_change + 
               (session + phase + slope_change | set/id), # 
