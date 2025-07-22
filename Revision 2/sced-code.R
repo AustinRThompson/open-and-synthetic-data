@@ -1,6 +1,9 @@
 library(purrr)
 library(kableExtra)
 library(tidybayes)
+library(tidyverse)
+library(synthpop)
+library(brms)
 
 # Original Data Import & Preprocessing
 df <- read.csv(here::here("Data", "07_Language", "Robinaugh", 'SDTBI001_Data.csv')) %>%
@@ -66,7 +69,7 @@ if (file.exists(original_model_path)) {
 original_estimate <- get_model_estimate(original_model)
 
 # Generate synthetic data
-syn_data <- syn(df_coded2, m = 7, seed = 2024)
+syn_data <- syn(df_coded2, m = 100, seed = 2024)
 
 # Analyze Synthetic Datasets
 synthetic_results <- syn_data$syn %>%
@@ -81,7 +84,7 @@ synthetic_results <- syn_data$syn %>%
                              family = bernoulli(),
                              data = .x,
                              iter = 2000, warmup = 1000,
-                             chains = 2, cores = 2,
+                             chains = 4, cores = 4,
                              control = list(adapt_delta = .97),
                              prior = c(prior(normal(-1, 2), class = b, coef = Intercept),
                                        prior(normal(0, 2), class = b),
