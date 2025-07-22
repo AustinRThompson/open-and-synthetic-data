@@ -2843,6 +2843,18 @@ language_final_plot <- cowplot::plot_grid(
 # Language - Single Subject -----------------------------------------------
 
 # Data Viz
+language2_data_synthetic_first <- syn_data$syn[[1]] |> 
+  as.data.frame()
+
+language2_data_original <- df_coded2 |> 
+  mutate(dataset_type = "Original") |> 
+  as.data.frame()
+
+# Combine the data frames
+robinaugh_combined_data <- language2_data_synthetic_first |> 
+  mutate(dataset_type = "Synthetic") |> 
+  rbind(language2_data_original)
+
 robinaugh_p1 <- 
   robinaugh_combined_data |> 
   ggplot(aes(x = factor(session), color = dataset_type, fill = dataset_type)) +
@@ -3688,7 +3700,7 @@ language_es_viz2 <-
         axis.title.y = element_text(margin = margin(r = 2))) +
   labs(x = "Difference in Model Estimate",
        y = "Count") +
-  ggtitle("E: Receptive and expressive language\n(Robinaugh et al., 2024)",
+  ggtitle("F: Receptive and expressive language\n(Robinaugh et al., 2024)",
           subtitle = "Mean difference of 34 words (SD = 8.98)")
   # geom_vline(xintercept = 0.59, color = "black", 
   #            size = 0.75, linetype = "dashed", alpha = 0.75)
@@ -3708,7 +3720,7 @@ aac_es_viz <-
         axis.title.y = element_text(margin = margin(r = 2))) +
   labs(x = "Cohen's 𝜔",
        y = "Count") +
-  ggtitle("F: Communication modalities",
+  ggtitle("G: Communication modalities",
           subtitle = "Mean difference of 7.24 (SD = 5.08)") +
   geom_vline(xintercept = 34.6, color = "black", 
              size = 0.75, linetype = "dashed", alpha = 0.75)
@@ -3728,7 +3740,7 @@ cognition_es_viz <-
         axis.title.y = element_text(margin = margin(r = 2))) +
   labs(x = "√(3/𝜋) x odds ratio",
        y = "Count") +
-  ggtitle("G: Cognition",
+  ggtitle("H: Cognition",
           subtitle = "Mean difference of 0.28 (SD = 0.19)") +
   geom_vline(xintercept = 1.53, color = "black", 
              size = 0.75, linetype = "dashed", alpha = 0.75)
@@ -3748,7 +3760,7 @@ social_es_viz <-
         axis.title.y = element_text(margin = margin(r = 2))) +
   labs(x = "√(3/𝜋) x odds ratio",
        y = "Count") +
-  ggtitle("H: Social aspects of communication",
+  ggtitle("I: Social aspects of communication",
           subtitle = "Mean difference of 0.21 (SD = 0.20)") +
   geom_vline(xintercept = -0.85, color = "black", 
              size = 0.75, linetype = "dashed", alpha = 0.75)
@@ -3759,20 +3771,21 @@ es_combined <- cowplot::plot_grid(articulation_es_viz,
                    voice_es_viz,
                    hearing_es_viz,
                    language_es_viz,
+                   language_es_viz2,
                    aac_es_viz,
                    cognition_es_viz,
                    social_es_viz, 
-                   nrow = 4, 
+                   ncol = 3, 
                    align = "hv"
                    )
 
 # save figure
 ggsave(
   filename = here::here(
-    "Manuscript/tables-figures/figure_4.png"),
+    "Manuscript/tables-figures/supplemental_figure_B.png"),
     es_combined,
     height = 10,
-    width = 10,
+    width = 15,
     dpi = 300,
     bg = "white"
   )
@@ -3852,13 +3865,13 @@ Supplemental Table 1: Stability of synthetic datasets across ASHA domains.
 
 <br>
 
-Supplemental Figure A. Distribution of log-transformed *p*-values in synthetic datasets across ASHA domains.
+Appendix Figure 1. Distribution of log-transformed *p*-values in synthetic datasets across ASHA domains.
 
 *Caption*: Each panel displays the distribution of log-transformed *p*-values across 100 synthetic datasets for a given ASHA domain. The dashed line indicates the threshold for statistical significance from the original study. Shaded green areas indicate synthetic *p*-values that maintained the statistical inferential result of the original study. The mean difference and standard deviation of raw *p*-values compared to the *p*-value reported in the original study is shown below each panel's title.
 
 <br>
 
-Supplemental Figure B. Distribution of effect sizes in synthetic datasets across ASHA domains.
+Appendix Figure 2. Distribution of effect sizes in synthetic datasets across ASHA domains.
 
 *Caption*: Each panel displays the distribution of effect sizes across 100 synthetic datasets for a given ASHA domain. The dashed line indicates the effect size reported in the original study and the light blue shaded area indicates the range of the effect size categorization. The mean difference and standard deviation of the effect size compared to the result reported in the original study is shown below each panel's title.
 :::
