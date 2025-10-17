@@ -717,7 +717,7 @@ Thompson et al. (2023) examined the relationship between vowel space area and sp
 Compared to original data, the synthetic data demonstrated a similar distribution (Figure 1B). General utility was high for both variables of vowel space area (*S_pMSE* = `r round(articulation_s_pMSE_value$S_pMSE[1], digits = 2)`) and intelligibility (*S_pMSE* = `r round(articulation_s_pMSE_value$S_pMSE[2], digits = 2)`). Specific utility was high as the statistical model with the synthetic data maintained the direction of statistical significance (*p* = `r fmt_p_value(articulation_results_synthetic[1,]$p_value)`) and effect size magnitude (*f* = `r round(articulation_results_synthetic[1,]$effect_size, digits = 2)`).
 
 ### Fluency
-```{r echo = FALSE}
+```{r echo = FALSE, eval = FALSE}
 # Import original data ----
 fluency_data_original <- rio::import(file = here::here("Data", 
                                                        "03_Fluency", 
@@ -805,8 +805,6 @@ fluency_analyze_data <- function(data) {
   t_test <- stats::t.test(
     Nonwordrepetition ~ Group,
     data = data,
-    paired = FALSE,
-    var.equal = FALSE
   )
 
   list(
